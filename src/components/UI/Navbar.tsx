@@ -15,12 +15,12 @@ export function Navbar() {
   ];
 
   return (
-    <div className="w-auto flex flex-row mt-0">
+    <div className="mt-0 flex w-auto flex-row">
       <ul className="flex flex-row gap-3">
         {sections.map((section) => (
           <li key={section.href}>
             <a
-              className="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900 uppercase"
+              className="flex items-center py-2 uppercase text-gray-600 hover:text-gray-900 lg:px-3"
               href={section.href}
             >
               {section.title}
