@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-const initialProducts = [
+export const initialProducts = [
   {
     id: 1,
     name: "Arveja lata",

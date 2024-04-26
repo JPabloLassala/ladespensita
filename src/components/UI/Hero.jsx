@@ -1,4 +1,4 @@
-import logo from "/public/ladespenlogo.png";
+import logo from "/ladespenlogo.png";
 
 export function Hero() {
   return (

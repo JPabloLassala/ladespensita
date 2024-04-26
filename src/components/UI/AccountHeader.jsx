@@ -6,7 +6,7 @@ export function AccountHeader() {
         href="#"
         className="rounded border-2 border-transparent bg-black px-4 py-2 text-center text-white ring-gray-200 ring-offset-2 transition  hover:bg-gray-800 focus-visible:ring-2"
       >
-        Sign up{" "}
+        Sign up
       </a>
     </div>
   );

@@ -1,7 +1,7 @@
 export function Header({ children }) {
   return (
     <header className="w-full font-header">
-      <div className="items-top my-5 flex flex-row justify-between">{children}</div>
+      <div className="items-top flex flex-row justify-between py-5">{children}</div>
     </header>
   );
 }
