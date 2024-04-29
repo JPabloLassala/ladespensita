@@ -33,8 +33,8 @@ export function FilterProducts() {
     const fd = new FormData(event.target);
     const formData = Object.fromEntries(fd.entries());
 
-    setProducts((prevProducts) => {
-      return prevProducts.filter((product) => {
+    setProducts(prevProducts => {
+      return prevProducts.filter(product => {
         if (
           formData.enablefilterDate &&
           product.name.toLowerCase().includes(formData.filterName.toLowerCase())
