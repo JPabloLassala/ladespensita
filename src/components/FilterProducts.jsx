@@ -9,20 +9,6 @@ import { ProductsContext, initialProducts } from "../stores/Products.context";
 export function FilterProducts() {
   const { setProducts } = useContext(ProductsContext);
 
-  function enableIfEntered() {
-    const filterName = document.getElementById("filterName");
-    const enablefilterDate = document.getElementById("filterDate");
-    const enablefilterName = document.getElementById("filterName");
-
-    if (filterName.value) {
-      enablefilterDate.disabled = false;
-      enablefilterName.disabled = false;
-    } else {
-      enablefilterDate.disabled = true;
-      enablefilterName.disabled = true;
-    }
-  }
-
   function resetProducts() {
     setProducts(initialProducts);
   }
@@ -56,13 +42,9 @@ export function FilterProducts() {
 
   return (
     <form className="flex flex-row gap-2" onSubmit={handleFilterProducts}>
-      <SearchInputField
-        id="filterName"
-        placeholder="Buscar según nombre"
-        label="Buscar"
-        onChange={enableIfEntered}
-      />
-      <DateInputField id="filterDate" icon={faCalendar} label="Disponible el día" type="date" />
+      <SearchInputField id="filterName" placeholder="Buscar según nombre" label="Buscar" />
+      <DateInputField id="filterFrom" icon={faCalendar} label="Disponible desde" type="date" />
+      <DateInputField id="filterUntil" icon={faCalendar} label="Disponible hasta" type="date" />
       <Checkbox id="filterToday" label="Mostrar no disponibles" />
       <div className="mt-5 flex items-center text-white">
         <Button label="Filtrar" isSubmit className="bg-blue-600 hover:bg-blue-500" />
