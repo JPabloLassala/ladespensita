@@ -2,23 +2,28 @@ import { faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef } from "react";
 
-export function SearchInputField({ placeholder, label, id, onChange }) {
+export function SearchInputField({ placeholder, label, id }) {
   const enableInputRef = useRef();
   const inputRef = useRef();
-  function handleOnChange(event) {
+  const toggleCheckbox = () => {
+    enableInputRef.current.checked = !enableInputRef.current.checked;
+  };
+  const handleOnChange = event => {
     if (event.target.value && !enableInputRef.current.checked) {
       enableInputRef.current.checked = true;
     }
-    onChange(event);
-  }
-  function handleClearInput() {
+  };
+  const handleClearInput = () => {
     inputRef.current.value = "";
     enableInputRef.current.checked = false;
-  }
+  };
 
   return (
     <div className="flex w-1/5 flex-col">
-      <div className="mb-1 flex flex-row items-center">
+      <div
+        className="mb-1 flex flex-row items-center hover:cursor-pointer"
+        onClick={toggleCheckbox}
+      >
         <input
           ref={enableInputRef}
           id={`enable${id}`}
@@ -26,7 +31,7 @@ export function SearchInputField({ placeholder, label, id, onChange }) {
           type="checkbox"
           className="mr-1"
         />
-        <label htmlFor={`enable${id}`} className=" font-semibold text-slate-700">
+        <label htmlFor={`enable${id}`} className=" font-semibold text-slate-700 select-none">
           {label}
         </label>
       </div>
