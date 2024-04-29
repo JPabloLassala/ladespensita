@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 
 export const initialAlquileres = [
   {
+    id: 1,
     productora: "QUILMES",
     proyecto: "REBOLUCION",
     since: "2024-04-01T03:03",
@@ -24,6 +25,7 @@ export const initialAlquileres = [
     ],
   },
   {
+    id: 2,
     productora: "THE MOVEMENT/LANDIA",
     proyecto: "TADA",
     since: "2024-04-03T03:03",
@@ -46,6 +48,7 @@ export const initialAlquileres = [
     ],
   },
   {
+    id: 3,
     productora: "LANDIA",
     proyecto: "OREO",
     since: "2024-04-20T03:03",
@@ -63,8 +66,35 @@ export const initialAlquileres = [
 ];
 
 export const AlquileresContext = createContext({
+  // Create JSDoc of the array
+  /**
+   * @type {Array<{
+   * id: number,
+   * productora: string,
+   * proyecto: string,
+   * since: string,
+   * until: string,
+   * products: Array<{
+   *  id: number,
+   *  valorUnitarioGarantia: number,
+   *  valorTotalGarantia: number,
+   *  valorUnitarioAlquiler: number,
+   *  subtotalAlquiler: number
+   * }>
+   *
+   */
   alquileres: [],
   setalquileres: () => {},
+  /**
+   * @returns {Array<{
+   *  id: number,
+   *  productora: string,
+   *  proyecto: string,
+   *  since: string,
+   *  until: string,
+   *  totalProductos: number
+   * }>}
+   */
   getSummary: () => {},
 });
 
@@ -74,6 +104,7 @@ export function AlquileresContextProvider({ children }) {
   function getSummary() {
     return initialAlquileres.map(alquiler => {
       return {
+        id: alquiler.id,
         productora: alquiler.productora,
         proyecto: alquiler.proyecto,
         since: alquiler.since,
