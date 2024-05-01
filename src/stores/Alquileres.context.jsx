@@ -1,5 +1,31 @@
 import { createContext, useState } from "react";
 
+/**
+ * @typedef {Object} Alquiler
+ * @property {number} id
+ * @property {string} productora
+ * @property {string} proyecto
+ * @property {string} since
+ * @property {string} until
+ * @property {Array<{
+ * id: number,
+ * valorUnitarioGarantia: number,
+ * valorTotalGarantia: number,
+ * valorUnitarioAlquiler: number,
+ * subtotalAlquiler: number
+ * }>} products
+ */
+
+/**
+ * @typedef {Object} AlquilerSummaryItem
+ * @property {number} id
+ * @property {string} productora
+ * @property {string} proyecto
+ * @property {string} since
+ * @property {string} until
+ * @property {number} totalProductos
+ */
+
 export const initialAlquileres = [
   {
     id: 1,
@@ -66,34 +92,19 @@ export const initialAlquileres = [
 ];
 
 export const AlquileresContext = createContext({
-  // Create JSDoc of the array
   /**
-   * @type {Array<{
-   * id: number,
-   * productora: string,
-   * proyecto: string,
-   * since: string,
-   * until: string,
-   * products: Array<{
-   *  id: number,
-   *  valorUnitarioGarantia: number,
-   *  valorTotalGarantia: number,
-   *  valorUnitarioAlquiler: number,
-   *  subtotalAlquiler: number
-   * }>
-   *
+   * @type {Array<{Alquiler}>
    */
   alquileres: [],
   setalquileres: () => {},
   /**
-   * @returns {Array<{
-   *  id: number,
-   *  productora: string,
-   *  proyecto: string,
-   *  since: string,
-   *  until: string,
-   *  totalProductos: number
-   * }>}
+   * @param {string} sinceDate
+   * @param {string} untilDate
+   * @returns {Array<{Alquiler}>}
+   */
+  getAlquileresBetweenDates: () => {},
+  /**
+   * @returns {Array<{AlquilerSummaryItem}>}
    */
   getSummary: () => {},
 });
