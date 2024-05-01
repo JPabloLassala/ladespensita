@@ -111,8 +111,7 @@ export const AlquileresContext = createContext({
 
 export function AlquileresContextProvider({ children }) {
   const [alquileres, setAlquileres] = useState(initialAlquileres);
-
-  function getSummary() {
+  const getSummary = () => {
     return initialAlquileres.map(alquiler => {
       return {
         id: alquiler.id,
