@@ -122,12 +122,22 @@ export function AlquileresContextProvider({ children }) {
         totalProductos: alquiler.products.length,
       };
     });
-  }
+  };
+  const getAlquileresBetweenDates = (sinceDate, untilDate) => {
+    if (!sinceDate && !untilDate) {
+      return initialAlquileres;
+    }
+
+    return initialAlquileres.filter(alquiler => {
+      return alquiler.since >= sinceDate && alquiler.until <= untilDate;
+    });
+  };
 
   const alquileresCtx = {
     alquileres,
     setAlquileres,
     getSummary,
+    getAlquileresBetweenDates,
   };
 
   return <AlquileresContext.Provider value={alquileresCtx}>{children}</AlquileresContext.Provider>;

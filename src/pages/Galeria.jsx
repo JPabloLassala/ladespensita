@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { Producto } from "./Producto";
-import { ProductsContext } from "../stores/Products.context";
 import { FilterProducts } from "../components/FilterProducts";
+import { useProductsAndAlquileres } from "../hooks/productsAndAlquileres";
 
 export function Galeria() {
-  const { products } = useContext(ProductsContext);
+  const { products } = useProductsAndAlquileres();
 
   return (
     <main className="flex flex-col">
