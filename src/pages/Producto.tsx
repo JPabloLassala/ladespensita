@@ -1,4 +1,6 @@
-export function Producto({ item }) {
+import { Product } from "../schemas";
+
+export function Producto({ item }: { item: Product }) {
   return (
     <div className="rounded-xl bg-white text-sm shadow-md duration-200 hover:scale-105 hover:shadow-xl">
       <a href="#">
@@ -14,6 +16,7 @@ export function Producto({ item }) {
           {item.medidas.profundidad && (
             <p className="block truncate">Profundidad: {item.medidas.profundidad}cm</p>
           )}
+          s
           <p className="mt-2 block truncate text-stone-800">
             Unidades disponibles: <span className="font-bold">{item.unidadesDisponibles}</span>
           </p>

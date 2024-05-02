@@ -1,4 +1,4 @@
-export function Layout({ children }) {
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div id="layout" className="flex h-screen flex-col px-10">
       {children}

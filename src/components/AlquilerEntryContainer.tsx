@@ -1,4 +1,4 @@
-export function AlquilerEntryContainer({ children }) {
+export function AlquilerEntryContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="overflow-y-auto flex flex-col 2xl:w-1/5 w-1/4">
       <p className="text-2xl font-semibold font-body">Alquileres</p>

@@ -1,14 +1,13 @@
-import { useContext } from "react";
+import { MouseEvent, useContext } from "react";
 import { PAGES, PageContext } from "../../stores/Page.context";
 
 export function Navbar() {
-  const { setPage } = useContext(PageContext);
+  const { setPage } = useContext(PageContext)!;
   const pages = Object.entries(PAGES).map(([title, href]) => ({ title, href }));
 
-  function navigateToPage(event) {
+  function navigateToPage(event: MouseEvent<HTMLAnchorElement>, section: string) {
     event.preventDefault();
-    const href = event.target.getAttribute("href");
-    setPage(href);
+    setPage(section);
   }
 
   return (
@@ -19,7 +18,7 @@ export function Navbar() {
             <a
               className="flex items-center py-2 uppercase text-gray-600 hover:text-gray-900 lg:px-3"
               href={section.href}
-              onClick={navigateToPage}
+              onClick={(event) => navigateToPage(event, section.href)}
             >
               {section.title}
             </a>

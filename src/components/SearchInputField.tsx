@@ -1,19 +1,31 @@
 import { faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef } from "react";
+import { ChangeEventHandler, useRef } from "react";
 
-export function SearchInputField({ placeholder, label, id }) {
-  const enableInputRef = useRef();
-  const inputRef = useRef();
+type SearchInputFieldProps = {
+  placeholder: string;
+  label: string;
+  id: string;
+};
+
+export function SearchInputField({ placeholder, label, id }: SearchInputFieldProps) {
+  const enableInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const toggleCheckbox = () => {
+    if (!enableInputRef.current) return;
+
     enableInputRef.current.checked = !enableInputRef.current.checked;
   };
-  const handleOnChange = event => {
+  const handleOnChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (!enableInputRef.current) return;
+
     if (event.target.value && !enableInputRef.current.checked) {
       enableInputRef.current.checked = true;
     }
   };
   const handleClearInput = () => {
+    if (!inputRef.current || !enableInputRef.current) return;
     inputRef.current.value = "";
     enableInputRef.current.checked = false;
   };

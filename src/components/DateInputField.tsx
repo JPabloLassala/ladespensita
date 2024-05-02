@@ -3,12 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import { useRef } from "react";
 
-export function DateInputField({ label, id }) {
-  const datePickerRef = useRef();
-  const enableInputRef = useRef();
+export function DateInputField({ label, id }: { label: string; id: string }) {
+  const datePickerRef = useRef<HTMLInputElement>(null);
+  const enableInputRef = useRef<HTMLInputElement>(null);
 
   const setDefaultDate = () => {
     const today = dayjs().format("YYYY-MM-DD");
+    if (!datePickerRef.current || !enableInputRef.current) return;
+
     if (!datePickerRef.current.value) {
       datePickerRef.current.value = today;
       enableInputRef.current.checked = true;
@@ -16,6 +18,8 @@ export function DateInputField({ label, id }) {
     datePickerRef.current.showPicker();
   };
   const handleClearInput = () => {
+    if (!datePickerRef.current || !enableInputRef.current) return;
+
     datePickerRef.current.value = "";
     enableInputRef.current.checked = false;
   };

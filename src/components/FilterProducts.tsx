@@ -1,36 +1,36 @@
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { DateInputField } from "./DateInputField";
 import { SearchInputField } from "./SearchInputField";
 import { Checkbox } from "./UI/Checkbox";
 import { Button } from "./UI/Button";
-import { useContext } from "react";
-import { ProductsContext, initialProducts } from "../stores/Products.context";
+import { FormEvent, useContext } from "react";
+import { ProductsContext } from "../stores/Products.context";
+import { initialProducts } from "../constants";
 
 export function FilterProducts() {
-  const { setProducts } = useContext(ProductsContext);
+  const { setProducts } = useContext(ProductsContext)!;
 
   function resetProducts() {
     setProducts(initialProducts);
   }
 
-  function handleFilterProducts(event) {
+  function handleFilterProducts(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const fd = new FormData(event.target);
+    const fd = new FormData(event.currentTarget);
     const formData = Object.fromEntries(fd.entries());
 
-    setProducts(prevProducts => {
-      return prevProducts.filter(product => {
+    setProducts((prevProducts) => {
+      return prevProducts.filter((product) => {
         if (
           formData.enablefilterDate &&
-          product.name.toLowerCase().includes(formData.filterName.toLowerCase())
+          product.name.toLowerCase().includes((formData.filterName as string).toLowerCase())
         ) {
           return true;
         }
 
         if (
           formData.enablefilterName &&
-          !product.name.toLowerCase().includes(formData.filterName.toLowerCase())
+          !product.name.toLowerCase().includes((formData.filterName as string).toLowerCase())
         ) {
           return false;
         }
@@ -43,8 +43,8 @@ export function FilterProducts() {
   return (
     <form className="flex flex-row gap-2" onSubmit={handleFilterProducts}>
       <SearchInputField id="filterName" placeholder="Buscar según nombre" label="Buscar" />
-      <DateInputField id="filterFrom" icon={faCalendar} label="Disponible desde" type="date" />
-      <DateInputField id="filterUntil" icon={faCalendar} label="Disponible hasta" type="date" />
+      <DateInputField id="filterFrom" label="Disponible desde" />
+      <DateInputField id="filterUntil" label="Disponible hasta" />
       <Checkbox id="filterToday" label="Mostrar no disponibles" />
       <div className="mt-5 flex items-center text-white">
         <Button label="Filtrar" isSubmit className="bg-blue-600 hover:bg-blue-500" />

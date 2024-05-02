@@ -6,12 +6,12 @@ import { AlquilerEntryContainer } from "../components/AlquilerEntryContainer";
 import { AlquilerDetailsContainer } from "../components/AlquilerDetailsContainer";
 
 export function Alquileres() {
-  const { getSummary, alquileres } = useContext(AlquileresContext);
+  const { getSummary, alquileres } = useContext(AlquileresContext)!;
   const [selectedAlquiler, setSelectedAlquiler] = useState(alquileres[0]);
-  const handleSelectAlquiler = id => {
+  const handleSelectAlquiler = (id: number) => {
     setSelectedAlquiler(alquileres[id]);
   };
-  const alquilerEntries = getSummary().map(alquiler => (
+  const alquilerEntries = getSummary().map((alquiler) => (
     <AlquilerEntry
       key={alquiler.id}
       alquiler={alquiler}

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
+import { Alquiler } from "../schemas";
 
-export function AlquilerDetailsContainer({ selectedAlquiler }) {
+export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquiler: Alquiler }) {
   return (
     <div className="flex flex-col grow mx-4 gap-4">
       <p className="text-2xl font-semibold font-body">Detalle de alquiler</p>

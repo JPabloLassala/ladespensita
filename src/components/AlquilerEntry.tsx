@@ -1,4 +1,14 @@
-export function AlquilerEntry({ alquiler, dateRange, onSelectAlquiler }) {
+import { AlquilerSummaryItem } from "../schemas";
+
+export function AlquilerEntry({
+  alquiler,
+  dateRange,
+  onSelectAlquiler,
+}: {
+  alquiler: AlquilerSummaryItem;
+  dateRange: string;
+  onSelectAlquiler: () => void;
+}) {
   return (
     <div
       key={alquiler.productora}

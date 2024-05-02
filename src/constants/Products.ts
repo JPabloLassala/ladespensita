@@ -1,5 +1,3 @@
-import { createContext, useState } from "react";
-
 export const initialProducts = [
   {
     id: 1,
@@ -93,20 +91,3 @@ export const initialProducts = [
     etiquetas: [],
   },
 ];
-
-export const ProductsContext = createContext({
-  products: [],
-  showProductDetails: () => {},
-  hideProductDetails: () => {},
-});
-
-export function ProductsContextProvider({ children }) {
-  const [products, setProducts] = useState(initialProducts);
-
-  const productsCtx = {
-    products,
-    setProducts,
-  };
-
-  return <ProductsContext.Provider value={productsCtx}>{children}</ProductsContext.Provider>;
-}
