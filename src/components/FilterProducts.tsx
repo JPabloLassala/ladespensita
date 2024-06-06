@@ -9,6 +9,7 @@ import {
 import { ProductsContext } from "../stores/Products.context";
 import { initialProducts } from "../constants";
 import { FilterContext } from "../stores/Filter.context";
+import dayjs from "dayjs";
 
 export function FilterProducts() {
   const { setProducts } = useContext(ProductsContext)!;
@@ -16,8 +17,10 @@ export function FilterProducts() {
     setShowUnavailable,
     showUnavailable,
     // setFilterDate,
-    // sinceDate,
+    sinceDate,
+    setSinceDate,
     untilDate,
+    setUntilDate,
     // setName,
     // name,
   } = useContext(FilterContext)!;
@@ -30,12 +33,25 @@ export function FilterProducts() {
     setShowUnavailable((prevShowUnavailable) => !prevShowUnavailable);
   }
 
-  function handleSetUntilDate() {}
+  function handleSetSinceDate(value: string) {
+    const date = dayjs(value);
+    setSinceDate(date);
+  }
+
+  function handleSetUntilDate(value: string) {
+    const date = dayjs(value);
+    setUntilDate(date);
+  }
 
   return (
     <div className="flex flex-row gap-2">
       <SearchInputField id="filterName" placeholder="Buscar según nombre" label="Buscar" />
-      <DateInputField id="filterFrom" label="Disponible desde" />
+      <DateInputField
+        id="filterFrom"
+        label="Disponible desde"
+        onSetDate={handleSetSinceDate}
+        value={sinceDate}
+      />
       <DateInputField
         id="filterUntil"
         label="Disponible hasta"

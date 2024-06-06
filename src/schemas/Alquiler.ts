@@ -13,6 +13,7 @@ export type AlquilerProduct = {
   valorTotalGarantia: number;
   valorUnitarioAlquiler: number;
   subtotalAlquiler: number;
+  cantidad: number;
 };
 
 export type AlquilerSummaryItem = {

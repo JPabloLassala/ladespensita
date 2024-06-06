@@ -7,7 +7,8 @@ export type FilterContextType = {
   sinceDate?: Dayjs;
   untilDate?: Dayjs;
   showUnavailable: boolean;
-  setFilterDate: (sinceDate?: Dayjs, untilDate?: Dayjs) => void;
+  setSinceDate: Dispatch<SetStateAction<Dayjs | undefined>>;
+  setUntilDate: Dispatch<SetStateAction<Dayjs | undefined>>;
   setShowUnavailable: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -18,10 +19,6 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
   const [sinceDate, setSinceDate] = useState<Dayjs | undefined>(undefined);
   const [untilDate, setUntilDate] = useState<Dayjs | undefined>(undefined);
   const [showUnavailable, setShowUnavailable] = useState(false);
-  const setFilterDate = (sinceDate?: Dayjs, untilDate?: Dayjs) => {
-    setSinceDate(sinceDate);
-    setUntilDate(untilDate);
-  };
 
   return (
     <FilterContext.Provider
@@ -30,7 +27,8 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
         setName,
         sinceDate,
         untilDate,
-        setFilterDate,
+        setSinceDate,
+        setUntilDate,
         showUnavailable,
         setShowUnavailable,
       }}

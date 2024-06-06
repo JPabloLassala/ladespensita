@@ -1,8 +1,18 @@
 import { Product } from "../schemas";
 
-export function Producto({ item }: { item: Product }) {
+export function Producto({
+  item,
+  disabled,
+  dimmed,
+}: {
+  item: Product;
+  disabled: boolean;
+  dimmed: boolean;
+}) {
   return (
-    <div className="rounded-xl bg-white text-sm shadow-md duration-200 hover:scale-105 hover:shadow-xl">
+    <div
+      className={`rounded-xl bg-white text-sm shadow-md duration-200 hover:scale-105 hover:shadow-xl ${disabled ? "hidden" : ""}`}
+    >
       <a href="#">
         <img src={item.img} alt="Product" className="h-60 rounded-t-xl object-cover" />
         <div className="px-4 py-3">
