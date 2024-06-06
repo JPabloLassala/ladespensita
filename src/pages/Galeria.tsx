@@ -1,9 +1,14 @@
 import { Producto } from "./Producto";
 import { FilterProducts } from "../components/FilterProducts";
-import { useProductsAndAlquileres } from "../hooks/productsAndAlquileres";
+import { useContext } from "react";
+import {
+  // AlquileresContext,
+  ProductsContext,
+} from "../stores";
 
 export function Galeria() {
-  const { products } = useProductsAndAlquileres();
+  // const { alquileres } = useContext(AlquileresContext)!;
+  const { products } = useContext(ProductsContext)!;
 
   return (
     <main className="flex flex-col">

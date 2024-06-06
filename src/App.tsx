@@ -7,9 +7,10 @@ import { Navbar } from "./components/UI/Navbar";
 import { useContext } from "react";
 import { PAGES, PageContext } from "./stores/Page.context";
 import { Alquileres } from "./pages/Alquileres";
+import { FilterContextProvider } from "./stores/Filter.context";
 
 function App() {
-  const { page } = useContext(PageContext);
+  const { page } = useContext(PageContext)!;
 
   return (
     <Layout>
@@ -18,8 +19,10 @@ function App() {
         <Navbar />
         <AccountHeader />
       </Header>
-      {page === PAGES.productos && <Galeria />}
-      {page === PAGES.alquileres && <Alquileres />}
+      <FilterContextProvider>
+        {page === PAGES.productos && <Galeria />}
+        {page === PAGES.alquileres && <Alquileres />}
+      </FilterContextProvider>
     </Layout>
   );
 }

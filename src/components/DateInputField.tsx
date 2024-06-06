@@ -1,27 +1,33 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import dayjs from "dayjs";
-import { useRef } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { useRef, useState } from "react";
 
-export function DateInputField({ label, id }: { label: string; id: string }) {
-  const datePickerRef = useRef<HTMLInputElement>(null);
+export function DateInputField({
+  label,
+  id,
+  onSetDate = () => {},
+  value,
+}: {
+  label: string;
+  id: string;
+  onSetDate?: (date: string) => void;
+  value?: Dayjs;
+}) {
+  const [, setTmpDate] = useState<Dayjs | undefined>(undefined);
+  // const datePickerRef = useRef<HTMLInputElement>(null);
   const enableInputRef = useRef<HTMLInputElement>(null);
+  const setDefaultDate = () => {};
+  const handleClearInput = () => {};
 
-  const setDefaultDate = () => {
-    const today = dayjs().format("YYYY-MM-DD");
-    if (!datePickerRef.current || !enableInputRef.current) return;
+  const handleSetOrUnsetDate = () => {
+    if (!enableInputRef.current) return;
 
-    if (!datePickerRef.current.value) {
-      datePickerRef.current.value = today;
-      enableInputRef.current.checked = true;
+    if (enableInputRef.current.checked) {
+      setTmpDate(value);
+    } else {
+      setTmpDate(undefined);
     }
-    datePickerRef.current.showPicker();
-  };
-  const handleClearInput = () => {
-    if (!datePickerRef.current || !enableInputRef.current) return;
-
-    datePickerRef.current.value = "";
-    enableInputRef.current.checked = false;
   };
 
   return (
@@ -31,7 +37,7 @@ export function DateInputField({ label, id }: { label: string; id: string }) {
           type="checkbox"
           name={`enable${id}`}
           id={`enable${id}`}
-          ref={enableInputRef}
+          onChange={handleSetOrUnsetDate}
           className="mr-1"
         />
         <label
@@ -46,9 +52,10 @@ export function DateInputField({ label, id }: { label: string; id: string }) {
         <input
           id={id}
           name={id}
-          ref={datePickerRef}
           type="date"
           onClick={setDefaultDate}
+          value={dayjs(value).format("YYYY-MM-DD")}
+          onChange={(event) => onSetDate(event.target.value)}
           className="ml-2 w-full bg-transparent text-sm text-slate-800 focus:outline-none disabled:bg-slate-400"
         />
         <FontAwesomeIcon

@@ -28,14 +28,27 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
   };
   const getAlquileresBetweenDates = (sinceDate: string, untilDate: string) => {
     if (!sinceDate && !untilDate) {
-      return initialAlquileres;
+      return [];
     }
 
+    if (sinceDate && untilDate) {
+      return initialAlquileres.filter((alquiler) => {
+        return (
+          dayjs(alquiler.since).isAfter(dayjs(sinceDate)) &&
+          dayjs(alquiler.until).isBefore(dayjs(untilDate))
+        );
+      });
+    }
+
+    if (sinceDate) {
+      return initialAlquileres.filter((alquiler) => {
+        return dayjs(alquiler.since).isAfter(dayjs(sinceDate));
+      });
+    }
+
+    // untilDate
     return initialAlquileres.filter((alquiler) => {
-      return (
-        dayjs(alquiler.since).isAfter(dayjs(sinceDate)) &&
-        dayjs(alquiler.until).isBefore(dayjs(untilDate))
-      );
+      return dayjs(alquiler.until).isBefore(dayjs(untilDate));
     });
   };
 
