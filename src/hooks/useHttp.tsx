@@ -1,8 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-async function sendHttpRequest(url, config) {
+async function sendHttpRequest(url: string, config: RequestInit) {
   const response = await fetch(url, config);
   const resData = await response.json();
 
@@ -13,36 +13,37 @@ async function sendHttpRequest(url, config) {
   return resData;
 }
 
-export default function useHttp(url, config, initialData) {
-  const [data, setData] = useState(initialData);
+export function useHttp<T>(url: string, config: RequestInit, initialData: T[] = []) {
+  const [data, setData] = useState<T[]>(initialData);
   const [error, setError] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const configMemo = useMemo(() => config, []);
 
   function clearData() {
     setData(initialData);
   }
 
   const sendRequest = useCallback(
-    async function sendRequest(data) {
+    async function sendRequest(data?: any) {
       setIsLoading(true);
 
       try {
         const resData = await sendHttpRequest(url, { ...config, body: data });
         setData(resData);
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message || "Something went wrong");
       }
 
       setIsLoading(false);
     },
-    [url, config],
+    [url, configMemo],
   );
 
   useEffect(() => {
     if (config && (config.method === "GET" || !config.method)) {
       sendRequest();
     }
-  }, [sendRequest, config]);
+  }, [sendRequest, configMemo]);
 
   return { data, isLoading, error, sendRequest, clearData };
 }
