@@ -1,17 +1,29 @@
 import { AccountHeader } from "./components/UI/AccountHeader";
-import { Galeria } from "./pages/Galeria";
+import { Productos } from "./pages/Productos";
 import { Header } from "./components/Header";
 import { Hero } from "./components/UI/Hero";
 import { Layout } from "./components/UI/Layout";
 import { Navbar } from "./components/UI/Navbar";
-import { useContext } from "react";
-import { PAGES, PageContext } from "./stores/Page.context";
 import { Alquileres } from "./pages/Alquileres";
 import { FilterContextProvider } from "./stores/Filter.context";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Productos />,
+  },
+  {
+    path: "/productos",
+    element: <Productos />,
+  },
+  {
+    path: "/alquileres",
+    element: <Alquileres />,
+  },
+]);
 
 function App() {
-  const { page } = useContext(PageContext)!;
-
   return (
     <Layout>
       <Header>
@@ -20,8 +32,7 @@ function App() {
         <AccountHeader />
       </Header>
       <FilterContextProvider>
-        {page === PAGES.productos && <Galeria />}
-        {page === PAGES.alquileres && <Alquileres />}
+        <RouterProvider router={router} />
       </FilterContextProvider>
     </Layout>
   );
