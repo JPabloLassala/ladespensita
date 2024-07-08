@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Alquiler } from "../../schemas";
 import { AlquilerInput } from "./AlquilerInput";
+import { AlquilerProductoItem } from "./AlquilerProductoItem";
 
 export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquiler: Alquiler }) {
   const fechaInicio = dayjs(selectedAlquiler.fechaAlquiler.inicio).format("DD/MM/YYYY");
@@ -21,8 +22,10 @@ export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquile
       <div className="grow shrink overflow-y-auto flex flex-row gap-2 h-full">
         <div className="flex flex-col w-1/2">
           <p className="font-body font-semibold text-lg">Productos</p>
-          <div className="grow shrink overflow-y-auto w-full mb-8 flex-col gap-2 rounded-md shadow-md border border-slate-100">
-            <div className="my-1 mx-2">asda</div>
+          <div className="grow shrink overflow-y-auto w-full mb-8 flex-col rounded-md shadow-md border border-slate-100">
+            {productos.map((p, i) => (
+              <AlquilerProductoItem key={i} alquilerProducto={p} />
+            ))}
           </div>
         </div>
       </div>

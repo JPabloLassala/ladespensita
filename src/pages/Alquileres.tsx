@@ -10,11 +10,11 @@ import { AlquilerNoneSelected } from "../components/Productos/AlquilerNoneSelect
 
 export function Alquileres() {
   const { getSummary, alquileres, setAlquileres } = useContext(AlquileresContext)!;
-  const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler>();
+  const [selectedAlquiler, setSelectedAlquiler] = useState<string>();
   const { data: alquilerData } = useHttp<Alquiler>("http://127.0.0.1:3000/alquileres", {}, []);
 
   const handleSelectAlquiler = (id: number) => {
-    setSelectedAlquiler(alquileres[id]);
+    setSelectedAlquiler(alquileres[id]._id);
   };
 
   useEffect(() => {
@@ -23,10 +23,13 @@ export function Alquileres() {
     }
   }, [alquilerData]);
 
+  console.log(selectedAlquiler);
+
   const alquilerEntries = getSummary().map((alquiler, i) => (
     <AlquilerEntry
       key={i}
       alquiler={alquiler}
+      isSelected={selectedAlquiler?.id === alquiler.id}
       dateRange={`${dayjs(alquiler.since).format("DD/MM/YYYY")} - ${dayjs(alquiler.until).format("DD/MM/YYYY")}`}
       onSelectAlquiler={() => handleSelectAlquiler(i)}
     />
