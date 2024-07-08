@@ -15,7 +15,7 @@ async function sendHttpRequest(url: string, config: RequestInit) {
 
 export function useHttp<T>(url: string, config: RequestInit, initialData: T[] = []) {
   const [data, setData] = useState<T[]>(initialData);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const configMemo = useMemo(() => config, []);
 
@@ -24,14 +24,16 @@ export function useHttp<T>(url: string, config: RequestInit, initialData: T[] = 
   }
 
   const sendRequest = useCallback(
-    async function sendRequest(data?: any) {
+    async function sendRequest(data?: T[]) {
       setIsLoading(true);
 
       try {
-        const resData = await sendHttpRequest(url, { ...config, body: data });
+        const resData = await sendHttpRequest(url, { ...config, body: JSON.stringify(data) });
         setData(resData);
-      } catch (error: any) {
-        setError(error.message || "Something went wrong");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message || "Something went wrong");
+        }
       }
 
       setIsLoading(false);
