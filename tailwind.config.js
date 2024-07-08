@@ -2,9 +2,14 @@
 export default {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
-    fontFamily: {
-      header: ["Rubik"],
-      body: ["Source Sans"],
+    extend: {
+      fontFamily: {
+        header: ["Rubik"],
+        body: ["Source Sans"],
+      },
+      screens: {
+        "3xl": "1843px",
+      },
     },
   },
   plugins: [],
