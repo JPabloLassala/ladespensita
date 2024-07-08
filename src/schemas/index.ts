@@ -1,2 +1,2 @@
 export * from "./Alquiler";
-export * from "./Product";
+export * from "./Producto";
