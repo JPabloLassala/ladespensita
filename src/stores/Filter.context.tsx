@@ -1,36 +1,97 @@
-import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
+import { ReactNode, createContext, useState } from "react";
 import { Dayjs } from "dayjs";
 
 export type FilterContextType = {
   name: string;
-  setName: Dispatch<SetStateAction<string>>;
-  sinceDate?: Dayjs;
-  untilDate?: Dayjs;
+  setName: (name: string) => void;
+  nameEnabled: boolean;
+  toggleEnableName: () => void;
+  sinceDate?: Dayjs | undefined;
+  setSinceDate: (sinceDate: Dayjs | undefined) => void;
+  sinceDateEnabled: boolean;
+  toggleEnableSinceDate: () => void;
+  untilDate?: Dayjs | undefined;
+  setUntilDate: (untilDate: Dayjs | undefined) => void;
+  untilDateEnabled: boolean;
+  toggleEnableUntilDate: () => void;
   showUnavailable: boolean;
-  setSinceDate: Dispatch<SetStateAction<Dayjs | undefined>>;
-  setUntilDate: Dispatch<SetStateAction<Dayjs | undefined>>;
-  setShowUnavailable: Dispatch<SetStateAction<boolean>>;
+  toggleShowUnavailable: () => void;
 };
 
 export const FilterContext = createContext<FilterContextType | null>(null);
 
 export function FilterContextProvider({ children }: { children: ReactNode }) {
-  const [name, setName] = useState("");
-  const [sinceDate, setSinceDate] = useState<Dayjs | undefined>(undefined);
-  const [untilDate, setUntilDate] = useState<Dayjs | undefined>(undefined);
-  const [showUnavailable, setShowUnavailable] = useState(false);
+  const [filter, setFilter] = useState({
+    name: "",
+    nameEnabled: false,
+    sinceDate: undefined as Dayjs | undefined,
+    sinceDateEnabled: false,
+    untilDate: undefined as Dayjs | undefined,
+    untilDateEnabled: false,
+    showUnavailable: false,
+  });
+
+  const setName = (name: string) => {
+    setFilter((filter) => ({ ...filter, name }));
+  };
+
+  const toggleEnableName = () => {
+    setFilter((filter) => ({ ...filter, nameEnabled: !filter.nameEnabled }));
+  };
+
+  const setSinceDate = (sinceDate: Dayjs | undefined) => {
+    setFilter((filter) => ({ ...filter, sinceDate }));
+  };
+
+  const toggleEnableSinceDate = () => {
+    setFilter((filter) => ({
+      ...filter,
+      sinceDateEnabled: !filter.sinceDateEnabled,
+    }));
+  };
+
+  const setUntilDate = (untilDate: Dayjs | undefined) => {
+    setFilter((filter) => ({ ...filter, untilDate }));
+  };
+
+  const toggleEnableUntilDate = () => {
+    setFilter((filter) => ({
+      ...filter,
+      untilDateEnabled: !filter.untilDateEnabled,
+    }));
+  };
+
+  const toggleShowUnavailable = () => {
+    setFilter((filter) => ({ ...filter, showUnavailable: !filter.showUnavailable }));
+  };
+
+  const {
+    name,
+    nameEnabled,
+    sinceDate,
+    sinceDateEnabled,
+    untilDate,
+    untilDateEnabled,
+    showUnavailable,
+  } = filter;
 
   return (
     <FilterContext.Provider
       value={{
         name,
         setName,
+        nameEnabled,
+        toggleEnableName,
         sinceDate,
-        untilDate,
         setSinceDate,
+        sinceDateEnabled,
+        toggleEnableSinceDate,
+        untilDate,
         setUntilDate,
+        untilDateEnabled,
+        toggleEnableUntilDate,
         showUnavailable,
-        setShowUnavailable,
+        toggleShowUnavailable,
       }}
     >
       {children}

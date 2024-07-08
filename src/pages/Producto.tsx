@@ -1,34 +1,43 @@
-import { Product } from "../schemas";
+import { ProductoType } from "../schemas";
 
 export function Producto({
   item,
-  disabled,
-  dimmed,
+  disabled = false,
+  dimmed = false,
 }: {
-  item: Product;
-  disabled: boolean;
-  dimmed: boolean;
+  item: ProductoType;
+  disabled?: boolean;
+  dimmed?: boolean;
 }) {
   return (
     <div
-      className={`rounded-xl bg-white text-sm shadow-md duration-200 hover:scale-105 hover:shadow-xl ${disabled ? "hidden" : ""}`}
+      className={`
+        rounded-md bg-white text-sm shadow-md duration-200 max-w-72
+        hover:scale-105 hover:shadow-xl ${disabled ? "hidden" : ""}
+        ${dimmed ? "grayscale brightness-90 shadow-none" : ""}
+        `}
     >
       <a href="#">
-        <img src={item.img} alt="Product" className="h-60 rounded-t-xl object-cover" />
+        <img
+          src="http://localhost:3000/images/21.jpg"
+          alt="Producto"
+          className="w-full rounded-t-md object-scale-down"
+        />
         <div className="px-4 py-3">
-          <p className="block truncate text-lg font-bold capitalize text-black">{item.name}</p>
-          <p className="block truncate">Unidades metro lineal:{item.unidadesMetroLineal}</p>
-          <p className="block truncate">Altura: {item.medidas.altura}cm</p>
+          <p className="block text-md font-bold capitalize text-black">{item.nombre}</p>
+          <p className="block truncate text-xs">Unidades metro lineal:{item.unidadesMetroLineal}</p>
+          <p className="block truncate text-xs">Altura: {item.medidas.altura}cm</p>
           {item.medidas.diametro && (
-            <p className="block truncate">Diametro: {item.medidas.diametro}cm</p>
+            <p className="block truncate text-xs">Diametro: {item.medidas.diametro}cm</p>
           )}
-          {item.medidas.ancho && <p className="block truncate">Ancho: {item.medidas.ancho}cm</p>}
+          {item.medidas.ancho && (
+            <p className="block truncate text-xs">Ancho: {item.medidas.ancho}cm</p>
+          )}
           {item.medidas.profundidad && (
-            <p className="block truncate">Profundidad: {item.medidas.profundidad}cm</p>
+            <p className="block truncate text-xs">Profundidad: {item.medidas.profundidad}cm</p>
           )}
-          s
-          <p className="mt-2 block truncate text-stone-800">
-            Unidades disponibles: <span className="font-bold">{item.unidadesDisponibles}</span>
+          <p className="mt-2 truncate text-stone-800 text-xs">
+            Unidades disponibles: <span className="font-bold">0</span>
           </p>
         </div>
       </a>

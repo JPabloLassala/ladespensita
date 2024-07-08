@@ -1,22 +1,21 @@
 import { createContext, useState } from "react";
-import { Product } from "../schemas";
-import { initialProducts } from "../constants";
+import { ProductoType } from "../schemas";
 
 export type ProductsContextType = {
-  products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  productos: ProductoType[];
+  setProductos: React.Dispatch<React.SetStateAction<ProductoType[]>>;
 };
 
 export const ProductsContext = createContext<ProductsContextType | null>(null);
 
 export function ProductsContextProvider({ children }: { children: React.ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [productos, setProductos] = useState<ProductoType[]>([]);
 
   return (
     <ProductsContext.Provider
       value={{
-        products,
-        setProducts,
+        productos,
+        setProductos,
       }}
     >
       {children}
