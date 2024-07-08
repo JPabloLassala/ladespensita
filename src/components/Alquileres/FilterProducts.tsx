@@ -1,36 +1,33 @@
 import { DateInputField } from "./DateInputField";
 import { SearchInputField } from "./SearchInputField";
-import { Checkbox } from "./UI/Checkbox";
-import { Button } from "./UI/Button";
-import {
-  // FormEvent,
-  useContext,
-} from "react";
-import { ProductsContext } from "../stores/Products.context";
-import { initialProducts } from "../constants";
-import { FilterContext } from "../stores/Filter.context";
+import { Checkbox } from "../UI/Checkbox";
+import { Button } from "../UI/Button";
+import { useContext } from "react";
+import { ProductsContext } from "../../stores/Products.context";
+import { FilterContext } from "../../stores/Filter.context";
 import dayjs from "dayjs";
 
 export function FilterProducts() {
-  const { setProducts } = useContext(ProductsContext)!;
+  const { setProductos, productos } = useContext(ProductsContext)!;
   const {
-    setShowUnavailable,
-    showUnavailable,
-    // setFilterDate,
+    name,
+    setName,
+    toggleEnableName,
+    nameEnabled,
     sinceDate,
     setSinceDate,
     untilDate,
     setUntilDate,
-    // setName,
-    // name,
+    showUnavailable,
+    toggleShowUnavailable,
   } = useContext(FilterContext)!;
 
   function resetProducts() {
-    setProducts(initialProducts);
+    setProductos(productos);
   }
 
   function handleShowUnavailable() {
-    setShowUnavailable((prevShowUnavailable) => !prevShowUnavailable);
+    toggleShowUnavailable();
   }
 
   function handleSetSinceDate(value: string) {
@@ -45,7 +42,15 @@ export function FilterProducts() {
 
   return (
     <div className="flex flex-row gap-2">
-      <SearchInputField id="filterName" placeholder="Buscar según nombre" label="Buscar" />
+      <SearchInputField
+        onToggleSearch={toggleEnableName}
+        searchEnabled={nameEnabled}
+        value={name}
+        onChangeValue={setName}
+        id="filterName"
+        placeholder="Buscar según nombre"
+        label="Buscar"
+      />
       <DateInputField
         id="filterFrom"
         label="Disponible desde"

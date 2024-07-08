@@ -1,4 +1,4 @@
-import { AlquilerSummaryItem } from "../schemas";
+import { AlquilerSummaryItem } from "../../schemas";
 
 export function AlquilerEntry({
   alquiler,
