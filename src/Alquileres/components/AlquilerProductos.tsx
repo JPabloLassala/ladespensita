@@ -16,7 +16,7 @@ export function AlquilerProductos({
         return (
           <AlquilerProductoItem
             key={p.producto.id}
-            alquilerProducto={p}
+            producto={p}
             isSelected={selectedProducto?.producto.id === p.producto.id}
             onSelectProducto={handleSelectProducto}
           />
