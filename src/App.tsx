@@ -1,21 +1,21 @@
-import { AccountHeader } from "./components/UI/AccountHeader";
-import { Productos } from "./pages/Productos";
-import { Header } from "./components/Header";
-import { Hero } from "./components/UI/Hero";
-import { Layout } from "./components/UI/Layout";
-import { Navbar } from "./components/UI/Navbar";
-import { Alquileres } from "./pages/Alquileres";
 import { FilterContextProvider } from "./stores/Filter.context";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Header } from "./Shared/Header";
+import { ProductosPage } from "./Productos/Productos.page";
+import { Layout } from "./Shared/Layout";
+import { Hero } from "./Shared/Hero";
+import { Navbar } from "./Shared/Navbar";
+import { AccountHeader } from "./Shared/AccountHeader";
+import { Alquileres } from "./Alquileres/Alquileres.page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Productos />,
+    element: <ProductosPage />,
   },
   {
     path: "/productos",
-    element: <Productos />,
+    element: <ProductosPage />,
   },
   {
     path: "/alquileres",

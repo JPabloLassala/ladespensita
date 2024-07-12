@@ -1,7 +1,7 @@
 import { ProductoType } from "./Producto";
 
 export type Alquiler = {
-  id: number;
+  id: string;
   productora: string;
   proyecto: string;
   productos: AlquilerProducto[];
@@ -15,6 +15,7 @@ export type Alquiler = {
 };
 
 export type AlquilerProducto = {
+  id: string;
   producto: ProductoType;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
@@ -31,7 +32,7 @@ export type AlquilerProducto = {
 };
 
 export type AlquilerSummaryItem = {
-  id: number;
+  id: string;
   productora: string;
   proyecto: string;
   since: string;

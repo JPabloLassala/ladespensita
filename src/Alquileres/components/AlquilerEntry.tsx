@@ -11,14 +11,16 @@ export function AlquilerEntry({
   onSelectAlquiler: () => void;
   isSelected: boolean;
 }) {
-  const selectedClass = isSelected ? "bg-red-200" : "bg-slate-50";
+  const selectedClass = isSelected
+    ? "bg-red-100 border-red-300 hover:bg-red-200"
+    : "bg-slate-50 border-slate-300 hover:bg-slate-200 hover:border-slate-400";
 
   return (
     <div
       key={alquiler.productora}
       className={`flex flex-col shrink-0 h-30 border p-4 rounded-xl shadow-md
-        font-body bg-slate-50 hover:bg-slate-200 hover:cursor-pointer
-        transition-colors duration-200 ${selectedClass}
+        font-body hover:cursor-pointer
+        transition-colors duration-100 ${selectedClass}
         `}
       onClick={onSelectAlquiler}
     >

@@ -1,4 +1,4 @@
-import { PAGES } from "../../stores/Page.context";
+import { PAGES } from "../stores";
 
 export function Navbar() {
   const pages = Object.entries(PAGES).map(([title, href]) => ({ title, href }));

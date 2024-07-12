@@ -1,5 +1,5 @@
 export type ProductoType = {
-  id?: number;
+  id?: string;
   nombre: string;
   unidadesMetroLineal: number;
   img: string;
