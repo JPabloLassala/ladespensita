@@ -18,7 +18,7 @@ export function AlquilerInput({
 
   return (
     <div className={`flex ${flexOrientation} w-1/2`}>
-      <label htmlFor={id} className={`font-body ${boldClass} text-lg ${labelRowClasses}`}>
+      <label htmlFor={id} className={`font-body ${boldClass} ${labelRowClasses}`}>
         {titulo}
       </label>
       <input readOnly id={id} className="border shadow p-2 rounded" value={value}></input>
