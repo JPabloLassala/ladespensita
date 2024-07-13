@@ -1,10 +1,10 @@
-import { DateInputField } from "../../Productos/DateInputField";
-import { SearchInputField } from "../../Productos/SearchInputField";
 import { useContext } from "react";
 import dayjs from "dayjs";
 import { ProductsContext } from "../../stores";
 import { FilterContext } from "../../stores/Filter.context";
 import { Button, Checkbox } from "../../Shared";
+import { SearchInputField } from "../SearchInputField";
+import { DateInputField } from "../DateInputField";
 
 export function FilterProducts() {
   const { setProductos, productos } = useContext(ProductsContext)!;

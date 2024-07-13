@@ -1,8 +1,5 @@
 import { ProductoType } from "../schemas";
-import { ProductoContainer } from "./UI/ProductoContainer";
-import { ProductoImage } from "./UI/ProductoImage";
-import { ProductoParagraph } from "./UI/ProductoParagraph";
-import { ProductoTitle } from "./UI/ProductoTitle";
+import { ProductoContainer, ProductoImage, ProductoParagraph, ProductoTitle } from "./UI";
 
 export function ProductoCard({
   producto,

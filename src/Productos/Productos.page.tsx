@@ -1,11 +1,9 @@
-import { FilterProducts } from "../Alquileres/components/FilterProducts";
 import { useContext, useEffect } from "react";
-import { ProductosPageContainer } from "./UI/ProductosPageContainer";
-import { ProductosListContainer } from "./UI/ProductosListContainer";
 import { ProductoCard } from "./ProductoCard";
 import { ProductsContext } from "../stores";
 import { useHttp } from "../hooks";
 import { ProductoType } from "../schemas";
+import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "./UI";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductsContext)!;

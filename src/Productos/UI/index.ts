@@ -1,3 +1,4 @@
+export * from "./FilterProducts";
 export * from "./ProductoContainer";
 export * from "./ProductoImage";
 export * from "./ProductoParagraph";
