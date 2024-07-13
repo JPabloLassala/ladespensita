@@ -1,7 +1,7 @@
-import { ReactPortal, useEffect, useRef } from "react";
+import { ReactPortal } from "react";
 import { createPortal } from "react-dom";
 
-export default function Modal({
+export function Modal({
   children,
   open,
   onClose,
@@ -11,23 +11,25 @@ export default function Modal({
   open: boolean;
   onClose: () => void;
   className?: string;
-}): ReactPortal {
-  const dialog = useRef<HTMLDialogElement>(null)!;
-
-  useEffect(() => {
-    const modal = dialog.current;
-
-    if (open) {
-      modal?.showModal();
-    }
-
-    return () => modal?.close();
-  }, [open]);
+}): ReactPortal | null {
+  if (!open) return null;
 
   return createPortal(
-    <dialog ref={dialog} className={`modal ${className}`} onClose={onClose}>
-      {children}
-    </dialog>,
+    <div
+      className={`
+        absolute bg-slate-500 bg-opacity-50 
+        top-0 bottom-0 left-0 right-0 z-auto
+        ${className}
+      `}
+      onClick={onClose}
+    >
+      <div
+        className="relative left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/4 bg-white rounded-md p-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </div>,
     document.getElementById("modal")!,
   );
 }
