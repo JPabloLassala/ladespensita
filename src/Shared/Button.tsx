@@ -11,7 +11,7 @@ export function Button({
 }) {
   return (
     <button
-      className={`btn btn-primary ml-4 rounded-lg px-5 py-2 ${className ?? ""}`}
+      className={`btn btn-primary rounded px-5 py-2 ${className ?? ""}`}
       onClick={onClick}
       type={isSubmit ? "submit" : "button"}
     >

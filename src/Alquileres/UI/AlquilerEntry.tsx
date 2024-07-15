@@ -21,7 +21,7 @@ export function AlquilerEntry({
 
   return (
     <div
-      className={`flex flex-row shrink-0 border p-4 rounded-xl shadow-md ${selectedClass} hover:cursor-pointer `}
+      className={`flex flex-row shrink-0 border p-4 rounded-xl gap-4 shadow-md ${selectedClass} hover:cursor-pointer `}
     >
       <div
         key={alquiler.productora}
@@ -29,6 +29,7 @@ export function AlquilerEntry({
         onClick={onSelectAlquiler}
       >
         <p className="text-2xl font-semibold">{alquiler.productora}</p>
+        <p className="text-xl">{alquiler.proyecto}</p>
         <p className="italic">{dateRange}</p>
         <p>
           Cantidad de productos: <span className="font-semibold">{alquiler.totalProductos}</span>

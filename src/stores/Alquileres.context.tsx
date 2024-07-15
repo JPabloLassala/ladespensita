@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 export type AlquileresContextType = {
   alquileres: Alquiler[];
   setAlquileres: (alquileres: Alquiler[]) => void;
+  deleteAlquiler: (id: string) => void;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
 };
@@ -53,12 +54,17 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     });
   };
 
+  const deleteAlquiler = (id: string) => {
+    setAlquileres(alquileres.filter((alquiler) => alquiler.id !== id));
+  };
+
   return (
     <AlquileresContext.Provider
       value={{
         alquileres,
-        setAlquileres,
         getSummary,
+        setAlquileres,
+        deleteAlquiler,
         getAlquileresBetweenDates,
       }}
     >

@@ -1,1 +1,1 @@
-export * from "./useHttp";
+export * from "./useHttpRepository";
