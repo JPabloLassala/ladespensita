@@ -1,4 +1,4 @@
-import { Modal } from "../Shared";
+import { Modal } from "@Shared";
 
 export function NewAlquiler() {
   return (

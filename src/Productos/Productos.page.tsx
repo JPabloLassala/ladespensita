@@ -1,8 +1,8 @@
 import { useContext, useEffect } from "react";
 import { ProductoCard } from "./ProductoCard";
-import { ProductsContext } from "../stores";
-import { useHttp } from "../hooks";
-import { ProductoType } from "../schemas";
+import { ProductsContext } from "@stores";
+import { useHttp } from "@hooks";
+import { ProductoType } from "@schemas";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "./UI";
 
 export function ProductosPage() {

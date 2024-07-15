@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { AlquileresContext } from "../stores/Alquileres.context";
 import dayjs from "dayjs";
-import { Alquiler } from "../schemas";
-import { useHttp } from "../hooks";
-import { Modal } from "../Shared";
 import {
   AlquilerDetailsContainer,
   AlquilerEntry,
   AlquilerEntryContainer,
   AlquilerNoneSelected,
 } from "./UI";
+import { DeleteAlquilerModal } from "./DeleteAlquilerModal";
+import { AlquileresContext } from "@stores";
+import { Alquiler } from "@schemas";
+import { useHttp } from "@hooks";
 
 export function Alquileres() {
   const { getSummary, alquileres, setAlquileres } = useContext(AlquileresContext)!;

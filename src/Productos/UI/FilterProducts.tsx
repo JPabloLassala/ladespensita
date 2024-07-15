@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import dayjs from "dayjs";
-import { ProductsContext } from "../../stores";
-import { FilterContext } from "../../stores/Filter.context";
-import { Button, Checkbox } from "../../Shared";
-import { SearchInputField } from "../SearchInputField";
+import { FilterContext, ProductsContext } from "@stores";
+import { SearchInputField } from "@Productos/SearchInputField";
+import { Button, Checkbox } from "@Shared";
 import { DateInputField } from "../DateInputField";
 
 export function FilterProducts() {

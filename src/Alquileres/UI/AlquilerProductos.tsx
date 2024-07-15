@@ -1,4 +1,4 @@
-import { AlquilerProducto } from "../../schemas";
+import { AlquilerProducto } from "@schemas";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
 
 export function AlquilerProductos({

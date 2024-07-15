@@ -1,4 +1,4 @@
-import { ProductoType } from "../schemas";
+import { ProductoType } from "@schemas";
 import { ProductoContainer, ProductoImage, ProductoParagraph, ProductoTitle } from "./UI";
 
 export function ProductoCard({

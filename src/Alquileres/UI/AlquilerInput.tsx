@@ -1,4 +1,4 @@
-import { convertToCamelCase } from "../../utils/convertCase";
+import { convertToCamelCase } from "@utils";
 
 export function AlquilerInput({
   titulo,

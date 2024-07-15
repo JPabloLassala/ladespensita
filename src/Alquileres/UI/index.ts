@@ -5,4 +5,3 @@ export * from "./AlquilerInput";
 export * from "./AlquilerNoneSelected";
 export * from "./AlquilerProductoItem";
 export * from "./AlquilerProductos";
-export * from "./FilterProducts";

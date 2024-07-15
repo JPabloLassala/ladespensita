@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { AlquilerInput } from "./AlquilerInput";
 import { useState } from "react";
-import { Alquiler, AlquilerProducto } from "../../schemas";
+import { Alquiler, AlquilerProducto } from "@schemas";
+import { AlquilerInput } from "./AlquilerInput";
 import { AlquilerProductos } from "./AlquilerProductos";
 
 export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquiler: Alquiler }) {

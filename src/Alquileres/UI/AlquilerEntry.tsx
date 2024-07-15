@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AlquilerSummaryItem } from "../../schemas";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { AlquilerSummaryItem } from "@schemas";
 
 export function AlquilerEntry({
   alquiler,
