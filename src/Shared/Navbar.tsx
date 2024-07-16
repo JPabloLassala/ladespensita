@@ -1,4 +1,5 @@
 import { PAGES } from "@stores";
+import { NavLink } from "react-router-dom";
 
 export function Navbar() {
   const pages = Object.entries(PAGES).map(([title, href]) => ({ title, href }));
@@ -8,12 +9,12 @@ export function Navbar() {
       <ul className="flex flex-row gap-3">
         {pages.map((section) => (
           <li key={section.href}>
-            <a
+            <NavLink
               className="flex items-center py-2 uppercase text-gray-600 hover:text-gray-900 lg:px-3"
-              href={section.href}
+              to={section.href}
             >
               {section.title}
-            </a>
+            </NavLink>
           </li>
         ))}
       </ul>

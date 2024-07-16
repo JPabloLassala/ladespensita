@@ -21,11 +21,15 @@ export function AlquilerEntry({
 
   return (
     <div
-      className={`flex flex-row shrink-0 border p-4 rounded-xl gap-4 shadow-md ${selectedClass} hover:cursor-pointer `}
+      className={`
+        flex flex-row shrink-0 border p-4 rounded-xl
+        gap-4 shadow-md ${selectedClass} hover:cursor-pointer
+        [transition:color_0.2s,transform_0.5s]
+      `}
     >
       <div
         key={alquiler.productora}
-        className="flex flex-col font-body transition-colors duration-100 grow"
+        className="flex flex-col font-body transition-colors duration-1000 grow"
         onClick={onSelectAlquiler}
       >
         <p className="text-2xl font-semibold">{alquiler.productora}</p>

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { ProductoCard } from "./ProductoCard";
-import { ProductsContext } from "@stores";
+import { FilterContextProvider, ProductsContext } from "@stores";
 import { ProductoType } from "@schemas";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "./UI";
 import { useHttpRepository } from "@hooks";
@@ -16,13 +16,15 @@ export function ProductosPage() {
   }, [data]);
 
   return (
-    <ProductosPageContainer>
-      <FilterProducts />
-      <ProductosListContainer>
-        {productos.map((p) => (
-          <ProductoCard key={p.id} producto={p} dimmed={false} disabled={false} />
-        ))}
-      </ProductosListContainer>
-    </ProductosPageContainer>
+    <FilterContextProvider>
+      <ProductosPageContainer>
+        <FilterProducts />
+        <ProductosListContainer>
+          {productos.map((p) => (
+            <ProductoCard key={p.id} producto={p} dimmed={false} disabled={false} />
+          ))}
+        </ProductosListContainer>
+      </ProductosPageContainer>
+    </FilterContextProvider>
   );
 }
