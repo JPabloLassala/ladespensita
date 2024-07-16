@@ -1,18 +1,20 @@
-import { useContext, useEffect } from "react";
-import { AlquilerDetailsContainer } from "./UI";
-import { AlquileresContext } from "@stores";
-import { Alquiler } from "@schemas";
-import { useHttpRepository } from "@hooks";
+import { Outlet } from "react-router-dom";
 import { AlquilerList } from "./AlquilerList";
+import { useContext, useEffect } from "react";
+import { AlquileresContext } from "@stores";
+import { useHttpRepository } from "@hooks";
+import { Alquiler } from "@schemas";
 
-export function Alquileres() {
-  const { getSummary, alquileres, setAlquileres, deleteAlquiler } = useContext(AlquileresContext)!;
+export function AlquileresRoot() {
+  const { getSummary, setAlquileres, deleteAlquiler } = useContext(AlquileresContext)!;
   const { data: alquilerData, sendDelete } = useHttpRepository<Alquiler>(
     "http://localhost:3000/alquileres",
     {},
     [],
   );
+
   const handleDelete = (id: string) => {
+    console.log("Deleting alquiler with id", id);
     deleteAlquiler(id);
     sendDelete(id);
   };
@@ -24,7 +26,7 @@ export function Alquileres() {
   return (
     <main className="flex flex-row overflow-y-auto w-full">
       <AlquilerList onDeleteAlquiler={handleDelete} getSummary={getSummary} />
-      {alquileres.length > 0 && <AlquilerDetailsContainer />}
+      <Outlet />
     </main>
   );
 }

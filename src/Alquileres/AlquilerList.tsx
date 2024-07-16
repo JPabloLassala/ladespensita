@@ -1,19 +1,15 @@
 import { useState } from "react";
 import { DeleteAlquilerModal } from "./DeleteAlquilerModal";
 import { AlquilerEntry, AlquilerEntryContainer } from "./UI";
-import { Alquiler, AlquilerSummaryItem } from "@schemas";
+import { AlquilerSummaryItem } from "@schemas";
 import dayjs from "dayjs";
 
 export function AlquilerList({
-  onSelectAlquiler,
   onDeleteAlquiler,
   getSummary,
-  selectedAlquiler,
 }: {
-  onSelectAlquiler: (id: string) => void;
   onDeleteAlquiler: (id: string) => void;
   getSummary: () => AlquilerSummaryItem[];
-  selectedAlquiler: Alquiler | undefined;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
@@ -47,9 +43,9 @@ export function AlquilerList({
           <AlquilerEntry
             key={alquiler.id}
             alquiler={alquiler}
-            isSelected={selectedAlquiler?.id === alquiler.id}
+            // isSelected={selectedAlquiler?.id === alquiler.id}
+            isSelected={false}
             dateRange={`${dayjs(alquiler.since).format("DD/MM/YYYY")} - ${dayjs(alquiler.until).format("DD/MM/YYYY")}`}
-            onSelectAlquiler={() => onSelectAlquiler(alquiler.id)}
             onDeleteAlquiler={() => handleOpenConfirmation(alquiler)}
           />
         ))}

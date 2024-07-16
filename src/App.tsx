@@ -1,7 +1,8 @@
+import { AlquilerDetailsContainer, AlquilerIDLoader, AlquilerNoneSelected } from "@Alquileres/UI";
+import { RootPage } from "@Shared/Root.page";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ProductosPage } from "./Productos/Productos.page";
-import { Alquileres } from "./Alquileres/Alquileres.page";
-import { RootPage } from "@Shared/Root.page";
+import { AlquileresRoot } from "@Alquileres/AlquileresRoot.page";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +11,22 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ProductosPage /> },
       { path: "/productos", element: <ProductosPage /> },
-      { path: "/alquileres", element: <Alquileres /> },
+      {
+        path: "/alquileres",
+        element: <AlquileresRoot />,
+        children: [
+          {
+            index: true,
+            element: <AlquilerNoneSelected />,
+          },
+          {
+            path: ":alquilerId",
+            id: "alquiler-detail",
+            children: [{ index: true, element: <AlquilerDetailsContainer /> }],
+            loader: AlquilerIDLoader,
+          },
+        ],
+      },
     ],
   },
 ]);

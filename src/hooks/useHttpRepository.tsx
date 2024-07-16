@@ -119,6 +119,26 @@ export function useHttpRepository<T extends { id?: string }>(
     [url, configMemo],
   );
 
+  const getAlquiler = useCallback(
+    async function getAlquiler(id: string) {
+      setIsLoading(true);
+
+      try {
+        const resData = await sendHttpRequest(`${url}/${id}`, {
+          method: "GET",
+        });
+        setData(resData);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message || "Something went wrong");
+        }
+      }
+
+      setIsLoading(false);
+    },
+    [url],
+  );
+
   useEffect(() => {
     if (config && (config.method === "GET" || !config.method)) {
       sendRequest();
@@ -133,6 +153,7 @@ export function useHttpRepository<T extends { id?: string }>(
     sendCreate,
     sendDelete,
     sendUpdate,
+    getAlquiler,
     sendList,
     clearData,
   };

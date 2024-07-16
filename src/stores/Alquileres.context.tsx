@@ -6,6 +6,7 @@ export type AlquileresContextType = {
   alquileres: Alquiler[];
   setAlquileres: (alquileres: Alquiler[]) => void;
   deleteAlquiler: (id: string) => void;
+  getAlquiler: (id: string) => Alquiler | undefined;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
 };
@@ -58,11 +59,16 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     setAlquileres(alquileres.filter((alquiler) => alquiler.id !== id));
   };
 
+  const getAlquiler = (id: string) => {
+    return alquileres.find((alquiler) => alquiler.id === id);
+  };
+
   return (
     <AlquileresContext.Provider
       value={{
         alquileres,
         getSummary,
+        getAlquiler,
         setAlquileres,
         deleteAlquiler,
         getAlquileresBetweenDates,

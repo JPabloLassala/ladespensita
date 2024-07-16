@@ -1,10 +1,26 @@
 import dayjs from "dayjs";
-import { useState } from "react";
-import { Alquiler, AlquilerProducto } from "@schemas";
+import { useEffect, useState } from "react";
+import { AlquilerProducto } from "@schemas";
 import { AlquilerInput } from "./AlquilerInput";
 import { AlquilerProductos } from "./AlquilerProductos";
+import { useRouteLoaderData } from "react-router-dom";
+import { useHttpRepository } from "@hooks";
 
-export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquiler: Alquiler }) {
+export function AlquilerDetailsContainer() {
+  const { id } = useRouteLoaderData("alquiler-detail") as { id: string };
+  const [alquiler, setAlquiler] = useState<AlquilerProducto>();
+  const { getAlquiler } = useHttpRepository<AlquilerProducto>(
+    `http://localhost:3000/alquileres/${id}`,
+    {},
+    [],
+  );
+
+  useEffect(() => {
+    if (data) {
+      setAlquiler(data);
+    }
+  }, [getAlquiler]);
+
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProducto | undefined>(undefined);
   const fechaInicio = dayjs(selectedAlquiler?.fechaAlquiler?.inicio || "1/1/1991").format(
     "DD/MM/YYYY",
@@ -47,4 +63,9 @@ export function AlquilerDetailsContainer({ selectedAlquiler }: { selectedAlquile
       </div>
     </div>
   );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function AlquilerIDLoader({ params }: any) {
+  return { id: params.alquilerId };
 }
