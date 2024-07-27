@@ -47,11 +47,14 @@ export function Alquileres() {
         onDeleteAlquiler={handleDelete}
         getSummary={getSummary}
         selectedAlquiler={selectedAlquiler}
+        onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
+        onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
-      {alquileres.length > 0 && selectedAlquiler && (
+      {selectedAlquiler && !isCreatingNewAlquiler && (
         <AlquilerDetailsContainer selectedAlquiler={selectedAlquiler} />
       )}
-      {!selectedAlquiler && <AlquilerNoneSelected />}
+      {isCreatingNewAlquiler && <NewAlquilerForm newAlquiler={newAlquiler} />}
+      {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
     </main>
   );
 }

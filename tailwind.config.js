@@ -10,6 +10,9 @@ export default {
       screens: {
         "3xl": "1843px",
       },
+      transitionProperty: {
+        "max-height": "max-height",
+      },
     },
   },
   plugins: [],

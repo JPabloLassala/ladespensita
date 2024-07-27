@@ -4,7 +4,9 @@ import dayjs from "dayjs";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
-  setAlquileres: (alquileres: Alquiler[]) => void;
+  newAlquiler: Partial<Alquiler>;
+  setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
+  setNewAlquiler: React.Dispatch<React.SetStateAction<Partial<Alquiler>>>;
   deleteAlquiler: (id: string) => void;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
@@ -14,6 +16,7 @@ export const AlquileresContext = createContext<AlquileresContextType | null>(nul
 
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
+  const [newAlquiler, setNewAlquiler] = useState<Partial<Alquiler>>({});
 
   const getSummary = (): AlquilerSummaryItem[] => {
     return alquileres.map((alquiler) => {
@@ -65,6 +68,8 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         getSummary,
         setAlquileres,
         deleteAlquiler,
+        newAlquiler,
+        setNewAlquiler,
         getAlquileresBetweenDates,
       }}
     >

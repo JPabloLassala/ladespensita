@@ -2,18 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./main.css";
-import { PageContextProvider } from "./stores/Page.context";
-import { ProductsContextProvider } from "./stores/Products.context";
-import { AlquileresContextProvider } from "./stores/Alquileres.context";
+import { AppStateProvider } from "@stores/AppState.context.tsx";
+import { AlquileresContextProvider, ProductsContextProvider } from "@stores";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <PageContextProvider>
+    <AppStateProvider>
       <AlquileresContextProvider>
         <ProductsContextProvider>
           <App />
         </ProductsContextProvider>
       </AlquileresContextProvider>
-    </PageContextProvider>
+    </AppStateProvider>
   </React.StrictMode>,
 );
