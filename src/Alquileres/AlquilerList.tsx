@@ -18,19 +18,19 @@ export function AlquilerList({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
 
-  const handleCloseModal = () => {
+  function handleCloseModal() {
     setIsModalOpen(false);
-  };
-  const handleDeleteAlquiler = (id: string) => {
+  }
+  function handleDeleteAlquiler(id: string) {
     console.log("Deleting alquiler with id", id);
 
     handleCloseModal();
     onDeleteAlquiler(id);
-  };
-  const handleOpenConfirmation = (alquiler: AlquilerSummaryItem) => {
+  }
+  function handleOpenConfirmation(alquiler: AlquilerSummaryItem) {
     setIsModalOpen(true);
     setSelectedAlquilerForDelete(alquiler);
-  };
+  }
 
   return (
     <>

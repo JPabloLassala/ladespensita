@@ -1,26 +1,40 @@
 import { useContext, useEffect, useState } from "react";
 import { AlquilerDetailsContainer, AlquilerNoneSelected } from "./UI";
-import { AlquileresContext } from "@stores";
+import { AlquileresContext, APP_STATE, AppStateContext } from "@stores";
 import { Alquiler } from "@schemas";
 import { useHttpRepository } from "@hooks";
 import { AlquilerList } from "./AlquilerList";
+import { NewAlquilerForm } from "./UI/NewAlquilerForm";
 
 export function Alquileres() {
-  const { getSummary, alquileres, setAlquileres, deleteAlquiler } = useContext(AlquileresContext)!;
-  const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler>();
+  const { getSummary, alquileres, setAlquileres, deleteAlquiler, newAlquiler } =
+    useContext(AlquileresContext)!;
+  const { setAppState, appState } = useContext(AppStateContext)!;
+  const [selectedAlquiler, setSelectedAlquiler] = useState<Partial<Alquiler>>();
+  const isCreatingNewAlquiler = appState === APP_STATE.creating;
   const { data: alquilerData, sendDelete } = useHttpRepository<Alquiler>(
     "http://localhost:3000/alquileres",
     {},
     [],
   );
-  const handleSelectAlquiler = (id: string) => {
+
+  function handleSelectAlquiler(id: string) {
+    setAppState(APP_STATE.loaded);
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
-  };
-  const handleDelete = (id: string) => {
+  }
+  function handleDelete(id: string) {
     console.log("Deleting alquiler with id", id);
     deleteAlquiler(id);
     sendDelete(id);
-  };
+  }
+  function handleStartCreateNewAlquiler() {
+    setAppState(APP_STATE.creating);
+    setSelectedAlquiler(undefined);
+  }
+  function handleCancelCreateNewAlquiler() {
+    setAppState(APP_STATE.loaded);
+    setSelectedAlquiler(undefined);
+  }
 
   useEffect(() => {
     setAlquileres(alquilerData);

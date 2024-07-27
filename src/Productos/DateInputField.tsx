@@ -17,10 +17,10 @@ export function DateInputField({
   const [, setTmpDate] = useState<Dayjs | undefined>(undefined);
   // const datePickerRef = useRef<HTMLInputElement>(null);
   const enableInputRef = useRef<HTMLInputElement>(null);
-  const setDefaultDate = () => {};
-  const handleClearInput = () => {};
+  function setDefaultDate() {}
+  function handleClearInput() {}
 
-  const handleSetOrUnsetDate = () => {
+  function handleSetOrUnsetDate() {
     if (!enableInputRef.current) return;
 
     if (enableInputRef.current.checked) {
@@ -28,7 +28,7 @@ export function DateInputField({
     } else {
       setTmpDate(undefined);
     }
-  };
+  }
 
   return (
     <div className="flex flex-col">
