@@ -39,3 +39,7 @@ export type AlquilerSummaryItem = {
   until: string;
   totalProductos: number;
 };
+
+export type PartialAlquiler = Omit<Partial<Alquiler>, "fechaAlquiler"> & {
+  fechaAlquiler?: { inicio?: Date; fin?: Date };
+};

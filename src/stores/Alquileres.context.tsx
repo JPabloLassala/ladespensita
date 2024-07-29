@@ -1,12 +1,12 @@
 import { ReactNode, createContext, useState } from "react";
-import { Alquiler, AlquilerSummaryItem } from "../schemas/Alquiler";
+import { Alquiler, AlquilerSummaryItem, PartialAlquiler } from "../schemas/Alquiler";
 import dayjs from "dayjs";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
-  newAlquiler: Partial<Alquiler>;
+  newAlquiler: PartialAlquiler;
   setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
-  setNewAlquiler: React.Dispatch<React.SetStateAction<Partial<Alquiler>>>;
+  setNewAlquiler: React.Dispatch<React.SetStateAction<PartialAlquiler>>;
   deleteAlquiler: (id: string) => void;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
@@ -16,7 +16,7 @@ export const AlquileresContext = createContext<AlquileresContextType | null>(nul
 
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
-  const [newAlquiler, setNewAlquiler] = useState<Partial<Alquiler>>({});
+  const [newAlquiler, setNewAlquiler] = useState<PartialAlquiler>({});
 
   const getSummary = (): AlquilerSummaryItem[] => {
     return alquileres.map((alquiler) => {
