@@ -7,8 +7,7 @@ import { AlquilerList } from "./AlquilerList";
 import { NewAlquilerForm } from "./UI/NewAlquilerForm";
 
 export function Alquileres() {
-  const { getSummary, alquileres, setAlquileres, deleteAlquiler, newAlquiler } =
-    useContext(AlquileresContext)!;
+  const { getSummary, alquileres, setAlquileres, deleteAlquiler } = useContext(AlquileresContext)!;
   const { setAppState, appState } = useContext(AppStateContext)!;
   const [selectedAlquiler, setSelectedAlquiler] = useState<Partial<Alquiler>>();
   const isCreatingNewAlquiler = appState === APP_STATE.creating;
@@ -53,7 +52,7 @@ export function Alquileres() {
       {selectedAlquiler && !isCreatingNewAlquiler && (
         <AlquilerDetailsContainer selectedAlquiler={selectedAlquiler} />
       )}
-      {isCreatingNewAlquiler && <NewAlquilerForm newAlquiler={newAlquiler} />}
+      {isCreatingNewAlquiler && <NewAlquilerForm />}
       {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
     </main>
   );
