@@ -1,4 +1,4 @@
-import { PAGES } from "@stores";
+import { PAGES } from "@/Common";
 import { NavLink } from "react-router-dom";
 
 export function Navbar() {

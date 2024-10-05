@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ProductosPage } from "./Productos/Productos.page";
-import { Alquileres } from "./Alquileres/Alquileres.page";
-import { RootPage } from "@Shared/Root.page";
+import { ProductosPage } from "./Productos/pages/Productos.page";
+import { RootPage } from "./Shared/Root.page";
+import { AlquileresPage } from "./Alquileres";
 
 const router = createBrowserRouter([
   {
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ProductosPage /> },
       { path: "/productos", element: <ProductosPage /> },
-      { path: "/alquileres", element: <Alquileres /> },
+      { path: "/alquileres", element: <AlquileresPage /> },
     ],
   },
 ]);
