@@ -1,4 +1,8 @@
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AlquilerProducto } from "@schemas";
+import { AlquileresContext } from "@stores";
+import { useContext } from "react";
 
 export function AlquilerProductoItem({
   producto,
@@ -9,6 +13,7 @@ export function AlquilerProductoItem({
   onSelectProducto: (apId: AlquilerProducto) => void;
   isSelected: boolean;
 }) {
+  const { alquileres } = useContext(AlquileresContext)!;
   const selectedClass = isSelected
     ? "bg-red-100 border-red-300 hover:bg-red-200"
     : "bg-slate-50 border-slate-300 hover:bg-slate-200 hover:border-slate-400";
@@ -27,9 +32,25 @@ export function AlquilerProductoItem({
         className="object-contain w-20 rounded-md mr-2"
       />
       <div className="w-full">
-        <div className="">
+        <div className="flex flex-row justify-between">
           <p className="font-bold text-lg">{producto.producto.nombre}</p>
-          <p>Cantidad: {producto.cantidad}</p>
+          <div className="h-8 flex flex-row borde items-center shadow-lg rounded-lg border border-slate-300 bg-white divide-x">
+            <div
+              className="w-6 flex items-center justify-center h-full"
+              onClick={() => onIncreaseQuantity(producto.producto.id as string)}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
+            <div className="w-6 flex items-center justify-center border-slate-300">
+              {producto.cantidad}
+            </div>
+            <div
+              className="w-6 flex items-center justify-center h-full"
+              onClick={() => onDecreaseQuantity(producto.producto.id as string)}
+            >
+              <FontAwesomeIcon icon={faMinus} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
