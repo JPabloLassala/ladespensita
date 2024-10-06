@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { DeleteAlquilerModal } from "../pages/DeleteAlquilerModal";
+import { useContext, useState } from "react";
+import { DeleteAlquilerModal } from "../pages/DeleteAlquilerModal.page";
 import { AlquilerEntry, AlquilerListContainer, NewAlquilerEntry } from "./UI";
 import dayjs from "dayjs";
 import { Alquiler, AlquilerSummaryItem } from "../entities";
+import { AlquileresContext } from "../stores";
 
 export function AlquilerList({
   onSelectAlquiler,
@@ -21,6 +22,7 @@ export function AlquilerList({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
+  const { newAlquiler } = useContext(AlquileresContext)!;
 
   function handleCloseModal() {
     setIsModalOpen(false);
@@ -47,7 +49,10 @@ export function AlquilerList({
         />
       )}
       <AlquilerListContainer onStartCreateNewAlquiler={onStartCreateNewAlquiler}>
-        <NewAlquilerEntry onCancelCreateAlquiler={onCancelCreateNewAlquiler} />
+        <NewAlquilerEntry
+          onCancelCreateAlquiler={onCancelCreateNewAlquiler}
+          newAlquiler={newAlquiler}
+        />
         {getSummary().map((alquiler) => (
           <AlquilerEntry
             key={alquiler.id}
