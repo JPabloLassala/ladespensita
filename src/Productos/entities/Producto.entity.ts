@@ -1,5 +1,5 @@
 export class ProductoEntity {
-  id?: string;
+  id: number;
   nombre: string;
   unidadesMetroLineal: number;
   img: string;

@@ -5,10 +5,11 @@ import { ProductoEntity } from "../entities";
 import { useHttpRepository } from "@/Common";
 import { FilterContextProvider } from "@/Common";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "../components";
+import { getProductoRepository } from "../repository";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductosContext)!;
-  const { data } = useHttpRepository<ProductoEntity>("http://127.0.0.1:3000/productos", {}, []);
+  const { data } = useHttpRepository<ProductoEntity>([], getProductoRepository());
 
   useEffect(() => {
     if (data) {

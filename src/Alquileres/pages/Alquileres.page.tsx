@@ -9,23 +9,24 @@ import {
   NewAlquilerForm,
 } from "../components";
 import { useHttpRepository } from "@/Common";
+import { getAlquileresRepository } from "../repository";
 
 export function AlquileresPage() {
-  const { getSummary, alquileres, setAlquileres, deleteAlquiler } = useContext(AlquileresContext)!;
+  const { getSummary, alquileres, setAlquileres, deleteAlquiler, newAlquiler, setNewAlquiler } =
+    useContext(AlquileresContext)!;
   const { setAppState, appState } = useContext(AppStateContext)!;
   const [selectedAlquiler, setSelectedAlquiler] = useState<Partial<Alquiler>>();
   const isCreatingNewAlquiler = appState === APP_STATE.creating;
   const { data: alquilerData, sendDelete } = useHttpRepository<Alquiler>(
-    "http://localhost:3000/alquileres",
-    {},
     [],
+    getAlquileresRepository(),
   );
 
-  function handleSelectAlquiler(id: string) {
+  function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
   }
-  function handleDelete(id: string) {
+  function handleDelete(id: number) {
     console.log("Deleting alquiler with id", id);
     deleteAlquiler(id);
     sendDelete(id);

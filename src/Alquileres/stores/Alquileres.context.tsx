@@ -8,10 +8,10 @@ export type AlquileresContextType = {
   newAlquiler: PartialAlquiler;
   setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
   setNewAlquiler: React.Dispatch<React.SetStateAction<PartialAlquiler>>;
-  deleteAlquiler: (id: string) => void;
+  deleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
-  increaseAlquilerProducto: (idAlquiler: string, productoId: string) => void;
+  increaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
 };
 
 export const AlquileresContext = createContext<AlquileresContextType | null>(null);
@@ -59,11 +59,11 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     });
   };
 
-  const deleteAlquiler = (id: string) => {
+  const deleteAlquiler = (id: number) => {
     setAlquileres(alquileres.filter((alquiler) => alquiler.id !== id));
   };
 
-  const increaseAlquilerProducto = (idAlquiler: string, productoId: string) => {
+  const increaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
     const alquiler = alquileres.find((a) => a.id === idAlquiler);
     if (!alquiler) {
       return;

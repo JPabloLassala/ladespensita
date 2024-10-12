@@ -13,8 +13,8 @@ export function AlquilerList({
   onStartCreateNewAlquiler,
   onCancelCreateNewAlquiler,
 }: {
-  onSelectAlquiler: (id: string) => void;
-  onDeleteAlquiler: (id: string) => void;
+  onSelectAlquiler: (id: number) => void;
+  onDeleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
   selectedAlquiler: Partial<Alquiler> | undefined;
   onStartCreateNewAlquiler: () => void;
@@ -27,7 +27,7 @@ export function AlquilerList({
   function handleCloseModal() {
     setIsModalOpen(false);
   }
-  function handleDeleteAlquiler(id: string) {
+  function handleDeleteAlquiler(id: number) {
     console.log("Deleting alquiler with id", id);
 
     handleCloseModal();

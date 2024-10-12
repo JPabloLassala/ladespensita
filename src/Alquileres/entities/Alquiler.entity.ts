@@ -1,7 +1,7 @@
 import { AlquilerProductoEntity } from "./AlquilerProducto.entity";
 
 export type Alquiler = {
-  id: string;
+  id: number;
   productora: string;
   proyecto: string;
   productos: AlquilerProductoEntity[];
@@ -15,7 +15,7 @@ export type Alquiler = {
 };
 
 export type AlquilerSummaryItem = {
-  id: string;
+  id: number;
   productora: string;
   proyecto: string;
   since: string;
