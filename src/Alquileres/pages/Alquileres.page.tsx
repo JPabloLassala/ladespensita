@@ -57,7 +57,9 @@ export function AlquileresPage() {
       {selectedAlquiler && !isCreatingNewAlquiler && (
         <AlquilerDetailsContainer selectedAlquiler={selectedAlquiler} />
       )}
-      {isCreatingNewAlquiler && <NewAlquilerForm />}
+      {isCreatingNewAlquiler && (
+        <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
+      )}
       {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
     </main>
   );

@@ -1,18 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
 import dayjs from "dayjs";
-import { APP_STATE, AppStateContext } from "@/Common";
 import { PartialAlquiler } from "@/Alquileres/entities";
+import { APP_STATE } from "@/Common";
 
 export function NewAlquilerEntry({
   onCancelCreateAlquiler,
   newAlquiler,
+  appState,
 }: {
   onCancelCreateAlquiler: () => void;
   newAlquiler: PartialAlquiler;
+  appState: string;
 }) {
-  const { appState } = useContext(AppStateContext)!;
   let fechaInicio = "";
   let fechaFin = "";
   if (newAlquiler.fechaAlquiler?.inicio) {

@@ -1,12 +1,16 @@
 import { AlquilerInput } from "./AlquilerInput";
 import { AlquilerProductos } from "./AlquilerProductos";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AlquilerDateInput } from "./AlquilerDateInput";
-import { AlquileresContext } from "@/Alquileres/stores";
-import { AlquilerProductoEntity } from "@/Alquileres/entities";
+import { AlquilerProductoEntity, PartialAlquiler } from "@/Alquileres/entities";
 
-export function NewAlquilerForm() {
-  const { newAlquiler, setNewAlquiler } = useContext(AlquileresContext)!;
+export function NewAlquilerForm({
+  newAlquiler,
+  setNewAlquiler,
+}: {
+  newAlquiler: PartialAlquiler;
+  setNewAlquiler: React.Dispatch<React.SetStateAction<PartialAlquiler>>;
+}) {
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
