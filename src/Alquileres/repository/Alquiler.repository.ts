@@ -8,8 +8,8 @@ export const getAlquileresRepository = (): {
   remove: (id: number) => Promise<void>;
 } => {
   const get = async (id: number): Promise<Alquiler> => {
-    const base_url = process.env.BASE_URL;
-    const response = await fetch(`http://${base_url}/alquiler/${id}`, {
+    const apiHost = import.meta.env.VITE_API_HOST;
+    const response = await fetch(`${apiHost}/alquiler/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -22,8 +22,8 @@ export const getAlquileresRepository = (): {
   };
 
   const list = async (): Promise<Alquiler[]> => {
-    const base_url = process.env.BASE_URL;
-    const response = await fetch(`http://${base_url}/alquiler`, {
+    const apiHost = import.meta.env.VITE_API_HOST;
+    const response = await fetch(`${apiHost}/alquiler`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,8 +36,8 @@ export const getAlquileresRepository = (): {
   };
 
   const create = async (data: Omit<Alquiler, "id">): Promise<Alquiler> => {
-    const base_url = process.env.BASE_URL;
-    const response = await fetch(`http://${base_url}/alquiler`, {
+    const apiHost = import.meta.env.VITE_API_HOST;
+    const response = await fetch(`${apiHost}/alquiler`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,8 +51,8 @@ export const getAlquileresRepository = (): {
   };
 
   const update = async (data: Partial<Alquiler>): Promise<Alquiler> => {
-    const base_url = process.env.BASE_URL;
-    const response = await fetch(`http://${base_url}/alquiler/${data.id}`, {
+    const apiHost = import.meta.env.VITE_API_HOST;
+    const response = await fetch(`${apiHost}/alquiler/${data.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -66,8 +66,8 @@ export const getAlquileresRepository = (): {
   };
 
   const remove = async (id: number): Promise<void> => {
-    const base_url = process.env.BASE_URL;
-    await fetch(`http://${base_url}/alquiler/${id}`, {
+    const apiHost = import.meta.env.VITE_API_HOST;
+    await fetch(`${apiHost}/alquiler/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
