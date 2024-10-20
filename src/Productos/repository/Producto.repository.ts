@@ -1,3 +1,4 @@
+import Cookies from "universal-cookie";
 import { ProductoEntity } from "../entities";
 
 export const getProductoRepository = (): {
@@ -22,10 +23,13 @@ export const getProductoRepository = (): {
   };
 
   const list = async (): Promise<ProductoEntity[]> => {
-    const base_url = process.env.BASE_URL;
-    const response = await fetch(`http://${base_url}/producto`, {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const apiHost = import.meta.env.VITE_API_HOST;
+    const response = await fetch(`${apiHost}/producto`, {
       method: "GET",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
