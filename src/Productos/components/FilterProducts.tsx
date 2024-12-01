@@ -68,7 +68,7 @@ export function FilterProducts() {
         checked={showUnavailable}
         onCheck={handleShowUnavailable}
       />
-      <div className="mt-5 flex items-center text-white">
+      <div className="mt-5 flex items-center text-white gap-2">
         <Button label="Filtrar" isSubmit className="bg-blue-600 hover:bg-blue-500" />
         <Button
           onClick={resetProducts}

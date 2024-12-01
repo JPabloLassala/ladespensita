@@ -1,3 +1,4 @@
+import Cookies from "universal-cookie";
 import { Alquiler } from "../entities";
 
 export const getAlquileresRepository = (): {
@@ -7,13 +8,18 @@ export const getAlquileresRepository = (): {
   update: (data: Partial<Alquiler>) => Promise<Alquiler>;
   remove: (id: number) => Promise<void>;
 } => {
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const getHeaders = () => ({
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  });
+
   const get = async (id: number): Promise<Alquiler> => {
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/alquiler/${id}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
     });
 
     const alquiler = await response.json();
@@ -25,9 +31,7 @@ export const getAlquileresRepository = (): {
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/alquiler`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
     });
 
     const alquileres = await response.json();
@@ -39,9 +43,7 @@ export const getAlquileresRepository = (): {
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/alquiler`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -54,9 +56,7 @@ export const getAlquileresRepository = (): {
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/alquiler/${data.id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -69,9 +69,7 @@ export const getAlquileresRepository = (): {
     const apiHost = import.meta.env.VITE_API_HOST;
     await fetch(`${apiHost}/alquiler/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeaders(),
     });
   };
 

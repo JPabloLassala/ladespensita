@@ -4,6 +4,7 @@ import { RootPage } from "./Shared/Root.page";
 import { AlquileresPage } from "./Alquileres";
 import { PrivateRoute } from "./Auth/components/PrivateRoute";
 import { LoginPage } from "./Auth";
+import "@mantine/core/styles.css";
 
 const router = createBrowserRouter([
   {

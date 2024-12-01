@@ -9,13 +9,17 @@ import { getProductoRepository } from "../repository";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductosContext)!;
-  const { data } = useHttpRepository<ProductoEntity>([], getProductoRepository());
+  const { data, sendList } = useHttpRepository<ProductoEntity>([], getProductoRepository());
 
   useEffect(() => {
-    if (data) {
-      setProductos(data);
-    }
+    console.log("setting productos");
+    setProductos(data);
   }, [data]);
+
+  useEffect(() => {
+    console.log("sending list");
+    sendList();
+  }, []);
 
   return (
     <FilterContextProvider>

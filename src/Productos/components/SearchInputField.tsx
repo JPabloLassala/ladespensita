@@ -49,8 +49,8 @@ export function SearchInputField({
       <div className="mb-1 flex flex-row items-center" onClick={onToggleSearch}>
         <input
           ref={enableInputRef}
-          defaultChecked={searchEnabled}
           checked={searchEnabled}
+          onChange={onToggleSearch}
           id={`enable${id}`}
           name={`enable${id}`}
           type="checkbox"

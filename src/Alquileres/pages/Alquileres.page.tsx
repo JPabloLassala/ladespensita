@@ -17,10 +17,7 @@ export function AlquileresPage() {
   const { setAppState, appState } = useContext(AppStateContext)!;
   const [selectedAlquiler, setSelectedAlquiler] = useState<Partial<Alquiler>>();
   const isCreatingNewAlquiler = appState === APP_STATE.creating;
-  const { data: alquilerData, sendDelete } = useHttpRepository<Alquiler>(
-    [],
-    getAlquileresRepository(),
-  );
+  const { data, sendDelete, sendList } = useHttpRepository<Alquiler>([], getAlquileresRepository());
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
@@ -41,8 +38,14 @@ export function AlquileresPage() {
   }
 
   useEffect(() => {
-    setAlquileres(alquilerData);
-  }, [alquilerData]);
+    console.log("setting productos");
+    setAlquileres(data);
+  }, [data]);
+
+  useEffect(() => {
+    console.log("sending list");
+    sendList();
+  }, []);
 
   return (
     <main className="flex flex-row overflow-y-auto w-full">

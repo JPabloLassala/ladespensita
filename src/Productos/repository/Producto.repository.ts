@@ -8,11 +8,15 @@ export const getProductoRepository = (): {
   update: (data: Partial<ProductoEntity>) => Promise<ProductoEntity>;
   remove: (id: number) => Promise<void>;
 } => {
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+
   const get = async (id: number): Promise<ProductoEntity> => {
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/producto/${id}`, {
       method: "GET",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -23,8 +27,6 @@ export const getProductoRepository = (): {
   };
 
   const list = async (): Promise<ProductoEntity[]> => {
-    const cookies = new Cookies();
-    const token = cookies.get("token");
     const apiHost = import.meta.env.VITE_API_HOST;
     const response = await fetch(`${apiHost}/producto`, {
       method: "GET",
@@ -44,6 +46,7 @@ export const getProductoRepository = (): {
     const response = await fetch(`${apiHost}/producto`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -59,6 +62,7 @@ export const getProductoRepository = (): {
     const response = await fetch(`${apiHost}/producto/${data.id}`, {
       method: "PUT",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -74,6 +78,7 @@ export const getProductoRepository = (): {
     await fetch(`${apiHost}/producto/${id}`, {
       method: "DELETE",
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
