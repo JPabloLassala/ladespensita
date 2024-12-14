@@ -1,4 +1,4 @@
-import { AppShell, Avatar, Flex, Group } from "@mantine/core";
+import { AppShell, Group } from "@mantine/core";
 
 export function Header({ children }: { children: React.ReactNode }) {
   // return (

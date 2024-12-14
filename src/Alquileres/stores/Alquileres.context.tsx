@@ -28,7 +28,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         proyecto: alquiler.proyecto,
         since: alquiler.fechaAlquiler.inicio.toString(),
         until: alquiler.fechaAlquiler.fin.toString(),
-        totalProductos: alquiler.productos.length,
+        totalProductos: 0,
       };
     });
   };

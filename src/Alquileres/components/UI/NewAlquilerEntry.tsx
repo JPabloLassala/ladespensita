@@ -3,6 +3,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import { PartialAlquiler } from "@/Alquileres/entities";
 import { APP_STATE } from "@/Common";
+import { Card, Collapse, Group, Stack, Text } from "@mantine/core";
 
 export function NewAlquilerEntry({
   onCancelCreateAlquiler,
@@ -27,32 +28,26 @@ export function NewAlquilerEntry({
   }
 
   const dateRange = fechaInicio || fechaFin ? `${fechaInicio} - ${fechaFin}` : "";
-  const hiddenMaxH = appState === APP_STATE.creating ? "max-h-full" : "max-h-0";
-  const hiddenBorderContainer = appState === APP_STATE.creating ? "border" : "";
 
   return (
-    <div
-      className={` overflow-hidden transition-all flex flex-row rounded-xl gap-4 duration-300
-        bg-red-100 hover:cursor-pointer shadow-md border-red-300
-        hover:bg-red-200 h-auto ${hiddenMaxH} ${hiddenBorderContainer}`}
-    >
-      <div
-        className={`flex flex-col font-body grow my-4 ml-4 duration-300 transition-all ${hiddenMaxH}`}
-      >
-        <p className="text-2xl font-semibold ">{newAlquiler?.productora || "\u00A0"}</p>
-        <p className="text-xl">{newAlquiler.proyecto || "\u00A0"}</p>
-        <p className="italic">{dateRange}</p>
-        <p>
-          Cantidad de productos: <span className="font-semibold">{0}</span>
-        </p>
-      </div>
-      <div className={`flex flex-col justify-center items-end mr-4`}>
-        <FontAwesomeIcon
-          icon={faTrash}
-          onClick={onCancelCreateAlquiler}
-          className={`duration-300 transition-all ${hiddenMaxH}`}
-        />
-      </div>
-    </div>
+    <Collapse in={appState === APP_STATE.creating}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card.Section withBorder py="1rem">
+          <Group justify="space-between" px="1rem">
+            <Text fw={700}>{newAlquiler.proyecto}</Text>
+            <FontAwesomeIcon icon={faTrash} onClick={onCancelCreateAlquiler} className="p-4" />
+          </Group>
+        </Card.Section>
+        <Card.Section p="md">
+          <Stack gap="0.5rem">
+            <Text>{newAlquiler.productora}</Text>
+            <Text>{dateRange}</Text>
+            <Text>
+              Cantidad de productos: <span className="font-semibold">{0}</span>
+            </Text>
+          </Stack>
+        </Card.Section>
+      </Card>
+    </Collapse>
   );
 }

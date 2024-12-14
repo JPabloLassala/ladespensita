@@ -10,6 +10,7 @@ import {
 } from "../components";
 import { useHttpRepository } from "@/Common";
 import { getAlquileresRepository } from "../repository";
+import { Flex } from "@mantine/core";
 
 export function AlquileresPage() {
   const { getSummary, alquileres, setAlquileres, deleteAlquiler, newAlquiler, setNewAlquiler } =
@@ -48,7 +49,7 @@ export function AlquileresPage() {
   }, []);
 
   return (
-    <main className="flex flex-row overflow-y-auto w-full">
+    <Flex id="ALQUILERES_PAGE" direction="row" h="100%" mih="100%">
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
         onDeleteAlquiler={handleDelete}
@@ -64,6 +65,6 @@ export function AlquileresPage() {
         <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
       )}
       {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
-    </main>
+    </Flex>
   );
 }

@@ -1,10 +1,13 @@
+import { SimpleGrid } from "@mantine/core";
+
 export function ProductosListContainer({ children }: { children: React.ReactNode }) {
   return (
-    <section
-      id="Projects"
-      className="mb-5 mt-10 grid gap-x-5 gap-y-8 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7"
+    <SimpleGrid
+      cols={{ base: 1, sm: 2, lg: 5 }}
+      spacing={{ base: 10, sm: "xl" }}
+      verticalSpacing={{ base: "md", sm: "xl" }}
     >
       {children}
-    </section>
+    </SimpleGrid>
   );
 }

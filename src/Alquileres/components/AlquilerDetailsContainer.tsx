@@ -6,6 +6,7 @@ import { AlquilerProductos } from "./UI/AlquilerProductos";
 import { Alquiler, AlquilerProductoEntity } from "@/Alquileres/entities";
 import { AlquileresContext } from "../stores";
 import { APP_STATE, AppStateContext } from "@/Common";
+import { AppShell } from "@mantine/core";
 
 export function AlquilerDetailsContainer({
   selectedAlquiler,
