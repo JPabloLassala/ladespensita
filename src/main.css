@@ -8,13 +8,15 @@
   src: url("./fonts/SourceSans3-VariableFont_wght.ttf");
 }
 
-/* body {
+html,
+body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 div#root {
   height: 100%;
   width: 100%;
   min-height: 100vh;
-} */
+}

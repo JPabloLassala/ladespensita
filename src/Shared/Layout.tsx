@@ -1,9 +1,9 @@
-import { AppShell } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <AppShell withBorder={false} header={{ height: 80 }} padding="md">
+    <Stack mah="100%" gap="1rem" w="100%">
       {children}
-    </AppShell>
+    </Stack>
   );
 }

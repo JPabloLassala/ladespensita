@@ -3,7 +3,7 @@ import { Layout } from "./Layout";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
 import { AccountHeader } from "./AccountHeader";
-import { AppShell, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { Navbar } from "./Navbar";
 
 export function RootPage() {
@@ -15,9 +15,7 @@ export function RootPage() {
           <Navbar />
           <AccountHeader />
         </Header>
-        <AppShell.Main id="AppShellLayout">
-          <Outlet />
-        </AppShell.Main>
+        <Outlet />
       </Layout>
     </MantineProvider>
   );
