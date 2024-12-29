@@ -1,11 +1,11 @@
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { DeleteAlquilerModal } from "../pages/DeleteAlquilerModal.page";
 import { AlquilerEntry, AlquilerListContainer, NewAlquilerEntry } from "./UI";
 import dayjs from "dayjs";
 import { Alquiler, AlquilerSummaryItem } from "../entities";
 import { AlquileresContext } from "../stores";
 import { AppStateContext } from "@/Common";
-import { Button, Center, ScrollArea, Stack } from "@mantine/core";
+import { Button, Center, Stack } from "@mantine/core";
 
 export function AlquilerList({
   onSelectAlquiler,
@@ -22,26 +22,10 @@ export function AlquilerList({
   onStartCreateNewAlquiler: () => void;
   onCancelCreateNewAlquiler: () => void;
 }) {
-  const [scrollHeight, setScrollHeight] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [size, setSize] = useState(0);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
   const { newAlquiler } = useContext(AlquileresContext)!;
   const { appState } = useContext(AppStateContext)!;
-  const newAlquilerContainerHeight =
-    document.getElementById("newAlquilerContainer")?.clientHeight || 0;
-
-  useLayoutEffect(() => {
-    const updateSize = () => setSize(window.innerHeight);
-    window.addEventListener("resize", updateSize);
-    updateSize();
-
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  useEffect(() => {
-    setScrollHeight(size - newAlquilerContainerHeight - 130);
-  }, [size]);
 
   function handleCloseModal() {
     setIsModalOpen(false);
@@ -65,6 +49,9 @@ export function AlquilerList({
         <Button variant="filled" onClick={onStartCreateNewAlquiler}>
           Nuevo Alquiler
         </Button>
+        <Button variant="outline" onClick={() => onSelectAlquiler(0)}>
+          Reset
+        </Button>
       </Center>
       {selectedAlquilerForDelete && (
         <DeleteAlquilerModal
@@ -74,15 +61,8 @@ export function AlquilerList({
           title={selectedAlquilerForDelete.proyecto}
         />
       )}
-      <ScrollArea
-        offsetScrollbars
-        type="always"
-        style={{
-          height: scrollHeight,
-          maxHeight: scrollHeight,
-        }}
-      >
-        <Stack gap={2}>
+      <div style={{ height: "100%", overflow: "scroll" }}>
+        <Stack gap="0.25rem">
           <NewAlquilerEntry
             onCancelCreateAlquiler={onCancelCreateNewAlquiler}
             newAlquiler={newAlquiler}
@@ -99,7 +79,7 @@ export function AlquilerList({
             />
           ))}
         </Stack>
-      </ScrollArea>
+      </div>
     </AlquilerListContainer>
   );
 }
