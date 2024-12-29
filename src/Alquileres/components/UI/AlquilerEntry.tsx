@@ -19,7 +19,7 @@ export function AlquilerEntry({
   return (
     <Card
       key={alquiler.productora}
-      shadow="sm"
+      shadow="xs"
       padding="lg"
       radius="md"
       withBorder
@@ -46,28 +46,5 @@ export function AlquilerEntry({
         </Stack>
       </Card.Section>
     </Card>
-    // <div
-    //   className={`
-    //     flex flex-row shrink-0 border p-4 rounded-xl
-    //     gap-4 shadow-md ${selectedClass} hover:cursor-pointer
-    //     [transition:color_0.2s,transform_0.5s]
-    //   `}
-    // >
-    //   <div
-    //     key={alquiler.productora}
-    //     className="flex flex-col font-body transition-colors duration-1000 grow"
-    //     onClick={onSelectAlquiler}
-    //   >
-    //     <p className="text-2xl font-semibold">{alquiler.productora}</p>
-    //     <p className="text-xl">{alquiler.proyecto}</p>
-    //     <p className="italic">{dateRange}</p>
-    //     <p>
-    //       Cantidad de productos: <span className="font-semibold">{alquiler.totalProductos}</span>
-    //     </p>
-    //   </div>
-    //   <div className="flex flex-col justify-center items-end">
-    //     <FontAwesomeIcon icon={faTrash} onClick={onDeleteAlquiler} />
-    //   </div>
-    // </div>
   );
 }
