@@ -31,7 +31,7 @@ export function NewAlquilerEntry({
 
   return (
     <Collapse in={appState === APP_STATE.creating}>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="xs" padding="lg" radius="md" withBorder>
         <Card.Section withBorder py="1rem">
           <Group justify="space-between" px="1rem">
             <Text fw={700}>{newAlquiler.proyecto}</Text>
