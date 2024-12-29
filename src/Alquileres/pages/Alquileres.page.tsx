@@ -49,7 +49,10 @@ export function AlquileresPage() {
   }, []);
 
   return (
-    <Flex id="ALQUILERES_PAGE" direction="row" h="100%" mih="100%">
+    <Flex
+      direction="row"
+      style={{ height: "100%", maxHeight: "100%", minHeight: "100%", overflow: "hidden" }}
+    >
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
         onDeleteAlquiler={handleDelete}
