@@ -12,7 +12,6 @@ import {
   Image,
   Indicator,
   Paper,
-  Stack,
   Text,
   TextInput,
   Title,
@@ -32,12 +31,13 @@ export function AlquilerDetailsContainer({
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
-  const fechaInicio = dayjs(selectedAlquiler?.fechaAlquiler?.inicio || "1/1/1991").format(
-    "DD/MM/YYYY",
-  );
-  const fechaFin = dayjs(selectedAlquiler?.fechaAlquiler?.fin || "1/1/1991").format("DD/MM/YYYY");
+  // const fechaInicio = dayjs(selectedAlquiler?.fechaAlquiler?.inicio || "1/1/1991").format(
+  //   "DD/MM/YYYY",
+  // );
+  // const fechaFin = dayjs(selectedAlquiler?.fechaAlquiler?.fin || "1/1/1991").format("DD/MM/YYYY");
 
   function handleSelectProducto(alquilerProductoId: AlquilerProductoEntity) {
+    console.log(alquilerProductoId);
     setSelectedProducto(alquilerProductoId);
   }
   function handleChange(property: string, value: string) {
@@ -119,7 +119,20 @@ export function AlquilerDetailsContainer({
               >
                 <Flex direction="column" gap="0.5rem" style={{ flexShrink: 1 }}>
                   {productos.map((producto) => (
-                    <Paper withBorder shadow="xs" radius="md" p="xs" key={producto.id}>
+                    <Paper
+                      withBorder
+                      shadow="xs"
+                      radius="md"
+                      p="xs"
+                      key={producto.id}
+                      onClick={() =>
+                        handleSelectProducto(
+                          selectedAlquiler.productos?.find(
+                            (p) => parseInt(p.id) === producto.id,
+                          ) as AlquilerProductoEntity,
+                        )
+                      }
+                    >
                       <Group wrap="nowrap">
                         <Indicator label="0" color="red" size="lg">
                           <AspectRatio ratio={1} maw={75}>
