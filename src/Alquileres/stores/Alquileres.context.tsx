@@ -80,7 +80,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       return;
     }
 
-    const producto = alquiler.productos.find((p) => p.producto.id === productoId);
+    const producto = alquiler.productos.find((p) => p.productoId === productoId);
     if (!producto) {
       return;
     }
