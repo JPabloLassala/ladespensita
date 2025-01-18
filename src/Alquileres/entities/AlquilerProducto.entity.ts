@@ -1,8 +1,6 @@
-import { ProductoEntity } from "@/Productos";
-
 export type AlquilerProductoEntity = {
-  id: string;
-  producto: ProductoEntity;
+  id: number;
+  productoId: number;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
   cantidad: number;
