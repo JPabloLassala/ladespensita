@@ -6,14 +6,17 @@ import { Flex, TextInput, Title } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { ProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
-import { AlquilerProductosContainer } from "./UI";
+import { AlquilerProductosContainer } from "./AlquilerProductosContainer";
+import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 
 export function AlquilerDetailsContainer() {
   const { productos } = useContext(ProductosContext)!;
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const { increaseAlquilerProducto, selectedAlquiler, setAlquilerProductos, alquilerProductos } =
     useContext(AlquileresContext)!;
-  const [, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(undefined);
+  const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
+    undefined,
+  );
   const { data, sendGet } = useAlquilerProductoRepository();
 
   useEffect(() => {
@@ -101,12 +104,15 @@ export function AlquilerDetailsContainer() {
             }}
           >
             <Title order={3}>Productos</Title>
-            <AlquilerProductosContainer
-              productos={productos}
-              alquilerProductos={alquilerProductos}
-              onSelectProducto={handleSelectProducto}
-              onIncreaseAlquilerProducto={increaseAlquilerProducto}
-            />
+            <Flex direction="row" gap="1rem" mih="100%" mah="100%">
+              <AlquilerProductosContainer
+                productos={productos}
+                alquilerProductos={alquilerProductos}
+                onSelectProducto={handleSelectProducto}
+                onIncreaseAlquilerProducto={increaseAlquilerProducto}
+              />
+              {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
+            </Flex>
           </div>
         </form>
       </div>
