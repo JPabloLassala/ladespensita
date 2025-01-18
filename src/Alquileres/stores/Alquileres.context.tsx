@@ -1,7 +1,12 @@
 import { ReactNode, createContext, useState } from "react";
 
 import dayjs from "dayjs";
-import { Alquiler, AlquilerSummaryItem, PartialAlquiler } from "../entities";
+import {
+  Alquiler,
+  AlquilerProductoEntity,
+  AlquilerSummaryItem,
+  PartialAlquiler,
+} from "../entities";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
@@ -12,6 +17,10 @@ export type AlquileresContextType = {
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
   increaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
+  alquilerProductos: AlquilerProductoEntity[];
+  selectedAlquiler: Alquiler | undefined;
+  setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
+  setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
 };
 
 export const AlquileresContext = createContext<AlquileresContextType | null>(null);
@@ -19,6 +28,8 @@ export const AlquileresContext = createContext<AlquileresContextType | null>(nul
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
   const [newAlquiler, setNewAlquiler] = useState<PartialAlquiler>({});
+  const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
+  const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler | undefined>(undefined);
 
   const getSummary = (): AlquilerSummaryItem[] => {
     return alquileres.map((alquiler) => {
@@ -26,8 +37,8 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         id: alquiler.id,
         productora: alquiler.productora,
         proyecto: alquiler.proyecto,
-        since: alquiler.fechaAlquiler.inicio.toString(),
-        until: alquiler.fechaAlquiler.fin.toString(),
+        since: alquiler.fechaAlquiler?.inicio?.toString(),
+        until: alquiler.fechaAlquiler?.fin?.toString(),
         totalProductos: 0,
       };
     });
@@ -86,8 +97,12 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         setAlquileres,
         deleteAlquiler,
         setNewAlquiler,
+        selectedAlquiler,
+        setSelectedAlquiler,
         increaseAlquilerProducto,
         getAlquileresBetweenDates,
+        alquilerProductos,
+        setAlquilerProductos,
       }}
     >
       {children}

@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AlquileresContext } from "../stores";
 import { APP_STATE, AppStateContext } from "@/Common";
-import { Alquiler } from "../entities";
 import {
   AlquilerDetailsContainer,
   AlquilerList,
@@ -67,13 +66,10 @@ export function AlquileresPage() {
         onSelectAlquiler={handleSelectAlquiler}
         onDeleteAlquiler={handleDelete}
         getSummary={getSummary}
-        selectedAlquiler={selectedAlquiler}
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
-      {selectedAlquiler && !isCreatingNewAlquiler && (
-        <AlquilerDetailsContainer selectedAlquiler={selectedAlquiler} />
-      )}
+      {selectedAlquiler && !isCreatingNewAlquiler && <AlquilerDetailsContainer />}
       {isCreatingNewAlquiler && (
         <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
       )}
