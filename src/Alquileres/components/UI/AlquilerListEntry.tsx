@@ -3,7 +3,7 @@ import { faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { AlquilerSummaryItem } from "@/Alquileres/entities";
 import { Card, Group, Stack, Text } from "@mantine/core";
 
-export function AlquilerEntry({
+export function AlquilerListEntry({
   alquiler,
   dateRange,
   isSelected,

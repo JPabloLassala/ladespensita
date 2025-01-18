@@ -2,30 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { AlquileresContext } from "../stores";
-import {
-  AspectRatio,
-  Button,
-  Flex,
-  Group,
-  Image,
-  Indicator,
-  Paper,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Flex, TextInput, Title } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { ProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
+import { AlquilerProductosContainer } from "./UI";
 
 export function AlquilerDetailsContainer() {
   const { productos } = useContext(ProductosContext)!;
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
   const { increaseAlquilerProducto, selectedAlquiler, setAlquilerProductos, alquilerProductos } =
     useContext(AlquileresContext)!;
-  const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
-    undefined,
-  );
+  const [, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(undefined);
   const { data, sendGet } = useAlquilerProductoRepository();
 
   useEffect(() => {
@@ -113,90 +101,12 @@ export function AlquilerDetailsContainer() {
             }}
           >
             <Title order={3}>Productos</Title>
-            <Flex direction="row" gap="1rem" mih="100%" mah="100%">
-              <div
-                style={{
-                  width: "50%",
-                  minHeight: "100%",
-                  maxHeight: "100%",
-                  overflow: "scroll",
-                }}
-              >
-                <Flex direction="column" gap="0.5rem" style={{ flexShrink: 1 }}>
-                  {productos.map((producto) => {
-                    const productoInAlquiler = alquilerProductos?.find(
-                      (p) => p.productoId === producto.id,
-                    );
-                    return (
-                      <Paper
-                        withBorder
-                        shadow="xs"
-                        radius="md"
-                        p="xs"
-                        key={producto.id}
-                        onClick={() =>
-                          handleSelectProducto(
-                            selectedAlquiler!.productos?.find(
-                              (p) => p.id === producto.id,
-                            ) as AlquilerProductoEntity,
-                          )
-                        }
-                      >
-                        <Group wrap="nowrap">
-                          <Indicator
-                            label={productoInAlquiler?.cantidad.toString() || "0"}
-                            color="red"
-                            size="lg"
-                          >
-                            <AspectRatio ratio={1} maw={75}>
-                              <Image
-                                src="http://localhost:3000/images/21.jpg"
-                                alt={producto.nombre}
-                              />
-                            </AspectRatio>
-                          </Indicator>
-                          <Text>{producto.nombre}</Text>
-                          <Button
-                            variant="outline"
-                            onClick={() =>
-                              increaseAlquilerProducto(selectedAlquiler!.id || 0, producto.id)
-                            }
-                            color="gray"
-                            size="xs"
-                          >
-                            -
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() =>
-                              increaseAlquilerProducto(selectedAlquiler!.id || 0, producto.id)
-                            }
-                            color="gray"
-                            size="xs"
-                          >
-                            +
-                          </Button>
-                        </Group>
-                      </Paper>
-                    );
-                  })}
-                </Flex>
-              </div>
-              <Flex direction="column" gap="0.5rem" w="50%">
-                <TextInput w="15rem" label="Cantidad" defaultValue="0" />
-                <TextInput w="15rem" label="Garantia unitario" />
-                <TextInput w="15rem" label="Garantia total" />
-                <TextInput w="15rem" label="Garantia subtotal" />
-                <Group mt="1rem">
-                  <Button type="submit" color="blue" size="lg">
-                    Guardar
-                  </Button>
-                  <Button type="button" color="red" size="lg">
-                    Cancelar
-                  </Button>
-                </Group>
-              </Flex>
-            </Flex>
+            <AlquilerProductosContainer
+              productos={productos}
+              alquilerProductos={alquilerProductos}
+              onSelectProducto={handleSelectProducto}
+              onIncreaseAlquilerProducto={increaseAlquilerProducto}
+            />
           </div>
         </form>
       </div>

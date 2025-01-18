@@ -5,7 +5,7 @@ import { PartialAlquiler } from "@/Alquileres/entities";
 import { APP_STATE } from "@/Common";
 import { Card, Collapse, Group, Stack, Text } from "@mantine/core";
 
-export function NewAlquilerEntry({
+export function NewAlquilerListEntry({
   onCancelCreateAlquiler,
   newAlquiler,
   appState,

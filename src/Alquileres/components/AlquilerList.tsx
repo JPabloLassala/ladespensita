@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { DeleteAlquilerModal } from "../pages/DeleteAlquilerModal.page";
-import { AlquilerEntry, AlquilerListContainer, NewAlquilerEntry } from "./UI";
+import { AlquilerListContainer, AlquilerListEntry, NewAlquilerListEntry } from "./UI";
 import dayjs from "dayjs";
 import { AlquilerSummaryItem } from "../entities";
 import { AlquileresContext } from "../stores";
@@ -61,13 +61,13 @@ export function AlquilerList({
       )}
       <div style={{ height: "100%", overflow: "scroll" }}>
         <Stack gap="0.25rem">
-          <NewAlquilerEntry
+          <NewAlquilerListEntry
             onCancelCreateAlquiler={onCancelCreateNewAlquiler}
             newAlquiler={newAlquiler}
             appState={appState}
           />
           {getSummary().map((alquiler) => (
-            <AlquilerEntry
+            <AlquilerListEntry
               key={alquiler.id}
               alquiler={alquiler}
               isSelected={selectedAlquiler?.id === alquiler.id}
