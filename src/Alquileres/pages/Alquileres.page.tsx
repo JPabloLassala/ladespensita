@@ -1,12 +1,7 @@
 import { useContext, useEffect } from "react";
 import { AlquileresContext } from "../stores";
 import { APP_STATE, AppStateContext } from "@/Common";
-import {
-  AlquilerDetailsContainer,
-  AlquilerList,
-  AlquilerNoneSelected,
-  NewAlquilerForm,
-} from "../components";
+import { AlquilerDetailsContainer, AlquilerList, AlquilerNoneSelected } from "../components";
 import { Flex } from "@mantine/core";
 import { ProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
@@ -18,8 +13,6 @@ export function AlquileresPage() {
     alquileres,
     setAlquileres,
     deleteAlquiler,
-    newAlquiler,
-    setNewAlquiler,
     selectedAlquiler,
     setSelectedAlquiler,
   } = useContext(AlquileresContext)!;
@@ -70,9 +63,9 @@ export function AlquileresPage() {
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
       {selectedAlquiler && !isCreatingNewAlquiler && <AlquilerDetailsContainer />}
-      {isCreatingNewAlquiler && (
+      {/* {isCreatingNewAlquiler && (
         <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
-      )}
+      )} */}
       {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
     </Flex>
   );
