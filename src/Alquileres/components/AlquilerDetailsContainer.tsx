@@ -18,6 +18,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { ProductosContext } from "@/Productos";
+import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
 
 export function AlquilerDetailsContainer({
   selectedAlquiler,
@@ -26,11 +27,21 @@ export function AlquilerDetailsContainer({
 }) {
   const { productos } = useContext(ProductosContext)!;
   const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
-  const { newAlquiler, setNewAlquiler, increaseAlquilerProducto } = useContext(AlquileresContext)!;
-  const { appState } = useContext(AppStateContext)!;
+  const { increaseAlquilerProducto, selectedAlquiler, setAlquilerProductos, alquilerProductos } =
+    useContext(AlquileresContext)!;
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
+  const { data, sendGet } = useAlquilerProductoRepository();
+
+  useEffect(() => {
+    setAlquilerProductos(data);
+  }, [data]);
+
+  useEffect(() => {
+    sendGet(selectedAlquiler?.id || 0);
+  }, []);
+
   // const fechaInicio = dayjs(selectedAlquiler?.fechaAlquiler?.inicio || "1/1/1991").format(
   //   "DD/MM/YYYY",
   // );

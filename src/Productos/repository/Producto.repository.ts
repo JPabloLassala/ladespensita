@@ -1,88 +1,157 @@
 import Cookies from "universal-cookie";
 import { ProductoEntity } from "../entities";
+import { useCallback } from "react";
+import { useState } from "react";
 
-export const getProductoRepository = (): {
-  get: (id: number) => Promise<ProductoEntity>;
-  list: () => Promise<ProductoEntity[]>;
-  create: (data: Omit<ProductoEntity, "id">) => Promise<ProductoEntity>;
-  update: (data: Partial<ProductoEntity>) => Promise<ProductoEntity>;
-  remove: (id: number) => Promise<void>;
-} => {
+export function useProductoRepository(initialData: ProductoEntity[] = []) {
   const cookies = new Cookies();
   const token = cookies.get("token");
+  const [data, setData] = useState(initialData);
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const get = async (id: number): Promise<ProductoEntity> => {
+  function clearData() {
+    setData(initialData);
+  }
+
+  const sendDelete = useCallback(async function sendDelete(id: number) {
     const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/producto/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
 
-    const alquiler = await response.json();
+    setIsLoading(true);
 
-    return alquiler as ProductoEntity;
+    try {
+      await fetch(`${apiHost}/producto/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendCreate = useCallback(async function sendCreate(data: ProductoEntity): Promise<void> {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/producto`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const productos = await resData.json();
+
+      setData((oldData) => [...oldData, productos]);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendUpdate = useCallback(async function sendUpdate(
+    data: Partial<ProductoEntity>,
+  ): Promise<void> {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await await fetch(`${apiHost}/producto/${data.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const producto = await resData.json();
+
+      setData((oldData) => {
+        const index = oldData.findIndex((p) => p.id === producto.id);
+        oldData[index] = producto;
+        return oldData;
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendList = useCallback(async function sendList() {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/producto`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const productos = await resData.json();
+
+      setData(productos);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendGet = useCallback(async function sendGet(id: number) {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/producto/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const producto = await resData.json();
+
+      setData(producto);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  return {
+    data,
+    isLoading,
+    error,
+    sendCreate,
+    sendDelete,
+    sendUpdate,
+    sendList,
+    sendGet,
+    clearData,
   };
-
-  const list = async (): Promise<ProductoEntity[]> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/producto`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    const alquileres = await response.json();
-
-    return alquileres as ProductoEntity[];
-  };
-
-  const create = async (data: Omit<ProductoEntity, "id">): Promise<ProductoEntity> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/producto`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const alquiler = await response.json();
-
-    return alquiler as ProductoEntity;
-  };
-
-  const update = async (data: Partial<ProductoEntity>): Promise<ProductoEntity> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/producto/${data.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const alquiler = await response.json();
-
-    return alquiler as ProductoEntity;
-  };
-
-  const remove = async (id: number): Promise<void> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    await fetch(`${apiHost}/producto/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
-  };
-
-  return { get, list, create, update, remove };
-};
+}

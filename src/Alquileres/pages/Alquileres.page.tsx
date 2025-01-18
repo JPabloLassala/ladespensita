@@ -8,17 +8,27 @@ import {
   AlquilerNoneSelected,
   NewAlquilerForm,
 } from "../components";
-import { useHttpRepository } from "@/Common";
-import { getAlquileresRepository } from "../repository";
 import { Flex } from "@mantine/core";
+import { ProductosContext } from "@/Productos";
+import { useProductoRepository } from "@/Productos/repository";
+import { useAlquilerRepository } from "../repository";
 
 export function AlquileresPage() {
-  const { getSummary, alquileres, setAlquileres, deleteAlquiler, newAlquiler, setNewAlquiler } =
-    useContext(AlquileresContext)!;
+  const {
+    getSummary,
+    alquileres,
+    setAlquileres,
+    deleteAlquiler,
+    newAlquiler,
+    setNewAlquiler,
+    selectedAlquiler,
+    setSelectedAlquiler,
+  } = useContext(AlquileresContext)!;
   const { setAppState, appState } = useContext(AppStateContext)!;
-  const [selectedAlquiler, setSelectedAlquiler] = useState<Partial<Alquiler>>();
+  const { data, sendDelete, sendList } = useAlquilerRepository([]);
+  const { setProductos } = useContext(ProductosContext)!;
   const isCreatingNewAlquiler = appState === APP_STATE.creating;
-  const { data, sendDelete, sendList } = useHttpRepository<Alquiler>([], getAlquileresRepository());
+  const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
@@ -39,12 +49,12 @@ export function AlquileresPage() {
   }
 
   useEffect(() => {
-    console.log("setting productos");
+    setProductos(productosData);
     setAlquileres(data);
-  }, [data]);
+  }, [data, productosData]);
 
   useEffect(() => {
-    console.log("sending list");
+    sendListProductos();
     sendList();
   }, []);
 

@@ -1,15 +1,13 @@
 import { useContext, useEffect } from "react";
 import { ProductoCard } from "../components/ProductoCard";
 import { ProductosContext } from "../stores";
-import { ProductoEntity } from "../entities";
-import { useHttpRepository } from "@/Common";
 import { FilterContextProvider } from "@/Common";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "../components";
-import { getProductoRepository } from "../repository";
+import { useProductoRepository } from "../repository";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductosContext)!;
-  const { data, sendList } = useHttpRepository<ProductoEntity>([], getProductoRepository());
+  const { data, sendList } = useProductoRepository([]);
 
   useEffect(() => {
     console.log("setting productos");

@@ -1,77 +1,150 @@
 import Cookies from "universal-cookie";
 import { Alquiler } from "../entities";
+import { useCallback } from "react";
+import { useState } from "react";
 
-export const getAlquileresRepository = (): {
-  get: (id: number) => Promise<Alquiler>;
-  list: () => Promise<Alquiler[]>;
-  create: (data: Omit<Alquiler, "id">) => Promise<Alquiler>;
-  update: (data: Partial<Alquiler>) => Promise<Alquiler>;
-  remove: (id: number) => Promise<void>;
-} => {
+export function useAlquilerRepository(initialData: Alquiler[] = []) {
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const getHeaders = () => ({
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  });
+  const [data, setData] = useState(initialData);
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const get = async (id: number): Promise<Alquiler> => {
+  function clearData() {
+    setData(initialData);
+  }
+
+  const sendDelete = useCallback(async function sendDelete(id: number) {
     const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/alquiler/${id}`, {
-      method: "GET",
-      headers: getHeaders(),
-    });
 
-    const alquiler = await response.json();
+    setIsLoading(true);
 
-    return alquiler as Alquiler;
+    try {
+      await fetch(`${apiHost}/alquiler/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendCreate = useCallback(async function sendCreate(data: Alquiler): Promise<void> {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/producto`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const productos = await resData.json();
+
+      return productos;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendUpdate = useCallback(async function sendUpdate(data: Partial<Alquiler>): Promise<void> {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await await fetch(`${apiHost}/alquiler/${data.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const producto = await resData.json();
+      return producto;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendList = useCallback(async function sendList() {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/alquiler`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const alquileres = await resData.json();
+
+      setData(alquileres);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const sendGet = useCallback(async function sendGet(id: number) {
+    setIsLoading(true);
+
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      const resData = await fetch(`${apiHost}/alquiler/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const alquiler = await resData.json();
+
+      setData(alquiler);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      }
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  return {
+    data,
+    isLoading,
+    error,
+    sendCreate,
+    sendDelete,
+    sendUpdate,
+    sendList,
+    sendGet,
+    clearData,
   };
-
-  const list = async (): Promise<Alquiler[]> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/alquiler`, {
-      method: "GET",
-      headers: getHeaders(),
-    });
-
-    const alquileres = await response.json();
-
-    return alquileres as Alquiler[];
-  };
-
-  const create = async (data: Omit<Alquiler, "id">): Promise<Alquiler> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/alquiler`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(data),
-    });
-
-    const alquiler = await response.json();
-
-    return alquiler as Alquiler;
-  };
-
-  const update = async (data: Partial<Alquiler>): Promise<Alquiler> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    const response = await fetch(`${apiHost}/alquiler/${data.id}`, {
-      method: "PUT",
-      headers: getHeaders(),
-      body: JSON.stringify(data),
-    });
-
-    const alquiler = await response.json();
-
-    return alquiler as Alquiler;
-  };
-
-  const remove = async (id: number): Promise<void> => {
-    const apiHost = import.meta.env.VITE_API_HOST;
-    await fetch(`${apiHost}/alquiler/${id}`, {
-      method: "DELETE",
-      headers: getHeaders(),
-    });
-  };
-
-  return { get, list, create, update, remove };
-};
+}
