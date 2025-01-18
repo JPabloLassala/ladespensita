@@ -1,1 +1,1 @@
-export * from "./useHttpRepository";
+export * from "./useSessionAdapter";

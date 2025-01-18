@@ -1,4 +1,4 @@
-import { useSessionAdapter } from "@/Common/hooks/useSessionAdapter";
+import { useSessionAdapter } from "@/Common";
 import { Button } from "@/Shared";
 import { FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
