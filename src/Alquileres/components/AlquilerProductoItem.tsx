@@ -33,11 +33,9 @@ export function AlquilerProductoItem({
       }
     >
       <Group wrap="nowrap">
-        <Indicator label={productoInAlquiler?.cantidad.toString() || "0"} color="red" size="lg">
-          <AspectRatio ratio={1} maw={75}>
-            <Image src="http://localhost:3000/images/21.jpg" alt={producto.nombre} />
-          </AspectRatio>
-        </Indicator>
+        <AspectRatio ratio={1} maw={75}>
+          <Image src="http://localhost:3000/images/21.jpg" alt={producto.nombre} />
+        </AspectRatio>
         <Text>{producto.nombre}</Text>
         <AlquilerProductoQuantity
           alquilerId={selectedAlquiler?.id || 0}
