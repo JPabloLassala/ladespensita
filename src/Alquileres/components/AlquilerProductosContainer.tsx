@@ -10,11 +10,13 @@ export function AlquilerProductosContainer({
   alquilerProductos,
   onSelectProducto,
   onIncreaseAlquilerProducto,
+  onDecreaseAlquilerProducto,
 }: {
   productos: ProductoEntity[];
   alquilerProductos: AlquilerProductoEntity[];
   onSelectProducto: (producto: AlquilerProductoEntity) => void;
   onIncreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
+  onDecreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
 }) {
   const { selectedAlquiler } = useContext(AlquileresContext)!;
 
@@ -34,9 +36,11 @@ export function AlquilerProductosContainer({
             <AlquilerProductoItem
               key={producto.id}
               producto={producto}
+              quantity={productoInAlquiler?.cantidad || 0}
               productoInAlquiler={productoInAlquiler}
               onSelectProducto={() => onSelectProducto(productoInAlquiler!)}
               onIncreaseAlquilerProducto={onIncreaseAlquilerProducto}
+              onDecreaseAlquilerProducto={onDecreaseAlquilerProducto}
               selectedAlquiler={selectedAlquiler}
             />
           );

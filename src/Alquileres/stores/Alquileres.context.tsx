@@ -17,6 +17,7 @@ export type AlquileresContextType = {
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
   increaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
+  decreaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
   alquilerProductos: AlquilerProductoEntity[];
   selectedAlquiler: Alquiler | undefined;
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
@@ -88,6 +89,20 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     producto.cantidad += 1;
   };
 
+  const decreaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
+    const alquiler = alquileres.find((a) => a.id === idAlquiler);
+    if (!alquiler) {
+      return;
+    }
+
+    const producto = alquiler.productos.find((p) => p.productoId === productoId);
+    if (!producto) {
+      return;
+    }
+
+    producto.cantidad -= 1;
+  };
+
   return (
     <AlquileresContext.Provider
       value={{
@@ -100,6 +115,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         selectedAlquiler,
         setSelectedAlquiler,
         increaseAlquilerProducto,
+        decreaseAlquilerProducto,
         getAlquileresBetweenDates,
         alquilerProductos,
         setAlquilerProductos,

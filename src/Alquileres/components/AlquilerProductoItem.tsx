@@ -1,19 +1,22 @@
 import { AlquilerProductoEntity, PartialAlquiler } from "@/Alquileres/entities";
 import { ProductoEntity } from "@/Productos";
-import { AspectRatio, Group, Image, Indicator, Paper, Text } from "@mantine/core";
-import { AlquilerProductoIncreaseDecrease } from "./AlquilerProductoIncreaseDecrease";
+import { AspectRatio, Group, Image, Paper, Text } from "@mantine/core";
+import { AlquilerProductoQuantity } from "./AlquilerProductoIncreaseDecrease";
 
 export function AlquilerProductoItem({
   producto,
-  productoInAlquiler,
+  quantity,
   onSelectProducto,
   onIncreaseAlquilerProducto,
+  onDecreaseAlquilerProducto,
   selectedAlquiler,
 }: {
   producto: ProductoEntity;
+  quantity: number;
   productoInAlquiler: AlquilerProductoEntity | undefined;
   onSelectProducto: (producto: AlquilerProductoEntity) => void;
   onIncreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
+  onDecreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
   selectedAlquiler: PartialAlquiler | undefined;
 }) {
   return (
@@ -36,10 +39,12 @@ export function AlquilerProductoItem({
           </AspectRatio>
         </Indicator>
         <Text>{producto.nombre}</Text>
-        <AlquilerProductoIncreaseDecrease
+        <AlquilerProductoQuantity
           alquilerId={selectedAlquiler?.id || 0}
           productoId={producto.id}
+          quantity={quantity}
           onIncreaseAlquilerProducto={onIncreaseAlquilerProducto}
+          onDecreaseAlquilerProducto={onDecreaseAlquilerProducto}
         />
       </Group>
     </Paper>
