@@ -1,11 +1,13 @@
 import { useContext, useEffect } from "react";
 import { AlquileresContext } from "../stores";
 import { APP_STATE, AppStateContext } from "@/Common";
-import { AlquilerDetailsContainer, AlquilerList, AlquilerNoneSelected } from "../components";
 import { Flex } from "@mantine/core";
 import { ProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
 import { useAlquilerRepository } from "../repository";
+import { AlquilerDetailsContainer } from "../components/AlquilerDetailsContainer";
+import { AlquilerDetails } from "../components/AlquilerDetails";
+import { AlquilerList, AlquilerNoneSelected } from "../components";
 
 export function AlquileresPage() {
   const {
@@ -62,7 +64,11 @@ export function AlquileresPage() {
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
-      {selectedAlquiler && !isCreatingNewAlquiler && <AlquilerDetailsContainer />}
+      {selectedAlquiler && !isCreatingNewAlquiler && (
+        <AlquilerDetailsContainer>
+          <AlquilerDetails />
+        </AlquilerDetailsContainer>
+      )}
       {/* {isCreatingNewAlquiler && (
         <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
       )} */}
