@@ -56,6 +56,7 @@ export function AlquileresPage() {
     <Flex
       direction="row"
       style={{ height: "100%", maxHeight: "100%", minHeight: "100%", overflow: "hidden" }}
+      gap="xs"
     >
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
