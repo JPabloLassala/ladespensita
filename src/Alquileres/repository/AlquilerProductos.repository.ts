@@ -14,7 +14,7 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
     setData(initialData);
   }
 
-  const sendGet = useCallback(async function sendGet(id: number) {
+  const sendList = useCallback(async function sendGet(id: number) {
     setIsLoading(true);
 
     try {
@@ -43,7 +43,7 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
     data,
     isLoading,
     error,
-    sendGet,
+    sendList,
     clearData,
   };
 }

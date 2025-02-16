@@ -4,10 +4,9 @@ import { APP_STATE, AppStateContext } from "@/Common";
 import { Flex } from "@mantine/core";
 import { ProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
-import { useAlquilerRepository } from "../repository";
-import { AlquilerDetailsContainer } from "../components/AlquilerDetailsContainer";
 import { AlquilerDetails } from "../components/AlquilerDetails";
-import { AlquilerList, AlquilerNoneSelected } from "../components";
+import { AlquilerDetailsContainer, AlquilerList, AlquilerNoneSelected } from "../components";
+import { useAlquilerRepository } from "../repository";
 
 export function AlquileresPage() {
   const {

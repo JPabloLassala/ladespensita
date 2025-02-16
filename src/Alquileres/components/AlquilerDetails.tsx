@@ -2,12 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { AlquileresContext } from "../stores";
-import { Flex, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 import { ProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
-import { AlquilerProductosContainer } from "./AlquilerProductosContainer";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
+import { AlquilerProductoItem } from "./AlquilerProductoItem";
+import { AlquilerProductosContainer, AlquilerProductosScrollContainer } from "./UI";
 
 export function AlquilerDetails() {
   const { productos } = useContext(ProductosContext)!;
@@ -21,30 +22,21 @@ export function AlquilerDetails() {
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
-  const { data, sendGet } = useAlquilerProductoRepository();
+  const { data, sendList } = useAlquilerProductoRepository();
 
   useEffect(() => {
+    console.log(data);
     setAlquilerProductos(data);
   }, [data]);
 
   useEffect(() => {
-    sendGet(selectedAlquiler?.id || 0);
-  }, []);
-
-  // const fechaInicio = dayjs(selectedAlquiler?.fechaAlquiler?.inicio || "1/1/1991").format(
-  //   "DD/MM/YYYY",
-  // );
-  // const fechaFin = dayjs(selectedAlquiler?.fechaAlquiler?.fin || "1/1/1991").format("DD/MM/YYYY");
+    sendList(selectedAlquiler?.id || 0);
+  }, [selectedAlquiler?.id]);
 
   function handleSelectProducto(alquilerProductoId: AlquilerProductoEntity) {
     console.log(alquilerProductoId);
     setSelectedProducto(alquilerProductoId);
   }
-  // function handleChange(property: string, value: string) {
-  //   if (appState === APP_STATE.creating) {
-  //     setNewAlquiler({ ...newAlquiler, [property]: value });
-  //   }
-  // }
 
   const form = useForm({
     mode: "uncontrolled",
@@ -65,27 +57,27 @@ export function AlquilerDetails() {
     >
       <Title order={2}>Detalle</Title>
       <AlquilerDetailsForm />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          minHeight: "100%",
-          maxHeight: "100%",
-        }}
-      >
-        <Title order={3}>Productos</Title>
-        <Flex direction="row" gap="1rem" mih="100%" mah="100%">
-          <AlquilerProductosContainer
-            productos={productos}
-            alquilerProductos={alquilerProductos}
-            onSelectProducto={handleSelectProducto}
-            onIncreaseAlquilerProducto={increaseAlquilerProducto}
-            onDecreaseAlquilerProducto={decreaseAlquilerProducto}
-          />
-          {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
-        </Flex>
-      </div>
+      <AlquilerProductosContainer>
+        <AlquilerProductosScrollContainer>
+          {productos.map((producto) => {
+            const productoInAlquiler = alquilerProductos?.find((p) => p.productoId === producto.id);
+            return (
+              <AlquilerProductoItem
+                key={producto.id}
+                producto={producto}
+                quantity={productoInAlquiler?.cantidad || 0}
+                productoInAlquiler={productoInAlquiler}
+                onSelectProducto={() => handleSelectProducto(productoInAlquiler!)}
+                onIncreaseAlquilerProducto={increaseAlquilerProducto}
+                onDecreaseAlquilerProducto={decreaseAlquilerProducto}
+                selectedAlquiler={selectedAlquiler}
+              />
+            );
+          })}
+        </AlquilerProductosScrollContainer>
+      </AlquilerProductosContainer>
+
+      {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
     </form>
   );
 }
