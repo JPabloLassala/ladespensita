@@ -22,6 +22,10 @@ export type AlquileresContextType = {
   selectedAlquiler: Alquiler | undefined;
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
+  createEmptyAlquilerProducto: (
+    productoId: number,
+    props: Partial<AlquilerProductoEntity>,
+  ) => AlquilerProductoEntity;
 };
 
 export const AlquileresContext = createContext<AlquileresContextType | null>(null);
@@ -81,12 +85,16 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       return;
     }
 
-    const producto = alquiler.productos.find((p) => p.productoId === productoId);
+    const producto = alquilerProductos.find((p) => p.productoId === productoId);
     if (!producto) {
       return;
     }
 
     producto.cantidad += 1;
+
+    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
+
+    setAlquilerProductos([...newAlquilerProductosArray, producto]);
   };
 
   const decreaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
@@ -95,12 +103,39 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       return;
     }
 
-    const producto = alquiler.productos.find((p) => p.productoId === productoId);
+    const producto = alquilerProductos.find((p) => p.productoId === productoId);
     if (!producto) {
       return;
     }
 
     producto.cantidad -= 1;
+
+    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
+
+    setAlquilerProductos([...newAlquilerProductosArray, producto]);
+  };
+
+  const createEmptyAlquilerProducto = (
+    productoId: number,
+    props: Partial<AlquilerProductoEntity>,
+  ): AlquilerProductoEntity => {
+    return {
+      id: 0,
+      productoId,
+      cantidad: alquilerProductos.find((p) => p.productoId === productoId)?.cantidad || 0,
+      unidadesAlquiladas: 0,
+      unidadesCotizadas: 0,
+      valor: {
+        totalGarantia: 0,
+        unitarioAlquiler: 0,
+        unitarioGarantia: 0,
+        x1: 0,
+        x3: 0,
+        x6: 0,
+        x12: 0,
+      },
+      ...props,
+    };
   };
 
   return (
@@ -117,6 +152,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         increaseAlquilerProducto,
         decreaseAlquilerProducto,
         getAlquileresBetweenDates,
+        createEmptyAlquilerProducto,
         alquilerProductos,
         setAlquilerProductos,
       }}

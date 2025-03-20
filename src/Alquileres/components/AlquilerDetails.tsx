@@ -18,6 +18,7 @@ export function AlquilerDetails() {
     selectedAlquiler,
     setAlquilerProductos,
     alquilerProductos,
+    createEmptyAlquilerProducto,
   } = useContext(AlquileresContext)!;
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
@@ -25,7 +26,6 @@ export function AlquilerDetails() {
   const { data, sendList } = useAlquilerProductoRepository();
 
   useEffect(() => {
-    console.log(data);
     setAlquilerProductos(data);
   }, [data]);
 
@@ -33,9 +33,10 @@ export function AlquilerDetails() {
     sendList(selectedAlquiler?.id || 0);
   }, [selectedAlquiler?.id]);
 
-  function handleSelectProducto(alquilerProductoId: AlquilerProductoEntity) {
-    console.log(alquilerProductoId);
-    setSelectedProducto(alquilerProductoId);
+  function handleSelectProducto(productoId: number) {
+    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === productoId);
+
+    setSelectedProducto(alquilerProducto || createEmptyAlquilerProducto(productoId, {}));
   }
 
   const form = useForm({
@@ -60,17 +61,19 @@ export function AlquilerDetails() {
       <AlquilerProductosContainer>
         <AlquilerProductosScrollContainer>
           {productos.map((producto) => {
-            const productoInAlquiler = alquilerProductos?.find((p) => p.productoId === producto.id);
+            const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
             return (
               <AlquilerProductoItem
                 key={producto.id}
                 producto={producto}
-                quantity={productoInAlquiler?.cantidad || 0}
-                productoInAlquiler={productoInAlquiler}
-                onSelectProducto={() => handleSelectProducto(productoInAlquiler!)}
-                onIncreaseAlquilerProducto={increaseAlquilerProducto}
-                onDecreaseAlquilerProducto={decreaseAlquilerProducto}
-                selectedAlquiler={selectedAlquiler}
+                alquilerProducto={alquilerProducto}
+                onSelectProducto={() => handleSelectProducto(producto.id)}
+                onIncreaseAlquilerProducto={() =>
+                  increaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
+                }
+                onDecreaseAlquilerProducto={() =>
+                  decreaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
+                }
               />
             );
           })}

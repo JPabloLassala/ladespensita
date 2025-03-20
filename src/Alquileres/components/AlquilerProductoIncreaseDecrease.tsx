@@ -1,25 +1,22 @@
 import { Button, Group, NumberInput } from "@mantine/core";
 
 export function AlquilerProductoQuantity({
-  alquilerId,
-  productoId,
   quantity,
   onIncreaseAlquilerProducto,
   onDecreaseAlquilerProducto,
 }: {
-  alquilerId: number;
-  productoId: number;
   quantity: number;
-  onIncreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
-  onDecreaseAlquilerProducto: (alquilerId: number, productoId: number) => void;
+  onIncreaseAlquilerProducto: () => void;
+  onDecreaseAlquilerProducto: () => void;
 }) {
   return (
     <Group wrap="nowrap" flex={1} align="center">
       <Button
         variant="outline"
-        onClick={() => onIncreaseAlquilerProducto(alquilerId, productoId)}
+        onClick={onDecreaseAlquilerProducto}
         color="gray"
         size="xs"
+        disabled={quantity === 0}
       >
         -
       </Button>
@@ -36,12 +33,7 @@ export function AlquilerProductoQuantity({
           },
         }}
       />
-      <Button
-        variant="outline"
-        onClick={() => onDecreaseAlquilerProducto(alquilerId, productoId)}
-        color="gray"
-        size="xs"
-      >
+      <Button variant="outline" onClick={onIncreaseAlquilerProducto} color="gray" size="xs">
         +
       </Button>
     </Group>
