@@ -1,6 +1,7 @@
 export type AlquilerProductoEntity = {
   id: number;
   productoId: number;
+  alquilerId: number;
   unidadesAlquiladas: number;
   unidadesCotizadas: number;
   cantidad: number;

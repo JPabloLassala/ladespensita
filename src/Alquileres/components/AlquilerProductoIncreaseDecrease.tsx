@@ -1,14 +1,19 @@
 import { Button, Group, NumberInput } from "@mantine/core";
+import { useDebouncedCallback } from "@mantine/hooks";
 
 export function AlquilerProductoQuantity({
   quantity,
   onIncreaseAlquilerProducto,
   onDecreaseAlquilerProducto,
+  onChangeAlquilerProductoQuantity,
 }: {
   quantity: number;
   onIncreaseAlquilerProducto: () => void;
   onDecreaseAlquilerProducto: () => void;
+  onChangeAlquilerProductoQuantity: (quantity: number) => void;
 }) {
+  const handleDelayedUpdate = useDebouncedCallback(onChangeAlquilerProductoQuantity, 200);
+
   return (
     <Group wrap="nowrap" flex={1} align="center">
       <Button
@@ -22,7 +27,7 @@ export function AlquilerProductoQuantity({
       </Button>
       <NumberInput
         value={quantity}
-        onChange={() => {}}
+        onChange={(value: number | string) => handleDelayedUpdate(parseInt(value.toString()))}
         hideControls
         min={0}
         w="4rem"

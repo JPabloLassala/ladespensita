@@ -5,7 +5,7 @@ export function AlquilerProductosScrollContainer({ children }: { children: React
     <Flex direction="row" gap="1rem" mih="100%" mah="100%" style={{ width: "100%" }}>
       <div
         style={{
-          width: "50%",
+          width: "100%",
           minHeight: "100%",
           maxHeight: "100%",
           overflow: "scroll",

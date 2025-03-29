@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { AlquileresContext } from "../stores";
-import { Title } from "@mantine/core";
+import { Flex, Title } from "@mantine/core";
 import { ProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
@@ -15,6 +15,7 @@ export function AlquilerDetails() {
   const {
     increaseAlquilerProducto,
     decreaseAlquilerProducto,
+    changeAlquilerProductoQuantity,
     selectedAlquiler,
     setAlquilerProductos,
     alquilerProductos,
@@ -52,35 +53,49 @@ export function AlquilerDetails() {
   });
 
   return (
-    <form
-      onSubmit={form.onSubmit((values) => console.log(values))}
-      style={{ display: "flex", flexDirection: "column", minHeight: "100%", maxHeight: "100%" }}
-    >
+    <Flex direction="column">
       <Title order={2}>Detalle</Title>
-      <AlquilerDetailsForm />
-      <AlquilerProductosContainer>
-        <AlquilerProductosScrollContainer>
-          {productos.map((producto) => {
-            const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
-            return (
-              <AlquilerProductoItem
-                key={producto.id}
-                producto={producto}
-                alquilerProducto={alquilerProducto}
-                onSelectProducto={() => handleSelectProducto(producto.id)}
-                onIncreaseAlquilerProducto={() =>
-                  increaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
-                }
-                onDecreaseAlquilerProducto={() =>
-                  decreaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
-                }
-              />
-            );
-          })}
-        </AlquilerProductosScrollContainer>
-      </AlquilerProductosContainer>
-
-      {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
-    </form>
+      <form
+        onSubmit={form.onSubmit((values) => console.log(values))}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "2rem",
+          minHeight: "100%",
+          maxHeight: "100%",
+        }}
+      >
+        <Flex direction="column">
+          <AlquilerDetailsForm />
+          <AlquilerProductosContainer>
+            <AlquilerProductosScrollContainer>
+              {productos.map((producto) => {
+                const alquilerProducto = alquilerProductos?.find(
+                  (p) => p.productoId === producto.id,
+                );
+                return (
+                  <AlquilerProductoItem
+                    key={producto.id}
+                    producto={producto}
+                    alquilerProducto={alquilerProducto}
+                    onSelectProducto={() => handleSelectProducto(producto.id)}
+                    onIncreaseAlquilerProducto={() =>
+                      increaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
+                    }
+                    onDecreaseAlquilerProducto={() =>
+                      decreaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
+                    }
+                    onChangeAlquilerProductoQuantity={(quantity) =>
+                      changeAlquilerProductoQuantity(selectedAlquiler!.id!, producto.id, quantity)
+                    }
+                  />
+                );
+              })}
+            </AlquilerProductosScrollContainer>
+          </AlquilerProductosContainer>
+        </Flex>
+        {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
+      </form>
+    </Flex>
   );
 }

@@ -9,12 +9,14 @@ export function AlquilerProductoItem({
   onSelectProducto,
   onIncreaseAlquilerProducto,
   onDecreaseAlquilerProducto,
+  onChangeAlquilerProductoQuantity,
 }: {
   producto: ProductoEntity;
   alquilerProducto: AlquilerProductoEntity | undefined;
   onSelectProducto: (productoId: number) => void;
   onIncreaseAlquilerProducto: () => void;
   onDecreaseAlquilerProducto: () => void;
+  onChangeAlquilerProductoQuantity: (quantity: number) => void;
 }) {
   return (
     <Paper
@@ -34,6 +36,7 @@ export function AlquilerProductoItem({
           quantity={alquilerProducto?.cantidad || 0}
           onIncreaseAlquilerProducto={onIncreaseAlquilerProducto}
           onDecreaseAlquilerProducto={onDecreaseAlquilerProducto}
+          onChangeAlquilerProductoQuantity={onChangeAlquilerProductoQuantity}
         />
       </Group>
     </Paper>

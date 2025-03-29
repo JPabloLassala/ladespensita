@@ -18,11 +18,17 @@ export type AlquileresContextType = {
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
   increaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
   decreaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
+  changeAlquilerProductoQuantity: (
+    alquilerId: number,
+    productoId: number,
+    quantity: number,
+  ) => void;
   alquilerProductos: AlquilerProductoEntity[];
   selectedAlquiler: Alquiler | undefined;
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   createEmptyAlquilerProducto: (
+    alquilerId: number,
     productoId: number,
     props: Partial<AlquilerProductoEntity>,
   ) => AlquilerProductoEntity;
@@ -97,6 +103,27 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     setAlquilerProductos([...newAlquilerProductosArray, producto]);
   };
 
+  const changeAlquilerProductoQuantity = (
+    alquilerId: number,
+    productoId: number,
+    quantity: number,
+  ) => {
+    const alquiler = alquileres.find((a) => a.id === alquilerId);
+    if (!alquiler) {
+      return;
+    }
+
+    const producto =
+      alquilerProductos.find((p) => p.productoId === productoId) ||
+      createEmptyAlquilerProducto(productoId, {});
+
+    producto.cantidad = quantity;
+
+    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
+
+    setAlquilerProductos([...newAlquilerProductosArray, producto]);
+  };
+
   const decreaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
     const alquiler = alquileres.find((a) => a.id === idAlquiler);
     if (!alquiler) {
@@ -117,11 +144,13 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
 
   const createEmptyAlquilerProducto = (
     productoId: number,
+    alquilerId: number,
     props: Partial<AlquilerProductoEntity>,
   ): AlquilerProductoEntity => {
     return {
       id: 0,
       productoId,
+      alquilerId,
       cantidad: alquilerProductos.find((p) => p.productoId === productoId)?.cantidad || 0,
       unidadesAlquiladas: 0,
       unidadesCotizadas: 0,
