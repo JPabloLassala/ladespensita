@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { AlquileresContext } from "../stores";
-import { Flex, Title } from "@mantine/core";
-import { ProductosContext } from "@/Productos";
+import { Button, Flex, Group, Title } from "@mantine/core";
+import { ProductoEntity, ProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
@@ -12,15 +12,8 @@ import { AlquilerProductosContainer, AlquilerProductosScrollContainer } from "./
 
 export function AlquilerDetails() {
   const { productos } = useContext(ProductosContext)!;
-  const {
-    increaseAlquilerProducto,
-    decreaseAlquilerProducto,
-    changeAlquilerProductoQuantity,
-    selectedAlquiler,
-    setAlquilerProductos,
-    alquilerProductos,
-    createEmptyAlquilerProducto,
-  } = useContext(AlquileresContext)!;
+  const { selectedAlquiler, setAlquilerProductos, alquilerProductos, createEmptyAlquilerProducto } =
+    useContext(AlquileresContext)!;
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
@@ -34,10 +27,10 @@ export function AlquilerDetails() {
     sendList(selectedAlquiler?.id || 0);
   }, [selectedAlquiler?.id]);
 
-  function handleSelectProducto(productoId: number) {
-    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === productoId);
+  function handleSelectProducto(alquilerId: number, producto: ProductoEntity) {
+    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
 
-    setSelectedProducto(alquilerProducto || createEmptyAlquilerProducto(productoId, {}));
+    setSelectedProducto(alquilerProducto || createEmptyAlquilerProducto(alquilerId, producto));
   }
 
   const form = useForm({
@@ -70,29 +63,26 @@ export function AlquilerDetails() {
           <AlquilerProductosContainer>
             <AlquilerProductosScrollContainer>
               {productos.map((producto) => {
-                const alquilerProducto = alquilerProductos?.find(
-                  (p) => p.productoId === producto.id,
-                );
                 return (
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
-                    alquilerProducto={alquilerProducto}
-                    onSelectProducto={() => handleSelectProducto(producto.id)}
-                    onIncreaseAlquilerProducto={() =>
-                      increaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
-                    }
-                    onDecreaseAlquilerProducto={() =>
-                      decreaseAlquilerProducto(selectedAlquiler!.id!, producto.id)
-                    }
-                    onChangeAlquilerProductoQuantity={(quantity) =>
-                      changeAlquilerProductoQuantity(selectedAlquiler!.id!, producto.id, quantity)
-                    }
+                    onSelectProducto={() => handleSelectProducto(selectedAlquiler!.id, producto)}
                   />
                 );
               })}
             </AlquilerProductosScrollContainer>
           </AlquilerProductosContainer>
+          {selectedProducto && (
+            <Group mt="1rem">
+              <Button type="submit" color="blue" size="lg">
+                Guardar
+              </Button>
+              <Button type="button" color="red" size="lg">
+                Cancelar
+              </Button>
+            </Group>
+          )}
         </Flex>
         {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
       </form>

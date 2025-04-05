@@ -7,6 +7,7 @@ import {
   AlquilerSummaryItem,
   PartialAlquiler,
 } from "../entities";
+import { ProductoEntity } from "@/Productos";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
@@ -16,21 +17,13 @@ export type AlquileresContextType = {
   deleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
-  increaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
-  decreaseAlquilerProducto: (idAlquiler: number, productoId: number) => void;
-  changeAlquilerProductoQuantity: (
-    alquilerId: number,
-    productoId: number,
-    quantity: number,
-  ) => void;
   alquilerProductos: AlquilerProductoEntity[];
   selectedAlquiler: Alquiler | undefined;
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   createEmptyAlquilerProducto: (
     alquilerId: number,
-    productoId: number,
-    props: Partial<AlquilerProductoEntity>,
+    producto: ProductoEntity,
   ) => AlquilerProductoEntity;
 };
 
@@ -85,85 +78,27 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     setAlquileres(alquileres.filter((alquiler) => alquiler.id !== id));
   };
 
-  const increaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
-    const alquiler = alquileres.find((a) => a.id === idAlquiler);
-    if (!alquiler) {
-      return;
-    }
-
-    const producto = alquilerProductos.find((p) => p.productoId === productoId);
-    if (!producto) {
-      return;
-    }
-
-    producto.cantidad += 1;
-
-    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
-
-    setAlquilerProductos([...newAlquilerProductosArray, producto]);
-  };
-
-  const changeAlquilerProductoQuantity = (
-    alquilerId: number,
-    productoId: number,
-    quantity: number,
-  ) => {
-    const alquiler = alquileres.find((a) => a.id === alquilerId);
-    if (!alquiler) {
-      return;
-    }
-
-    const producto =
-      alquilerProductos.find((p) => p.productoId === productoId) ||
-      createEmptyAlquilerProducto(productoId, {});
-
-    producto.cantidad = quantity;
-
-    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
-
-    setAlquilerProductos([...newAlquilerProductosArray, producto]);
-  };
-
-  const decreaseAlquilerProducto = (idAlquiler: number, productoId: number) => {
-    const alquiler = alquileres.find((a) => a.id === idAlquiler);
-    if (!alquiler) {
-      return;
-    }
-
-    const producto = alquilerProductos.find((p) => p.productoId === productoId);
-    if (!producto) {
-      return;
-    }
-
-    producto.cantidad -= 1;
-
-    const newAlquilerProductosArray = alquilerProductos.filter((ap) => ap.id !== producto.id);
-
-    setAlquilerProductos([...newAlquilerProductosArray, producto]);
-  };
-
   const createEmptyAlquilerProducto = (
-    productoId: number,
     alquilerId: number,
-    props: Partial<AlquilerProductoEntity>,
+    producto: ProductoEntity,
   ): AlquilerProductoEntity => {
+    const { unitarioGarantia, x1, x3, x6, x12 } = producto.valor;
     return {
       id: 0,
-      productoId,
+      productoId: producto.id,
       alquilerId,
-      cantidad: alquilerProductos.find((p) => p.productoId === productoId)?.cantidad || 0,
+      cantidad: alquilerProductos.find((p) => p.productoId === producto.id)?.cantidad || 0,
       unidadesAlquiladas: 0,
       unidadesCotizadas: 0,
       valor: {
-        totalGarantia: 0,
+        totalGarantia: unitarioGarantia,
         unitarioAlquiler: 0,
-        unitarioGarantia: 0,
-        x1: 0,
-        x3: 0,
-        x6: 0,
-        x12: 0,
+        unitarioGarantia,
+        x1,
+        x3,
+        x6,
+        x12,
       },
-      ...props,
     };
   };
 
@@ -178,12 +113,10 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         setNewAlquiler,
         selectedAlquiler,
         setSelectedAlquiler,
-        increaseAlquilerProducto,
-        decreaseAlquilerProducto,
         getAlquileresBetweenDates,
-        createEmptyAlquilerProducto,
         alquilerProductos,
         setAlquilerProductos,
+        createEmptyAlquilerProducto,
       }}
     >
       {children}

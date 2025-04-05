@@ -1,22 +1,12 @@
-import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { ProductoEntity } from "@/Productos";
 import { AspectRatio, Group, Image, Paper, Text } from "@mantine/core";
-import { AlquilerProductoQuantity } from "./AlquilerProductoIncreaseDecrease";
 
 export function AlquilerProductoItem({
   producto,
-  alquilerProducto,
   onSelectProducto,
-  onIncreaseAlquilerProducto,
-  onDecreaseAlquilerProducto,
-  onChangeAlquilerProductoQuantity,
 }: {
   producto: ProductoEntity;
-  alquilerProducto: AlquilerProductoEntity | undefined;
   onSelectProducto: (productoId: number) => void;
-  onIncreaseAlquilerProducto: () => void;
-  onDecreaseAlquilerProducto: () => void;
-  onChangeAlquilerProductoQuantity: (quantity: number) => void;
 }) {
   return (
     <Paper
@@ -25,19 +15,21 @@ export function AlquilerProductoItem({
       radius="md"
       p="xs"
       key={producto.id}
-      onClick={() => onSelectProducto(producto.id)}
+      onClick={() => {
+        onSelectProducto(producto.id);
+        console.log("Producto seleccionado:", producto.id);
+      }}
     >
-      <Group wrap="nowrap">
-        <AspectRatio ratio={1} maw={75}>
-          <Image src="http://localhost:3000/images/21.jpg" alt={producto.nombre} />
-        </AspectRatio>
-        <Text>{producto.nombre}</Text>
-        <AlquilerProductoQuantity
-          quantity={alquilerProducto?.cantidad || 0}
-          onIncreaseAlquilerProducto={onIncreaseAlquilerProducto}
-          onDecreaseAlquilerProducto={onDecreaseAlquilerProducto}
-          onChangeAlquilerProductoQuantity={onChangeAlquilerProductoQuantity}
-        />
+      <Group wrap="nowrap" justify="space-between" align="center">
+        <Group>
+          <AspectRatio ratio={1} maw={75}>
+            <Image src="http://localhost:3000/images/21.jpg" alt={producto.nombre} />
+          </AspectRatio>
+          <Text>{producto.nombre}</Text>
+        </Group>
+        <Group>
+          Disponibles: <Text fw={700}>{producto.disponibles}</Text>
+        </Group>
       </Group>
     </Paper>
   );
