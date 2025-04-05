@@ -16,10 +16,11 @@ export function useSessionAdapter() {
   }, [token]);
 
   async function login(username: string, password: string) {
+    const apiUrl = import.meta.env.VITE_API_HOST;
     setError("");
     setIsLoading(true);
 
-    const response = await fetch(`auth/login`, {
+    const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
