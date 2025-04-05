@@ -41,7 +41,7 @@ export function LoginPage() {
             <label htmlFor="pass" className="block w-1/2">
               Contraseña:
             </label>
-            <input className="border  w-full" type="text" name="pass" id="pass"></input>
+            <input type="password" className="border w-full" name="pass" id="pass"></input>
           </div>
         </div>
         <div className="w-full justify-center flex">
