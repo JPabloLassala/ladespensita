@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
+import axios from "axios";
 
 export function useSessionAdapter() {
   const [error, setError] = useState<string>();
@@ -20,22 +21,19 @@ export function useSessionAdapter() {
     setError("");
     setIsLoading(true);
 
-    const response = await fetch(`${apiUrl}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const response = await axios.post(`${apiUrl}/auth/login`, { username, password });
 
-    const data = await response.json();
+      console.log(response.data);
 
-    if (!response.ok) {
-      setError(data.message);
-      return;
+      setToken(response.data.access_token);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data.message || "Error de conexión");
+      } else {
+        setError("Error de conexión");
+      }
     }
-
-    setToken(data.access_token);
   }
 
   async function logout() {
