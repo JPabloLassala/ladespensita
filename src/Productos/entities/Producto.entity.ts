@@ -3,6 +3,8 @@ export class ProductoEntity {
   nombre: string;
   unidadesMetroLineal: number;
   img: string;
+  totales: number;
+  disponibles: number;
   medidas: {
     altura?: number;
     diametro?: number;
