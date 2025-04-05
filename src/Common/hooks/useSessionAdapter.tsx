@@ -17,6 +17,7 @@ export function useSessionAdapter() {
 
   async function login(username: string, password: string) {
     const apiUrl = import.meta.env.VITE_API_HOST;
+    console.log(apiUrl);
     setError("");
     setIsLoading(true);
 
