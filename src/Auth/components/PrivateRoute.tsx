@@ -6,7 +6,7 @@ export function PrivateRoute({ children }: { children: ReactNode }) {
   const cookies = new Cookies();
   const location = useLocation();
 
-  if (cookies.get("token")) {
+  if (cookies.get("token") && cookies.get("token") !== "undefined") {
     return <>{children}</>;
   }
 

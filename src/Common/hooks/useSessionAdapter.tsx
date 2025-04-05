@@ -8,10 +8,10 @@ export function useSessionAdapter() {
 
   useEffect(() => {
     const cookies = new Cookies();
-    const getDayTimestamp = () => Date.now() + 1000 * 60 * 60 * 24;
+    const getDayTimestamp = () => Date.now() + 1000 * 60 * 60 * 24 * 7; // 7 days
     cookies.set("token", token, {
       path: "/",
-      expires: new Date(getDayTimestamp() * 7),
+      expires: new Date(getDayTimestamp()),
     });
   }, [token]);
 
