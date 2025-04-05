@@ -4,7 +4,6 @@ import { ProductoEntity } from "../entities";
 export function ProductoCard({
   producto,
   disabled,
-  dimmed,
 }: {
   producto: ProductoEntity;
   disabled: boolean;
