@@ -1,55 +1,93 @@
 import { useSessionAdapter } from "@/Common";
-import { Button } from "@/Shared";
-import { FormEvent, useEffect } from "react";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Alert,
+  Button,
+  Center,
+  Divider,
+  Paper,
+  PasswordInput,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
-  const { login, error, token } = useSessionAdapter();
+  const [isErrorShown, setIsErrorShown] = useState(false);
+  const { login, error, isLoggedIn } = useSessionAdapter();
   const navigate = useNavigate();
+  const form = useForm({
+    initialValues: {
+      user: "",
+      password: "",
+    },
+  });
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const fd = new FormData(e.currentTarget);
-    const loginData = Object.fromEntries(fd.entries());
-
-    login(loginData.user as string, loginData.pass as string);
+  const handleLogin = ({ user, password }: { user: string; password: string }) => {
+    login(user, password);
   };
 
   useEffect(() => {
-    if (token) {
+    if (isLoggedIn) {
       console.log("logged in");
       return navigate("/productos");
     }
-  }, [token]);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (error) {
+      setIsErrorShown(true);
+    }
+  }, [error]);
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="w-1/4 h-1/4 min-h-1/4 rounded-md bg-white text-sm shadow-md p-4"
-    >
-      <div className="flex flex-col w-full h-full justify-between">
-        <div className="flex flex-col gap-3">
-          <p className="text-3xl font-body font-bold mb-2">Login</p>
-          <div className="flex flex-row justify-between gap-2">
-            <label htmlFor="usuario" className="block w-1/2">
-              Usuario:
-            </label>
-            <input className="border  w-full" type="text" name="user" id="user"></input>
-          </div>
-          <div className="flex flex-row gap-2">
-            <label htmlFor="pass" className="block w-1/2">
-              Contraseña:
-            </label>
-            <input type="password" className="border w-full" name="pass" id="pass"></input>
-          </div>
-        </div>
-        <div className="w-full justify-center flex">
-          <Button isSubmit className="bg-blue-400 text-white w-1/3" label="login" />
-        </div>
+    <form onSubmit={form.onSubmit(handleLogin)}>
+      <Center>
+        <Paper radius="md" p="xl" withBorder>
+          <Text size="lg" fw={500}>
+            Login
+          </Text>
+          <Divider labelPosition="center" my="lg" />
+          <Stack>
+            <TextInput
+              label="User"
+              placeholder="hola@gmail.com"
+              value={form.values.user}
+              onChange={(event) => form.setFieldValue("user", event.currentTarget.value)}
+              radius="md"
+            />
 
-        {error && <p className="text-red-500">{error}</p>}
-      </div>
+            <PasswordInput
+              label="Password"
+              placeholder="Your password"
+              value={form.values.password}
+              onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
+              radius="md"
+            />
+          </Stack>
+          <Stack justify="center" align="center" mt="xl">
+            {(error && isErrorShown) === true && (
+              <Alert
+                variant="light"
+                color="red"
+                title="Error"
+                withCloseButton
+                icon={<FontAwesomeIcon icon={faExclamationTriangle}></FontAwesomeIcon>}
+                onClick={() => setIsErrorShown(false)}
+              >
+                {error}
+              </Alert>
+            )}
+            <Button type="submit" radius="md">
+              Login
+            </Button>
+          </Stack>
+        </Paper>
+      </Center>
     </form>
   );
 }
