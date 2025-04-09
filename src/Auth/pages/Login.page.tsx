@@ -55,7 +55,7 @@ export function LoginPage() {
           <Stack>
             <TextInput
               label="User"
-              placeholder="hola@gmail.com"
+              placeholder="User"
               value={form.values.user}
               onChange={(event) => form.setFieldValue("user", event.currentTarget.value)}
               radius="md"
@@ -63,7 +63,7 @@ export function LoginPage() {
 
             <PasswordInput
               label="Password"
-              placeholder="Your password"
+              placeholder="Password"
               value={form.values.password}
               onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
               radius="md"
