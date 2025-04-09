@@ -6,6 +6,7 @@ export function useSessionAdapter() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState<string | null>();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const cookies = new Cookies();
@@ -27,17 +28,20 @@ export function useSessionAdapter() {
       console.log(response.data);
 
       setToken(response.data.access_token);
+      setIsLoggedIn(true);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setError(error.response?.data.message || "Error de conexión");
       } else {
         setError("Error de conexión");
       }
+      setIsLoggedIn(false);
     }
   }
 
   async function logout() {
     setToken("");
+    setIsLoggedIn(false);
   }
 
   return {
@@ -46,5 +50,6 @@ export function useSessionAdapter() {
     token,
     login,
     logout,
+    isLoggedIn,
   };
 }
