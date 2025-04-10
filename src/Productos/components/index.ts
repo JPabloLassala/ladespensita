@@ -1,4 +1,4 @@
-export * from "./DateInputField";
+export * from "./UI/DateInputField";
 export * from "./ProductoCard";
 export * from "./SearchInputField";
 export * from "./UI";

@@ -2,9 +2,9 @@ import { useContext } from "react";
 import dayjs from "dayjs";
 import { ProductosContext } from "@/Productos/stores";
 import { FilterContext } from "@/Common";
-import { SearchInputField } from "./SearchInputField";
-import { DateInputField } from "./DateInputField";
-import { Button, Checkbox } from "@/Shared";
+import { DateInputField } from "./UI/DateInputField";
+import { Button, Checkbox, Group, Stack } from "@mantine/core";
+import { SearchProducts } from "./UI/SearchProducts";
 
 export function FilterProducts() {
   const { setProductos, productos } = useContext(ProductosContext)!;
@@ -40,8 +40,8 @@ export function FilterProducts() {
   }
 
   return (
-    <div className="flex flex-row gap-2">
-      <SearchInputField
+    <Group justify="center">
+      <SearchProducts
         onToggleSearch={toggleEnableName}
         searchEnabled={nameEnabled}
         value={name}
@@ -62,20 +62,21 @@ export function FilterProducts() {
         onSetDate={handleSetUntilDate}
         value={untilDate}
       />
-      <Checkbox
-        id="filterToday"
-        label="Mostrar no incluidos"
-        checked={showUnavailable}
-        onCheck={handleShowUnavailable}
-      />
-      <div className="mt-5 flex items-center text-white gap-2">
-        <Button label="Filtrar" isSubmit className="bg-blue-600 hover:bg-blue-500" />
-        <Button
-          onClick={resetProducts}
-          label="Reestablecer"
-          className="bg-red-600 hover:bg-red-500"
+
+      <Stack>
+        <Checkbox
+          id="filterToday"
+          label="Mostrar no incluidos"
+          checked={showUnavailable}
+          onChange={handleShowUnavailable}
         />
-      </div>
-    </div>
+        <Group>
+          <Button type="submit">Filtrar</Button>
+          <Button onClick={resetProducts} color="gray">
+            Restablecer
+          </Button>
+        </Group>
+      </Stack>
+    </Group>
   );
 }

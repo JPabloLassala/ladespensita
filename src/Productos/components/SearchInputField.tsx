@@ -1,5 +1,6 @@
 import { faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Checkbox } from "@mantine/core";
 import { useRef } from "react";
 
 type SearchInputFieldProps = {
@@ -47,6 +48,7 @@ export function SearchInputField({
   return (
     <div className="flex w-1/5 flex-col">
       <div className="mb-1 flex flex-row items-center" onClick={onToggleSearch}>
+        <Checkbox label="Buscar" onChange={onToggleSearch} />
         <input
           ref={enableInputRef}
           checked={searchEnabled}
