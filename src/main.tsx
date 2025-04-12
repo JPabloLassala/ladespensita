@@ -5,6 +5,7 @@ import "@mantine/core/styles.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "./main.css";
+import "@mantine/dropzone/styles.css";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
