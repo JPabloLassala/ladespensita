@@ -13,7 +13,8 @@ export const CreateNewProducto = () => {
         radius="md"
         withBorder
         mt={3}
-        style={{ borderStyle: "dashed" }}
+        h={230}
+        style={{ borderStyle: "dashed", aspectRatio: "1/1" }}
       >
         <Flex align="center" justify="center" style={{ height: "100%", origin }} onClick={open}>
           <Button variant="outline" color="gray" style={{ borderStyle: "dashed" }}>
