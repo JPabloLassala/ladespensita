@@ -1,3 +1,5 @@
+import { FileWithPath } from "@mantine/dropzone";
+
 export class ProductoEntity {
   id: number;
   nombre: string;
@@ -25,4 +27,31 @@ export class ProductoEntity {
     total: number;
   };
   etiquetas: string[];
+  image?: {
+    id: number;
+    url: string;
+    productoId: number;
+    isMain: boolean;
+    createdAt: Date;
+  };
 }
+
+export type ProductoEntityCreate = {
+  id?: number;
+  nombre: string;
+  unidadesMetroLineal: number;
+  stock: number;
+  disponibles: number;
+  altura?: number;
+  diametro?: number;
+  ancho?: number;
+  profundidad?: number;
+  valorUnitarioGarantia: number;
+  valorUnitarioAlquiler: number;
+  valorx1: number;
+  valorx3: number;
+  valorx6: number;
+  valorx12: number;
+  file?: FileWithPath;
+};
+export type ProductoEntityUpdate = Omit<ProductoEntity, "createdAt" | "updatedAt">;
