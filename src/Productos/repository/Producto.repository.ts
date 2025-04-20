@@ -44,7 +44,6 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
       const resData = await axios.post<ProductoEntity>(`${apiHost}/producto`, newProductoFormData, {
-        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -66,27 +65,28 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
   }, []);
 
   const sendUpdate = useCallback(async function sendUpdate(
-    data: Partial<ProductoEntity>,
+    productoFormData: FormData,
+    id: number,
   ): Promise<void> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await await fetch(`${apiHost}/producto/${data.id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const resData = await axios.put<ProductoEntity>(
+        `${apiHost}/producto/${id}`,
+        productoFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
-        body: JSON.stringify(data),
-      });
+      );
 
-      const producto = await resData.json();
+      const producto = await resData.data;
 
       setData((oldData) => {
-        const index = oldData.findIndex((p) => p.id === producto.id);
-        oldData[index] = producto;
-        return oldData;
+        return [...oldData, producto];
       });
     } catch (error: unknown) {
       if (error instanceof Error) {
