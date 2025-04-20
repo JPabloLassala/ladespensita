@@ -2,7 +2,11 @@ import { Button, Card, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { NewProductoModal } from "./NewProductoModal";
 
-export const CreateNewProducto = () => {
+export const CreateNewProducto = ({
+  onCreate,
+}: {
+  onCreate: (data: FormData) => Promise<void>;
+}) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
@@ -22,7 +26,7 @@ export const CreateNewProducto = () => {
           </Button>
         </Flex>
       </Card>
-      <NewProductoModal opened={opened} onClose={close} />
+      <NewProductoModal opened={opened} onClose={close} onCreate={onCreate} />
     </>
   );
 };

@@ -8,10 +8,9 @@ import { CreateNewProducto } from "../components/CreateNewProducto";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductosContext)!;
-  const { data, sendList } = useProductoRepository([]);
+  const { data, sendList, sendCreate } = useProductoRepository(productos);
 
   useEffect(() => {
-    console.log("setting productos");
     setProductos(data);
   }, [data]);
 
@@ -25,7 +24,7 @@ export function ProductosPage() {
       <ProductosPageContainer>
         <FilterProducts />
         <ProductosListContainer>
-          <CreateNewProducto />
+          <CreateNewProducto onCreate={sendCreate} />
           {productos.map((p) => (
             <ProductoCard key={p.id} producto={p} dimmed={false} disabled={false} />
           ))}
