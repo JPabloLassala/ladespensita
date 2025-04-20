@@ -1,5 +1,13 @@
 import { FileWithPath } from "@mantine/dropzone";
 
+export class ProductoImage {
+  id: number;
+  url: string;
+  productoId: number;
+  isMain: boolean;
+  createdAt: Date;
+}
+
 export class ProductoEntity {
   id: number;
   nombre: string;
@@ -27,13 +35,7 @@ export class ProductoEntity {
     total: number;
   };
   etiquetas: string[];
-  image?: {
-    id: number;
-    url: string;
-    productoId: number;
-    isMain: boolean;
-    createdAt: Date;
-  };
+  image?: ProductoImage;
 }
 
 export type ProductoEntityCreate = {
