@@ -31,8 +31,7 @@ export const NewProductoModal = ({
     formData.append("file", values.file as FileWithPath);
     formData.append("nombre", values.nombre);
     formData.append("unidadesMetroLineal", values.unidadesMetroLineal.toString());
-    formData.append("stock", values.stock.toString());
-    formData.append("disponibles", values.stock.toString());
+    formData.append("totales", values.totales?.toString() || "");
     formData.append("altura", values.altura?.toString() || "");
     formData.append("diametro", values.diametro?.toString() || "");
     formData.append("ancho", values.ancho?.toString() || "");

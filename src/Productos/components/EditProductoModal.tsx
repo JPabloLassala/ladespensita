@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
 import { UploadFile } from "./UploadFile";
 import { useForm } from "@mantine/form";
-import { ProductoEntity, ProductoEntityCreate } from "../entities";
+import { ProductoEntity, ProductoEntityUpdate } from "../entities";
 import { useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 import { EditProductoForm } from "./EditProductoForm";
@@ -18,8 +18,25 @@ export const EditProductoModal = ({
   onUpdate: (producto: FormData, id: number) => void;
 }) => {
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
-  const form = useForm<ProductoEntityCreate>({
+  const form = useForm<ProductoEntityUpdate>({
     mode: "uncontrolled",
+    initialValues: {
+      id: producto.id,
+      file: undefined,
+      nombre: producto.nombre,
+      unidadesMetroLineal: producto.unidadesMetroLineal,
+      totales: producto.totales,
+      altura: producto.medidas.altura,
+      diametro: producto.medidas.diametro,
+      ancho: producto.medidas.ancho,
+      profundidad: producto.medidas.profundidad,
+      valorUnitarioGarantia: producto.valor.unitarioGarantia,
+      valorUnitarioAlquiler: producto.valor.unitarioAlquiler,
+      valorx1: producto.valor.x1,
+      valorx3: producto.valor.x3,
+      valorx6: producto.valor.x6,
+      valorx12: producto.valor.x12,
+    },
   });
 
   const handleSetFile = async (newFile: FileWithPath): Promise<void> => {
@@ -28,13 +45,12 @@ export const EditProductoModal = ({
     setFile(newFile);
   };
 
-  const handleSubmitForm = async (values: ProductoEntityCreate) => {
+  const handleSubmitForm = async (values: ProductoEntityUpdate) => {
     const formData = new FormData();
     formData.append("file", values.file as FileWithPath);
     formData.append("nombre", values.nombre);
     formData.append("unidadesMetroLineal", values.unidadesMetroLineal.toString());
-    formData.append("stock", values.stock.toString());
-    formData.append("disponibles", values.stock.toString());
+    formData.append("totales", values.totales.toString());
     formData.append("altura", values.altura?.toString() || "");
     formData.append("diametro", values.diametro?.toString() || "");
     formData.append("ancho", values.ancho?.toString() || "");
@@ -55,7 +71,7 @@ export const EditProductoModal = ({
         <Stack justify="center">
           <Group justify="center">
             <UploadFile file={file} onSetFile={handleSetFile} image={producto.image} />
-            <EditProductoForm form={form} producto={producto} />
+            <EditProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
             <Button color="gray" onClick={onClose}>
