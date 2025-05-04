@@ -55,9 +55,9 @@ export type ProductoEntityCreate = {
   valorx6: number;
   valorx12: number;
   file?: FileWithPath;
+  tmpURL?: string;
 };
 
 export type ProductoEntityUpdate = Omit<ProductoEntityCreate, "createdAt" | "updatedAt"> & {
   id: number;
-  file?: FileWithPath;
 };
