@@ -22,7 +22,7 @@ export const NewProductoModal = ({
     mode: "uncontrolled",
   });
 
-  const handleSetFile = (newFile: FileWithPath): void => {
+  const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
 
     setFile(newFile);

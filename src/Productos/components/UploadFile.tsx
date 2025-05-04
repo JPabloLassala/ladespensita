@@ -13,7 +13,7 @@ export const UploadFile = ({
   image,
 }: {
   file: File | undefined;
-  onSetFile: (file: File | undefined) => void;
+  onSetFile: (file: FileWithPath | undefined) => void;
   onSetTmpURL: (url: string) => void;
   onResetFile?: () => void;
   image?: ProductoImage;
@@ -30,7 +30,7 @@ export const UploadFile = ({
       url = image.url;
     }
 
-    return <Image fit="contain" h={200} src={url} onLoad={() => URL.revokeObjectURL(url)} />;
+    return <Image fit="contain" h={200} src={url} />;
   };
 
   const handleDrop = (acceptedFiles: FileWithPath[]) => {
