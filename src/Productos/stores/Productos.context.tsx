@@ -14,27 +14,27 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
   const [productos, setProductos] = useState<ProductoEntity[]>([]);
 
   const updateProducto = (newProducto: ProductoEntityUpdate) => {
-    const producto = productos.find((p) => p.id === newProducto.id);
+    const productoToUpdate = productos.find((p) => p.id === newProducto.id);
 
-    if (!producto) {
+    if (!productoToUpdate) {
       console.error("Producto not found");
       return;
     }
 
-    producto.nombre = newProducto.nombre;
-    producto.unidadesMetroLineal = newProducto.unidadesMetroLineal;
-    producto.totales = newProducto.totales;
-    producto.medidas.altura = newProducto.altura;
-    producto.medidas.diametro = newProducto.diametro;
-    producto.medidas.ancho = newProducto.ancho;
-    producto.medidas.profundidad = newProducto.profundidad;
-    producto.valor.unitarioGarantia = newProducto.valorUnitarioGarantia;
-    producto.valor.unitarioAlquiler = newProducto.valorUnitarioAlquiler;
-    producto.valor.x1 = newProducto.valorx1;
-    producto.valor.x3 = newProducto.valorx3;
-    producto.valor.x6 = newProducto.valorx6;
-    producto.valor.x12 = newProducto.valorx12;
-    producto.image = {
+    productoToUpdate.nombre = newProducto.nombre;
+    productoToUpdate.unidadesMetroLineal = newProducto.unidadesMetroLineal;
+    productoToUpdate.totales = newProducto.totales;
+    productoToUpdate.medidas.altura = newProducto.altura;
+    productoToUpdate.medidas.diametro = newProducto.diametro;
+    productoToUpdate.medidas.ancho = newProducto.ancho;
+    productoToUpdate.medidas.profundidad = newProducto.profundidad;
+    productoToUpdate.valor.unitarioGarantia = newProducto.valorUnitarioGarantia;
+    productoToUpdate.valor.unitarioAlquiler = newProducto.valorUnitarioAlquiler;
+    productoToUpdate.valor.x1 = newProducto.valorx1;
+    productoToUpdate.valor.x3 = newProducto.valorx3;
+    productoToUpdate.valor.x6 = newProducto.valorx6;
+    productoToUpdate.valor.x12 = newProducto.valorx12;
+    productoToUpdate.image = {
       createdAt: new Date(),
       id: Math.floor(Math.random() * 1000),
       isMain: true,
@@ -43,7 +43,13 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     };
 
     setProductos((prev) =>
-      prev.map((p) => (p.id === newProducto.id ? { ...p, ...producto } : producto)),
+      prev.map((p) => {
+        if (p.id === productoToUpdate.id) {
+          console.log("Updating producto", p.id);
+          console.log("New producto ID", newProducto.id);
+        }
+        return p.id === productoToUpdate.id ? { ...p, ...productoToUpdate } : p;
+      }),
     );
   };
 
