@@ -15,9 +15,10 @@ export const EditProductoModal = ({
   onClose: () => void;
   opened: boolean;
   producto: ProductoEntity;
-  onUpdate: (producto: FormData, id: number) => void;
+  onUpdate: (producto: ProductoEntityUpdate, id: number) => void;
 }) => {
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
+  const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
   const form = useForm<ProductoEntityUpdate>({
     mode: "uncontrolled",
     initialValues: {
@@ -39,30 +40,26 @@ export const EditProductoModal = ({
     },
   });
 
-  const handleSetFile = async (newFile: FileWithPath): Promise<void> => {
+  const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
 
+    if (!newFile) {
+      setTmpURL(undefined);
+    }
     setFile(newFile);
   };
 
-  const handleSubmitForm = async (values: ProductoEntityUpdate) => {
-    const formData = new FormData();
-    formData.append("file", values.file as FileWithPath);
-    formData.append("nombre", values.nombre);
-    formData.append("unidadesMetroLineal", values.unidadesMetroLineal.toString());
-    formData.append("totales", values.totales.toString());
-    formData.append("altura", values.altura?.toString() || "");
-    formData.append("diametro", values.diametro?.toString() || "");
-    formData.append("ancho", values.ancho?.toString() || "");
-    formData.append("profundidad", values.profundidad?.toString() || "");
-    formData.append("valorUnitarioGarantia", values.valorUnitarioGarantia.toString());
-    formData.append("valorUnitarioAlquiler", values.valorUnitarioAlquiler.toString());
-    formData.append("valorx1", values.valorx1.toString());
-    formData.append("valorx3", values.valorx3.toString());
-    formData.append("valorx6", values.valorx6.toString());
-    formData.append("valorx12", values.valorx12.toString());
+  const handleSubmitForm = (values: ProductoEntityUpdate) => {
+    onUpdate({ ...values, tmpURL: tmpURL }, producto.id);
+    form.reset();
+    setFile(undefined);
+    onClose();
+  };
 
-    onUpdate(formData, producto.id);
+  const handleResetFile = () => {
+    form.setFieldValue("file", undefined);
+    setFile(undefined);
+    setTmpURL(undefined);
   };
 
   return (
@@ -70,7 +67,13 @@ export const EditProductoModal = ({
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
-            <UploadFile file={file} onSetFile={handleSetFile} image={producto.image} />
+            <UploadFile
+              file={file}
+              onSetFile={handleSetFile}
+              image={producto.image}
+              onSetTmpURL={setTmpURL}
+              onResetFile={handleResetFile}
+            />
             <EditProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
@@ -78,7 +81,7 @@ export const EditProductoModal = ({
               Cancelar
             </Button>
             <Button type="submit" color="blue">
-              Crear
+              Guardar
             </Button>
           </Group>
         </Stack>

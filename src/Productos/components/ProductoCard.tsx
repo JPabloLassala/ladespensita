@@ -1,5 +1,5 @@
 import { Badge, Card, Group, Image, Overlay, Text } from "@mantine/core";
-import { ProductoEntity } from "../entities";
+import { ProductoEntity, ProductoEntityUpdate } from "../entities";
 import { useDisclosure } from "@mantine/hooks";
 import { EditProductoModal } from "./EditProductoModal";
 
@@ -11,7 +11,7 @@ export function ProductoCard({
   producto: ProductoEntity;
   disabled: boolean;
   dimmed: boolean;
-  onUpdate: (_: FormData, id: number) => void;
+  onUpdate: (_: ProductoEntityUpdate, id: number) => void;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
 
