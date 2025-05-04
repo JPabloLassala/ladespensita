@@ -8,22 +8,26 @@ import { ProductoImage } from "../entities";
 export const UploadFile = ({
   file,
   onSetFile,
+  onSetTmpURL,
+  onResetFile,
   image,
 }: {
   file: File | undefined;
-  onSetFile: (file: File) => void;
+  onSetFile: (file: File | undefined) => void;
+  onSetTmpURL: (url: string) => void;
+  onResetFile?: () => void;
   image?: ProductoImage;
 }) => {
   const theme = useMantineTheme();
 
   const preview = () => {
-    if (!file && !image) return null;
+    if (!file && !image) return;
 
     let url: string = "";
-    if (image) {
-      url = image.url;
-    } else {
+    if (file) {
       url = URL.createObjectURL(file as File);
+    } else if (image) {
+      url = image.url;
     }
 
     return <Image fit="contain" h={200} src={url} onLoad={() => URL.revokeObjectURL(url)} />;
@@ -31,10 +35,12 @@ export const UploadFile = ({
 
   const handleDrop = (acceptedFiles: FileWithPath[]) => {
     onSetFile(acceptedFiles[0]);
+    const url = URL.createObjectURL(acceptedFiles[0]);
+    onSetTmpURL(url);
   };
 
   const handleClearFile = () => {
-    onSetFile({} as File);
+    onSetFile(undefined);
   };
 
   return (
@@ -67,6 +73,11 @@ export const UploadFile = ({
           </Dropzone.Idle>
         </Dropzone>
         <Button onClick={handleClearFile}>Borrar imagen</Button>
+        {onResetFile && file && (
+          <Button onClick={onResetFile} color="red">
+            Volver a imagen anterior
+          </Button>
+        )}
       </Group>
     </Stack>
   );
