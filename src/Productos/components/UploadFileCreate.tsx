@@ -5,7 +5,7 @@ import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import classes from "../Css/Dropzone.module.css";
 import { ProductoImage } from "../entities";
 
-export const UploadFile = ({
+export const UploadFileCreate = ({
   file,
   onSetFile,
   onSetTmpURL,
