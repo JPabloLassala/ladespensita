@@ -2,7 +2,7 @@ import { Group, NumberInput, Stack, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const NewProductoForm = ({ form }: { form: UseFormReturnType<any> }) => {
+export const CreateProductoForm = ({ form }: { form: UseFormReturnType<any> }) => {
   return (
     <Group align="start">
       <Stack justify="start" align="start" gap="xs">

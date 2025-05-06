@@ -1,6 +1,6 @@
 import { Button, Card, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { NewProductoModal } from "./NewProductoModal";
+import { CreateProductoModal } from "./CreateProductoModal";
 import { ProductoEntityCreate } from "../entities";
 
 export const CreateNewProducto = ({
@@ -27,7 +27,7 @@ export const CreateNewProducto = ({
           </Button>
         </Flex>
       </Card>
-      <NewProductoModal opened={opened} onClose={close} onCreate={onCreate} />
+      <CreateProductoModal opened={opened} onClose={close} onCreate={onCreate} />
     </>
   );
 };
