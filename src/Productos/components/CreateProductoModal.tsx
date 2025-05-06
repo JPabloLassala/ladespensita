@@ -15,9 +15,9 @@ export const CreateProductoModal = ({
   opened: boolean;
   onCreate: (data: ProductoEntityCreate) => void;
 }) => {
+  const [uploadDirty, setUploadDirty] = useState(false);
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
-
   const form = useForm<ProductoEntityCreate>({
     mode: "uncontrolled",
   });
@@ -32,6 +32,7 @@ export const CreateProductoModal = ({
     onCreate({ ...values, tmpURL: tmpURL });
     form.reset();
     setFile(undefined);
+    setUploadDirty(false);
     onClose();
   };
 
@@ -40,7 +41,13 @@ export const CreateProductoModal = ({
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
-            <UploadFileCreate file={file} onSetFile={handleSetFile} onSetTmpURL={setTmpURL} />
+            <UploadFileCreate
+              file={file}
+              onSetFile={handleSetFile}
+              onSetTmpURL={setTmpURL}
+              dirty={uploadDirty}
+              setDirty={setUploadDirty}
+            />
             <CreateProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
