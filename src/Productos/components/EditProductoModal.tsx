@@ -24,7 +24,6 @@ export const EditProductoModal = ({
     mode: "uncontrolled",
     initialValues: {
       id: producto.id,
-      file: undefined,
       nombre: producto.nombre,
       unidadesMetroLineal: producto.unidadesMetroLineal,
       totales: producto.totales,
