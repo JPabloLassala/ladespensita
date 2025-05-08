@@ -21,8 +21,7 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
     setIsLoading(true);
 
     try {
-      await fetch(`${apiHost}/producto/${id}`, {
-        method: "DELETE",
+      await axios.delete(`${apiHost}/producto/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

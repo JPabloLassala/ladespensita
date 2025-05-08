@@ -6,6 +6,7 @@ export type ProductosContextType = {
   setProductos: React.Dispatch<React.SetStateAction<ProductoEntity[]>>;
   updateProducto: (newProducto: ProductoEntityUpdate) => void;
   createProducto: (newProducto: ProductoEntityCreate) => void;
+  deleteProducto: (id: number) => void;
 };
 
 export const ProductosContext = createContext<ProductosContextType | null>(null);
@@ -84,6 +85,10 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     setProductos((prev) => [...prev, { ...producto }]);
   };
 
+  const deleteProducto = (id: number) => {
+    setProductos((prev) => prev.filter((p) => p.id !== id));
+  };
+
   return (
     <ProductosContext.Provider
       value={{
@@ -91,6 +96,7 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
         setProductos,
         updateProducto,
         createProducto,
+        deleteProducto,
       }}
     >
       {children}
