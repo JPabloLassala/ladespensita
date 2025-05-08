@@ -1,9 +1,10 @@
-import { Card, Group, Image, Overlay, Text } from "@mantine/core";
+import { Button, Card, Group, Image, Overlay, Popover, Stack, Text } from "@mantine/core";
 import { ProductoEntity, ProductoEntityUpdate } from "../entities";
 import { useDisclosure } from "@mantine/hooks";
 import { EditProductoModal } from "./EditProductoModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 export function ProductoCard({
   producto,
@@ -18,13 +19,20 @@ export function ProductoCard({
   onDelete: (id: number) => void;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleDelete = () => {
+    setDeleteOpen(false);
+    onDelete(producto.id);
+  };
 
   return (
     <>
       <EditProductoModal opened={opened} onClose={close} producto={producto} onUpdate={onUpdate} />
-      <Card shadow="sm" padding="md" radius="md" withBorder mt={3} onClick={open}>
+      <Card shadow="sm" padding="md" radius="md" withBorder mt={3}>
         <Card.Section>
           <Image
+            onClick={open}
             src={producto.image?.url}
             fallbackSrc="https://placehold.co/160x300?text=Sin%20Foto"
             height={160}
@@ -34,7 +42,29 @@ export function ProductoCard({
 
         <Group justify="space-between" mt="md" mb="xs">
           <Text fw={500}>{producto.nombre}</Text>
-          <FontAwesomeIcon icon={faTrash} onClick={() => onDelete(producto.id)} className="p-4" />
+          <Popover
+            width={300}
+            opened={deleteOpen}
+            onChange={setDeleteOpen}
+            position="bottom"
+            withArrow
+            shadow="md"
+          >
+            <Popover.Target>
+              <FontAwesomeIcon icon={faTrash} onClick={() => setDeleteOpen(true)} />
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Stack>
+                <Text size="sm">¿Borrar producto?</Text>
+                <Group>
+                  <Button color="red" onClick={handleDelete}>
+                    Borrar
+                  </Button>
+                  <Button onClick={() => setDeleteOpen(false)}>Cancelar</Button>
+                </Group>
+              </Stack>
+            </Popover.Dropdown>
+          </Popover>
         </Group>
       </Card>
     </>
