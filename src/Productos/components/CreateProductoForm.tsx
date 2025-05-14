@@ -57,11 +57,11 @@ export const CreateProductoForm = ({ form }: { form: UseFormReturnType<any> }) =
       </Stack>
       <Stack justify="start" align="start" gap="xs">
         <NumberInput
-          label="Stock"
-          placeholder="Stock"
+          label="Stock inicial"
+          placeholder="Stock inicial"
           hideControls
-          key={form.key("stock")}
-          {...form.getInputProps("stock")}
+          key={form.key("totales")}
+          {...form.getInputProps("totales")}
         />
         <NumberInput
           label="Unidades metro lineal"
