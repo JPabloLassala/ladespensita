@@ -5,6 +5,7 @@ import { EditProductoModal } from "./EditProductoModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import "../Css/hover-trash.css";
 
 export function ProductoCard({
   producto,
@@ -51,7 +52,11 @@ export function ProductoCard({
             shadow="md"
           >
             <Popover.Target>
-              <FontAwesomeIcon icon={faTrash} onClick={() => setDeleteOpen(true)} />
+              <FontAwesomeIcon
+                className="hover-trash"
+                icon={faTrash}
+                onClick={() => setDeleteOpen(true)}
+              />
             </Popover.Target>
             <Popover.Dropdown>
               <Stack>
