@@ -84,9 +84,7 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
 
       const producto = await resData.data;
 
-      setData((oldData) => {
-        return [...oldData, producto];
-      });
+      setData((oldData) => oldData.map((p) => (p.id === producto.id ? producto : p)));
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
