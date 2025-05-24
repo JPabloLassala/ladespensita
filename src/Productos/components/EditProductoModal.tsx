@@ -24,20 +24,22 @@ export const EditProductoModal = ({
     mode: "uncontrolled",
   });
 
-  form.setFieldValue("id", producto.id);
-  form.setFieldValue("nombre", producto.nombre);
-  form.setFieldValue("unidadesMetroLineal", producto.unidadesMetroLineal);
-  form.setFieldValue("totales", producto.totales);
-  form.setFieldValue("altura", producto.medidas.altura);
-  form.setFieldValue("diametro", producto.medidas.diametro);
-  form.setFieldValue("ancho", producto.medidas.ancho);
-  form.setFieldValue("profundidad", producto.medidas.profundidad);
-  form.setFieldValue("valorUnitarioGarantia", producto.valor.unitarioGarantia);
-  form.setFieldValue("valorUnitarioAlquiler", producto.valor.unitarioAlquiler);
-  form.setFieldValue("valorx1", producto.valor.x1);
-  form.setFieldValue("valorx3", producto.valor.x3);
-  form.setFieldValue("valorx6", producto.valor.x6);
-  form.setFieldValue("valorx12", producto.valor.x12);
+  if (!form.isDirty()) {
+    form.setFieldValue("id", producto.id);
+    form.setFieldValue("nombre", producto.nombre);
+    form.setFieldValue("unidadesMetroLineal", producto.unidadesMetroLineal);
+    form.setFieldValue("totales", producto.totales);
+    form.setFieldValue("altura", producto.medidas.altura);
+    form.setFieldValue("diametro", producto.medidas.diametro);
+    form.setFieldValue("ancho", producto.medidas.ancho);
+    form.setFieldValue("profundidad", producto.medidas.profundidad);
+    form.setFieldValue("valorUnitarioGarantia", producto.valor.unitarioGarantia);
+    form.setFieldValue("valorUnitarioAlquiler", producto.valor.unitarioAlquiler);
+    form.setFieldValue("valorx1", producto.valor.x1);
+    form.setFieldValue("valorx3", producto.valor.x3);
+    form.setFieldValue("valorx6", producto.valor.x6);
+    form.setFieldValue("valorx12", producto.valor.x12);
+  }
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
@@ -53,6 +55,13 @@ export const EditProductoModal = ({
     setTmpURL(undefined);
     form.setFieldValue("file", undefined);
     setUploadDirty(true);
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    onClose();
+    setFile(undefined);
+    setUploadDirty(false);
   };
 
   const handleSubmitForm = (values: ProductoEntityUpdate) => {
@@ -81,7 +90,7 @@ export const EditProductoModal = ({
             <EditProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
-            <Button color="gray" onClick={onClose}>
+            <Button color="gray" onClick={handleCancel}>
               Cancelar
             </Button>
             <Button type="submit" color="blue">
