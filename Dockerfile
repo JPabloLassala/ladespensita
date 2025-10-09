@@ -6,7 +6,7 @@ WORKDIR /app
 # Install deps first (better layer caching)
 COPY yarn.lock* ./
 # pick your installer; default to npm
-RUN yarn install --frozen-lockfile;
+RUN yarn --frozen-lockfile;
 
 # Copy the rest and build
 COPY . .
