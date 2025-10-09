@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 export type AppProgressContextType = {
   appState: string;
@@ -14,7 +14,7 @@ export const APP_STATE = {
 
 export const AppStateContext = createContext<AppProgressContextType | null>(null);
 
-export function AppStateProvider({ children }: { children: ReactNode }) {
+export const AppStateProvider = ({ children }: { children: ReactNode }) => {
   const [appState, setAppState] = useState(APP_STATE.loaded);
 
   return (
@@ -22,4 +22,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       {children}
     </AppStateContext.Provider>
   );
-}
+};
+
+export const useAppStateContext = (): AppProgressContextType => {
+  const ctx = useContext(AppStateContext);
+  if (!ctx) throw new Error("useAppStateContext must be used within AppStateProvider");
+  return ctx;
+};

@@ -1,11 +1,16 @@
-import { useContext, useEffect } from "react";
-import { AlquileresContext } from "../stores";
-import { APP_STATE, AppStateContext } from "@/Common";
+import { useEffect } from "react";
+import { useAlquileresContext } from "../stores";
+import { APP_STATE, useAppStateContext } from "@/Common";
 import { Flex } from "@mantine/core";
-import { ProductosContext } from "@/Productos";
+import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
-import { AlquilerDetails } from "../components/AlquilerDetails";
-import { AlquilerDetailsContainer, AlquilerList, AlquilerNoneSelected } from "../components";
+import {
+  AlquilerDetails,
+  AlquilerDetailsContainer,
+  AlquilerList,
+  AlquilerNoneSelected,
+  NewAlquilerForm,
+} from "../components";
 import { useAlquilerRepository } from "../repository";
 
 export function AlquileresPage() {
@@ -16,10 +21,10 @@ export function AlquileresPage() {
     deleteAlquiler,
     selectedAlquiler,
     setSelectedAlquiler,
-  } = useContext(AlquileresContext)!;
-  const { setAppState, appState } = useContext(AppStateContext)!;
+  } = useAlquileresContext();
+  const { setAppState, appState } = useAppStateContext();
   const { data, sendDelete, sendList } = useAlquilerRepository([]);
-  const { setProductos } = useContext(ProductosContext)!;
+  const { setProductos } = useProductosContext();
   const isCreatingNewAlquiler = appState === APP_STATE.creating;
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
@@ -51,6 +56,9 @@ export function AlquileresPage() {
     sendList();
   }, []);
 
+  console.log("selectedAlquiler", selectedAlquiler);
+  console.log("isCreatingNewAlquiler", isCreatingNewAlquiler);
+
   return (
     <Flex
       direction="row"
@@ -69,9 +77,7 @@ export function AlquileresPage() {
           <AlquilerDetails />
         </AlquilerDetailsContainer>
       )}
-      {/* {isCreatingNewAlquiler && (
-        <NewAlquilerForm newAlquiler={newAlquiler} setNewAlquiler={setNewAlquiler} />
-      )} */}
+      {isCreatingNewAlquiler && <NewAlquilerForm />}
       {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
     </Flex>
   );

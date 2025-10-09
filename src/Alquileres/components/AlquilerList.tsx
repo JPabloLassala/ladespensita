@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { AlquilerListContainer, AlquilerListEntry, NewAlquilerListEntry } from "./UI";
 import dayjs from "dayjs";
 import { AlquilerSummaryItem } from "../entities";
-import { AlquileresContext } from "../stores";
-import { AppStateContext } from "@/Common";
+import { useAlquileresContext } from "../stores";
+import { useAppStateContext } from "@/Common";
 import { Button, Center, Stack } from "@mantine/core";
 import { DeleteAlquilerModal } from "../pages";
 
@@ -22,8 +22,8 @@ export function AlquilerList({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
-  const { newAlquiler, selectedAlquiler } = useContext(AlquileresContext)!;
-  const { appState } = useContext(AppStateContext)!;
+  const { newAlquiler, selectedAlquiler } = useAlquileresContext();
+  const { appState } = useAppStateContext();
 
   function handleCloseModal() {
     setIsModalOpen(false);

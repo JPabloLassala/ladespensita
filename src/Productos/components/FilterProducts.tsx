@@ -1,13 +1,12 @@
-import { useContext } from "react";
 import dayjs from "dayjs";
-import { ProductosContext } from "@/Productos/stores";
-import { FilterContext } from "@/Common";
+import { useProductosContext } from "@/Productos/stores";
+import { useFilterContext } from "@/Common";
 import { DateInputField } from "./UI/DateInputField";
 import { Button, Checkbox, Group, Stack } from "@mantine/core";
 import { SearchProducts } from "./UI/SearchProducts";
 
 export function FilterProducts() {
-  const { setProductos, productos } = useContext(ProductosContext)!;
+  const { setProductos, productos } = useProductosContext();
   const {
     name,
     setName,
@@ -19,7 +18,7 @@ export function FilterProducts() {
     setUntilDate,
     showUnavailable,
     toggleShowUnavailable,
-  } = useContext(FilterContext)!;
+  } = useFilterContext();
 
   function resetProducts() {
     setProductos(productos);
