@@ -5,11 +5,13 @@ WORKDIR /app
 
 # Install deps first (better layer caching)
 COPY yarn.lock* ./
+RUN npm g i yarn;
 # pick your installer; default to npm
 RUN yarn --frozen-lockfile;
 
 # Copy the rest and build
 COPY . .
+
 
 # Build (make sure your build script runs `vite build`)
 RUN yarn build 
