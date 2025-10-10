@@ -9,7 +9,6 @@ import {
   AlquilerDetailsContainer,
   AlquilerList,
   AlquilerNoneSelected,
-  NewAlquilerForm,
 } from "../components";
 import { useAlquilerRepository } from "../repository";
 
@@ -18,14 +17,16 @@ export function AlquileresPage() {
     getSummary,
     alquileres,
     setAlquileres,
+    newAlquilerIdx,
     deleteAlquiler,
     selectedAlquiler,
     setSelectedAlquiler,
+    createNewAlquiler,
+    deleteNewAlquiler,
   } = useAlquileresContext();
   const { setAppState, appState } = useAppStateContext();
   const { data, sendDelete, sendList } = useAlquilerRepository([]);
   const { setProductos } = useProductosContext();
-  const isCreatingNewAlquiler = appState === APP_STATE.creating;
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
   function handleSelectAlquiler(id: number) {
@@ -39,10 +40,12 @@ export function AlquileresPage() {
   }
   function handleStartCreateNewAlquiler() {
     setAppState(APP_STATE.creating);
-    setSelectedAlquiler(undefined);
+    const alquiler = createNewAlquiler();
+    setSelectedAlquiler(alquiler);
   }
   function handleCancelCreateNewAlquiler() {
     setAppState(APP_STATE.loaded);
+    deleteNewAlquiler();
     setSelectedAlquiler(undefined);
   }
 
@@ -56,8 +59,7 @@ export function AlquileresPage() {
     sendList();
   }, []);
 
-  console.log("selectedAlquiler", selectedAlquiler);
-  console.log("isCreatingNewAlquiler", isCreatingNewAlquiler);
+  console.log("selected", selectedAlquiler);
 
   return (
     <Flex
@@ -72,13 +74,12 @@ export function AlquileresPage() {
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
-      {selectedAlquiler && !isCreatingNewAlquiler && (
+      {selectedAlquiler && (
         <AlquilerDetailsContainer>
           <AlquilerDetails />
         </AlquilerDetailsContainer>
       )}
-      {isCreatingNewAlquiler && <NewAlquilerForm />}
-      {!selectedAlquiler && !isCreatingNewAlquiler && <AlquilerNoneSelected />}
+      {!selectedAlquiler && <AlquilerNoneSelected />}
     </Flex>
   );
 }
