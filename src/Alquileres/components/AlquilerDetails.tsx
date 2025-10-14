@@ -8,12 +8,13 @@ import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.r
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
-import { AlquilerProductosContainer, AlquilerProductosScrollContainer } from "./UI";
+import { AlquilerProductosScrollContainer } from "./UI";
 
 export function AlquilerDetails() {
   const { productos } = useProductosContext();
   const { selectedAlquiler, setAlquilerProductos, alquilerProductos, createEmptyAlquilerProducto } =
     useAlquileresContext();
+  console.log("selectedalquiler", selectedAlquiler);
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
@@ -46,43 +47,40 @@ export function AlquilerDetails() {
   });
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         onSubmit={form.onSubmit((values) => console.log(values))}
+        id="alquiler-details-form"
         style={{
           display: "flex",
           flexDirection: "row",
           gap: "2rem",
-          minHeight: "100%",
+          height: "100%",
           maxHeight: "100%",
         }}
       >
-        <Flex direction="column">
+        <Flex direction="column" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="1rem">
           <AlquilerDetailsForm />
-          <AlquilerProductosContainer>
-            <AlquilerProductosScrollContainer>
-              {productos.map((producto) => {
-                return (
-                  <AlquilerProductoItem
-                    key={producto.id}
-                    producto={producto}
-                    onSelectProducto={() => handleSelectProducto(selectedAlquiler!.id, producto)}
-                  />
-                );
-              })}
-            </AlquilerProductosScrollContainer>
-          </AlquilerProductosContainer>
-          {selectedProducto && (
-            <Group mt="1rem">
-              <Button type="submit" color="blue" size="lg">
-                Guardar
-              </Button>
-              <Button type="button" color="red" size="lg">
-                Cancelar
-              </Button>
-            </Group>
-          )}
+          <AlquilerProductosScrollContainer>
+            {productos.map((producto) => {
+              return (
+                <AlquilerProductoItem
+                  key={producto.id}
+                  producto={producto}
+                  onSelectProducto={() => handleSelectProducto(selectedAlquiler?.id || 0, producto)}
+                />
+              );
+            })}
+          </AlquilerProductosScrollContainer>
+          <Group my="1rem">
+            <Button type="submit" color="blue" size="lg">
+              Guardar
+            </Button>
+            <Button type="button" color="red" size="lg">
+              Cancelar
+            </Button>
+          </Group>
         </Flex>
         {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
       </form>
