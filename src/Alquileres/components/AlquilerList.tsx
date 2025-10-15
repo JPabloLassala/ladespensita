@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { AlquilerSummaryItem } from "../entities";
 import { useAlquileresContext } from "../stores";
 import { useAppStateContext } from "@/Common";
-import { Button, Center, Stack } from "@mantine/core";
+import { Button, Group, Stack } from "@mantine/core";
 import { DeleteAlquilerModal } from "../pages";
 
 export function AlquilerList({
@@ -58,23 +58,15 @@ export function AlquilerList({
 
   return (
     <AlquilerListContainer>
-      <Center id="newAlquilerContainer">
+      <Group w="100%" justify="center" gap="1rem" id="newAlquilerContainer">
         <Button variant="filled" onClick={onStartCreateNewAlquiler}>
           Nuevo Alquiler
         </Button>
         <Button variant="outline" onClick={onCancelCreateNewAlquiler}>
           Reset
         </Button>
-      </Center>
-      {selectedAlquilerForDelete && (
-        <DeleteAlquilerModal
-          isModalOpen={isModalOpen}
-          onCloseModal={handleCloseModal}
-          onAccept={() => handleDeleteAlquiler(selectedAlquilerForDelete.id)}
-          title={selectedAlquilerForDelete.proyecto}
-        />
-      )}
-      <div style={{ height: "100%", overflow: "scroll" }}>
+      </Group>
+      <div style={{ height: "100%", overflowY: "auto" }}>
         <Stack gap="0.25rem">{summary}</Stack>
       </div>
     </AlquilerListContainer>
