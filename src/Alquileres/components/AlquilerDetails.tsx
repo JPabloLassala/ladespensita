@@ -57,7 +57,7 @@ export function AlquilerDetails() {
   });
 
   return (
-    <Flex direction="column" h="100%" mih="100%" id="alquiler-details-outer-flex">
+    <Flex component="div" direction="column" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         onSubmit={form.onSubmit((values) => console.log(values))}
@@ -67,11 +67,17 @@ export function AlquilerDetails() {
           flexDirection: "row",
           gap: "1rem",
           height: "100%",
-          maxHeight: "100%",
           overflowY: "auto",
         }}
       >
-        <Flex direction="column" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="1rem">
+        <Flex
+          component="div"
+          direction="column"
+          mih="100%"
+          h="100%"
+          id="alquiler-details-inner-flex"
+          gap="1rem"
+        >
           <AlquilerDetailsForm />
           <AlquilerProductosScrollContainer>
             {productos.map((producto) => {

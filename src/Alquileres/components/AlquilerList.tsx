@@ -3,38 +3,22 @@ import { AlquilerListContainer, AlquilerListEntry, NewAlquilerListEntry } from "
 import dayjs from "dayjs";
 import { AlquilerSummaryItem } from "../entities";
 import { useAlquileresContext } from "../stores";
-import { useAppStateContext } from "@/Common";
 import { Button, Group, Stack } from "@mantine/core";
-import { DeleteAlquilerModal } from "../pages";
 
 export function AlquilerList({
   onSelectAlquiler,
-  onDeleteAlquiler,
   getSummary,
   onStartCreateNewAlquiler,
   onCancelCreateNewAlquiler,
 }: {
   onSelectAlquiler: (id: number) => void;
-  onDeleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
   onStartCreateNewAlquiler: () => void;
   onCancelCreateNewAlquiler: () => void;
 }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
+  const [, setIsModalOpen] = useState(false);
+  const [, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
   const { selectedAlquiler } = useAlquileresContext();
-  const { appState } = useAppStateContext();
-
-  function handleCloseModal() {
-    setIsModalOpen(false);
-  }
-
-  function handleDeleteAlquiler(id: number) {
-    console.log("Deleting alquiler with id", id);
-
-    handleCloseModal();
-    onDeleteAlquiler(id);
-  }
 
   function handleOpenConfirmation(alquiler: AlquilerSummaryItem) {
     setIsModalOpen(true);

@@ -17,26 +17,19 @@ export function AlquileresPage() {
     getSummary,
     alquileres,
     setAlquileres,
-    newAlquilerIdx,
-    deleteAlquiler,
     selectedAlquiler,
     setSelectedAlquiler,
     createNewAlquiler,
     deleteNewAlquiler,
   } = useAlquileresContext();
-  const { setAppState, appState } = useAppStateContext();
-  const { data, sendDelete, sendList } = useAlquilerRepository([]);
+  const { setAppState } = useAppStateContext();
+  const { data, sendList } = useAlquilerRepository([]);
   const { setProductos } = useProductosContext();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
-  }
-  function handleDelete(id: number) {
-    console.log("Deleting alquiler with id", id);
-    deleteAlquiler(id);
-    sendDelete(id);
   }
   function handleStartCreateNewAlquiler() {
     setAppState(APP_STATE.creating);
@@ -70,7 +63,6 @@ export function AlquileresPage() {
     >
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
-        onDeleteAlquiler={handleDelete}
         getSummary={getSummary}
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
