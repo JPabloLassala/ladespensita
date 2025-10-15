@@ -9,9 +9,10 @@ import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
+import { useProductoRepository } from "@/Productos/repository";
 
 export function AlquilerDetails() {
-  const { productos } = useProductosContext();
+  const { productos, setProductos } = useProductosContext();
   const { selectedAlquiler, setAlquilerProductos, alquilerProductos, createEmptyAlquilerProducto } =
     useAlquileresContext();
   console.log("selectedalquiler", selectedAlquiler);
@@ -19,10 +20,19 @@ export function AlquilerDetails() {
     undefined,
   );
   const { data, sendList } = useAlquilerProductoRepository();
+  const { data: productosData, sendList: sendProductosList } = useProductoRepository([]);
 
   useEffect(() => {
     setAlquilerProductos(data);
   }, [data]);
+
+  useEffect(() => {
+    sendProductosList();
+  }, []);
+
+  useEffect(() => {
+    setProductos(productosData);
+  }, [productosData]);
 
   useEffect(() => {
     sendList(selectedAlquiler?.id || 0);
@@ -55,9 +65,10 @@ export function AlquilerDetails() {
         style={{
           display: "flex",
           flexDirection: "row",
-          gap: "2rem",
+          gap: "1rem",
           height: "100%",
           maxHeight: "100%",
+          overflowY: "auto",
         }}
       >
         <Flex direction="column" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="1rem">
@@ -73,7 +84,7 @@ export function AlquilerDetails() {
               );
             })}
           </AlquilerProductosScrollContainer>
-          <Group my="1rem">
+          <Group mb="1rem">
             <Button type="submit" color="blue" size="lg">
               Guardar
             </Button>
