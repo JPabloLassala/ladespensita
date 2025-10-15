@@ -52,13 +52,14 @@ export function AlquileresPage() {
     sendList();
   }, []);
 
-  console.log("selected", selectedAlquiler);
-
   return (
     <Flex
+      component="div"
       id="alquileres-page"
       direction="row"
-      style={{ height: "100%", maxHeight: "100%", overflowY: "auto" }}
+      h="100%"
+      mah="100%"
+      style={{ overflowY: "auto" }}
       gap="xs"
     >
       <AlquilerList

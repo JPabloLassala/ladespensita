@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
 import { useAlquileresContext } from "../stores";
-import { Button, Flex, Group, Title } from "@mantine/core";
+import { Button, Group, Stack, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
@@ -13,9 +13,13 @@ import { useProductoRepository } from "@/Productos/repository";
 
 export function AlquilerDetails() {
   const { productos, setProductos } = useProductosContext();
-  const { selectedAlquiler, setAlquilerProductos, alquilerProductos, createEmptyAlquilerProducto } =
-    useAlquileresContext();
-  console.log("selectedalquiler", selectedAlquiler);
+  const {
+    updateAlquiler,
+    selectedAlquiler,
+    alquilerProductos,
+    setAlquilerProductos,
+    createEmptyAlquilerProducto,
+  } = useAlquileresContext();
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );
@@ -47,17 +51,26 @@ export function AlquilerDetails() {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      email: "",
-      termsOfService: false,
+      productora: selectedAlquiler?.productora || "",
+      proyecto: selectedAlquiler?.proyecto || "",
+      fechaInicio: selectedAlquiler?.fechaAlquiler?.inicio || new Date(),
+      fechaFin: selectedAlquiler?.fechaAlquiler?.fin || new Date(),
     },
-
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    onValuesChange: (values) => {
+      console.log("values", values);
+      updateAlquiler(selectedAlquiler?.id || 0, {
+        productora: values.productora,
+        proyecto: values.proyecto,
+        fechaAlquiler: {
+          inicio: values.fechaInicio,
+          fin: values.fechaFin,
+        },
+      });
     },
   });
 
   return (
-    <Flex component="div" direction="column" h="100%" mih="100%" id="alquiler-details-outer-flex">
+    <Stack component="div" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         onSubmit={form.onSubmit((values) => console.log(values))}
@@ -70,15 +83,8 @@ export function AlquilerDetails() {
           overflowY: "auto",
         }}
       >
-        <Flex
-          component="div"
-          direction="column"
-          mih="100%"
-          h="100%"
-          id="alquiler-details-inner-flex"
-          gap="1rem"
-        >
-          <AlquilerDetailsForm />
+        <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="1rem">
+          <AlquilerDetailsForm form={form} />
           <AlquilerProductosScrollContainer>
             {productos.map((producto) => {
               return (
@@ -98,9 +104,9 @@ export function AlquilerDetails() {
               Cancelar
             </Button>
           </Group>
-        </Flex>
+        </Stack>
         {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
       </form>
-    </Flex>
+    </Stack>
   );
 }

@@ -1,32 +1,42 @@
 import { Flex, TextInput } from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { useAlquileresContext } from "../stores";
 
-export function AlquilerDetailsForm() {
+export function AlquilerDetailsForm({ form }: { form: any }) {
   const { selectedAlquiler } = useAlquileresContext();
 
   return (
     <Flex direction="row" gap="1rem">
       <Flex direction="column" gap="1rem">
-        <TextInput w="15rem" label="Productora" defaultValue={selectedAlquiler?.productora} />
-        <TextInput w="15rem" label="Proyecto" defaultValue={selectedAlquiler?.proyecto} />
+        <TextInput
+          w="15rem"
+          key={form.key("proyecto")}
+          label="Proyecto"
+          {...form.getInputProps("proyecto")}
+        />
+        <TextInput
+          w="15rem"
+          key={form.key("productora")}
+          label="Productora"
+          {...form.getInputProps("productora")}
+        />
       </Flex>
       <Flex direction="column" gap="1rem">
-        <DateTimePicker
+        <DatePickerInput
+          w="15rem"
           label="Fecha de inicio"
           placeholder="Pick date"
-          value={new Date(selectedAlquiler?.fechaAlquiler?.inicio || "")}
-          onChange={(value) => console.log(value)}
-          w="15rem"
           valueFormat="DD/MM/YYYY HH:mm"
+          key={form.key("fechaInicio")}
+          {...form.getInputProps("fechaInicio")}
         />
-        <DateTimePicker
+        <DatePickerInput
+          w="15rem"
           label="Fecha de fin"
           placeholder="Pick date"
-          value={new Date(selectedAlquiler?.fechaAlquiler?.fin || "")}
-          onChange={(value) => console.log(value)}
-          w="15rem"
           valueFormat="DD/MM/YYYY HH:mm"
+          key={form.key("fechaFin")}
+          {...form.getInputProps("fechaFin")}
         />
       </Flex>
     </Flex>
