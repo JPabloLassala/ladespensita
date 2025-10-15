@@ -1,11 +1,23 @@
 import { ProductoEntity } from "@/Productos";
-import { AspectRatio, Group, Image, Paper, Text } from "@mantine/core";
+import {
+  AspectRatio,
+  Button,
+  Group,
+  Image,
+  NumberInput,
+  Paper,
+  Text,
+  TextInput,
+} from "@mantine/core";
+import { AlquilerProductoEntity } from "../entities";
 
 export function AlquilerProductoItem({
   producto,
+  alquilerProducto,
   onSelectProducto,
 }: {
   producto: ProductoEntity;
+  alquilerProducto: AlquilerProductoEntity | undefined;
   onSelectProducto: (productoId: number) => void;
 }) {
   return (
@@ -22,13 +34,22 @@ export function AlquilerProductoItem({
     >
       <Group wrap="nowrap" justify="space-between" align="center">
         <Group>
-          <AspectRatio ratio={1} maw={75}>
-            <Image src="http://localhost:3000/images/21.jpg" alt={producto.nombre} />
-          </AspectRatio>
+          <Image
+            src="http://localhost:3000/images/21.jpg"
+            fallbackSrc={`https://placehold.co/75?text=Sin%20Foto`}
+            w={75}
+            alt={producto.nombre}
+          />
           <Text>{producto.nombre}</Text>
         </Group>
         <Group>
-          Disponibles: <Text fw={700}>{producto.disponibles}</Text>
+          <Button size="compact-md" variant="outline">
+            -
+          </Button>
+          <NumberInput hideControls w="4rem" fw={700} value={alquilerProducto?.cantidad || 0} />
+          <Button size="compact-md" variant="outline">
+            +
+          </Button>
         </Group>
       </Group>
     </Paper>
