@@ -1,3 +1,4 @@
+import axios from "axios";
 import Cookies from "universal-cookie";
 import { useCallback } from "react";
 import { useState } from "react";
@@ -16,27 +17,32 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
 
   const sendList = useCallback(async function sendGet(id: number) {
     setIsLoading(true);
+    setError(undefined);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/alquilerProducto/${id}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const response = await axios.get<AlquilerProductoEntity[]>(
+        `${apiHost}/alquilerProducto/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
-      const alquilerProductos = await resData.json();
-
-      setData(alquilerProductos);
+      setData(response.data);
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
+      } else {
+        setError("Something went wrong");
       }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, []);
 
   return {

@@ -96,51 +96,56 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
 
   const sendList = useCallback(async function sendList() {
     setIsLoading(true);
+    setError(undefined);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/producto`, {
-        method: "GET",
+      const response = await axios.get<ProductoEntity[]>(`${apiHost}/producto`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      const productos = await resData.json();
 
-      setData(productos);
+      setData(response.data);
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
+      } else {
+        setError("Something went wrong");
       }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, []);
 
   const sendGet = useCallback(async function sendGet(id: number) {
     setIsLoading(true);
+    setError(undefined);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/producto/${id}`, {
-        method: "GET",
+      const response = await axios.get<ProductoEntity>(`${apiHost}/producto/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      const producto = await resData.json();
-
-      setData(producto);
+      setData([response.data]);
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
+      } else {
+        setError("Something went wrong");
       }
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, []);
 
   return {

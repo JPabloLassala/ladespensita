@@ -3,8 +3,6 @@ import { DatePickerInput } from "@mantine/dates";
 import { useAlquileresContext } from "../stores";
 
 export function AlquilerDetailsForm({ form }: { form: any }) {
-  const { selectedAlquiler } = useAlquileresContext();
-
   return (
     <Flex direction="row" gap="1rem">
       <Flex direction="column" gap="1rem">

@@ -29,16 +29,16 @@ export const EditProductoModal = ({
     form.setFieldValue("nombre", producto.nombre);
     form.setFieldValue("unidadesMetroLineal", producto.unidadesMetroLineal);
     form.setFieldValue("totales", producto.totales);
-    form.setFieldValue("altura", producto.medidas.altura);
-    form.setFieldValue("diametro", producto.medidas.diametro);
-    form.setFieldValue("ancho", producto.medidas.ancho);
-    form.setFieldValue("profundidad", producto.medidas.profundidad);
-    form.setFieldValue("valorUnitarioGarantia", producto.valor.unitarioGarantia);
-    form.setFieldValue("valorUnitarioAlquiler", producto.valor.unitarioAlquiler);
-    form.setFieldValue("valorx1", producto.valor.x1);
-    form.setFieldValue("valorx3", producto.valor.x3);
-    form.setFieldValue("valorx6", producto.valor.x6);
-    form.setFieldValue("valorx12", producto.valor.x12);
+    form.setFieldValue("medidasAltura", producto.medidasAltura);
+    form.setFieldValue("medidasDiametro", producto.medidasDiametro);
+    form.setFieldValue("medidasAncho", producto.medidasAncho);
+    form.setFieldValue("medidasProfundidad", producto.medidasProfundidad);
+    form.setFieldValue("valorUnitarioGarantia", producto.valorUnitarioGarantia);
+    form.setFieldValue("valorUnitarioAlquiler", producto.valorUnitarioAlquiler);
+    form.setFieldValue("valorX1", producto.valorX1);
+    form.setFieldValue("valorX3", producto.valorX3);
+    form.setFieldValue("valorX6", producto.valorX6);
+    form.setFieldValue("valorX12", producto.valorX12);
   }
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
