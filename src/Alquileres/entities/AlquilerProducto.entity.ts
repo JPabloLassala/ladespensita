@@ -34,5 +34,5 @@ export type AlquilerProductoCreate = Omit<
 };
 
 export type AlquilerProductoUpdate = Partial<AlquilerProductoEntity> & {
-  id: number;
+  id?: number;
 };

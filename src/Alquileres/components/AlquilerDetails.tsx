@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { AlquilerProductoCreate, AlquilerProductoEntity } from "@/Alquileres/entities";
+import {
+  AlquilerProductoCreate,
+  AlquilerProductoEntity,
+  AlquilerProductoUpdate,
+  AlquilerUpdate,
+} from "@/Alquileres/entities";
 import { useAlquileresContext } from "../stores";
 import { Button, Group, Stack, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
@@ -19,11 +24,13 @@ export function AlquilerDetails() {
     alquilerProductos,
     setAlquilerProductos,
     createEmptyAlquilerProducto,
+    setAlquilerProductoRemaining,
+    alquilerProductoRemaining,
   } = useAlquileresContext();
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
-  const { data, sendList } = useAlquilerProductoRepository();
+  const { data, sendList, sendGetRemaining, stockData } = useAlquilerProductoRepository();
   const { data: productosData, sendList: sendProductosList } = useProductoRepository([]);
 
   useEffect(() => {
@@ -32,11 +39,16 @@ export function AlquilerDetails() {
 
   useEffect(() => {
     sendProductosList();
+    sendGetRemaining();
   }, []);
 
   useEffect(() => {
     setProductos(productosData);
   }, [productosData]);
+
+  useEffect(() => {
+    setAlquilerProductoRemaining(stockData);
+  }, [stockData]);
 
   useEffect(() => {
     sendList(selectedAlquiler?.id || 0);
@@ -50,16 +62,18 @@ export function AlquilerDetails() {
     setSelectedProducto(alquilerProducto);
   }
 
-  const form = useForm({
+  const form = useForm<AlquilerUpdate>({
     initialValues: {
       productora: selectedAlquiler?.productora || "",
       proyecto: selectedAlquiler?.proyecto || "",
       fechaInicio: selectedAlquiler?.fechaInicio || new Date(),
       fechaFin: selectedAlquiler?.fechaFin || new Date(),
+      fechaPresupuesto: selectedAlquiler?.fechaPresupuesto || new Date(),
       productos: [],
     },
     onValuesChange: (values) => {
-      updateAlquiler(selectedAlquiler?.id || 0, { ...values });
+      console.log("values", values);
+      // updateAlquiler(selectedAlquiler?.id || 0, { ...values });
     },
   });
 
@@ -82,11 +96,16 @@ export function AlquilerDetails() {
           <AlquilerProductosScrollContainer>
             {productos.map((producto) => {
               const alquilerProducto = alquilerProductos.find((p) => p.productoId === producto.id);
+              const apRemaining = alquilerProductoRemaining.find(
+                (p) => p.productoId === producto.id,
+              ) || { productoId: producto.id, remaining: 0 };
               return (
                 <AlquilerProductoItem
                   key={producto.id}
                   alquilerProducto={alquilerProducto}
                   producto={producto}
+                  remaining={apRemaining}
+                  inputProps={form.getInputProps(`productos.${producto.id}`)}
                   onSelectProducto={() => handleSelectProducto(selectedAlquiler?.id || 0, producto)}
                 />
               );
@@ -101,7 +120,12 @@ export function AlquilerDetails() {
             </Button>
           </Group>
         </Stack>
-        {selectedProducto && <AlquilerProductoDetails selectedProducto={selectedProducto} />}
+        {selectedProducto && (
+          <AlquilerProductoDetails
+            selectedProducto={selectedProducto}
+            inputProps={form.getInputProps(`productos.${selectedProducto.productoId}`)}
+          />
+        )}
       </form>
     </Stack>
   );

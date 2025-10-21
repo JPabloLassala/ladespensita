@@ -24,7 +24,7 @@ export type AlquilerCreate = Omit<
   id?: number;
 };
 
-export type AlquilerUpdate = Partial<AlquilerEntity> & {
+export type AlquilerUpdate = Partial<Omit<AlquilerEntity, "productos">> & {
   productos?: AlquilerProductoUpdate[];
 };
 

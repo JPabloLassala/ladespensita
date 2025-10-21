@@ -5,6 +5,7 @@ import {
   AlquilerEntity,
   AlquilerProductoCreate,
   AlquilerProductoEntity,
+  AlquilerProductoRemaining,
   AlquilerSummaryItem,
   AlquilerUpdate,
 } from "../entities";
@@ -15,14 +16,15 @@ export type AlquileresContextType = {
   alquileres: AlquilerEntity[];
   setAlquileres: React.Dispatch<React.SetStateAction<AlquilerEntity[]>>;
   selectedAlquiler: AlquilerUpdate | undefined;
-  alquilerProductos: AlquilerProductoEntity[];
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<AlquilerEntity | undefined>>;
+  alquilerProductos: AlquilerProductoEntity[];
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
+  alquilerProductoRemaining: AlquilerProductoRemaining[];
+  setAlquilerProductoRemaining: React.Dispatch<React.SetStateAction<AlquilerProductoRemaining[]>>;
   deleteAlquiler: (id: number) => void;
   updateAlquiler: (alquilerId: number, updatedAlquiler: Partial<AlquilerEntity>) => void;
   createNewAlquiler: () => AlquilerEntity;
   deleteNewAlquiler: () => void;
-  getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => AlquilerEntity[];
   createEmptyAlquilerProducto: (
     alquilerId: number,
     producto: ProductoEntity,
@@ -36,6 +38,9 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
   const [, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
   const [selectedAlquiler, setSelectedAlquiler] = useState<AlquilerEntity | undefined>(undefined);
+  const [alquilerProductoRemaining, setAlquilerProductoRemaining] = useState<
+    AlquilerProductoRemaining[]
+  >([]);
 
   const getSummary = (): AlquilerSummaryItem[] => {
     return alquileres.map((alquiler) => {
@@ -56,32 +61,6 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         alquiler.id === alquilerId ? { ...alquiler, ...updatedAlquiler } : alquiler,
       ),
     );
-  };
-
-  const getAlquileresBetweenDates = (sinceDate: string, untilDate: string) => {
-    if (!sinceDate && !untilDate) {
-      return [];
-    }
-
-    if (sinceDate && untilDate) {
-      return alquileres.filter((alquiler) => {
-        return (
-          dayjs(alquiler.fechaInicio).isAfter(dayjs(sinceDate)) &&
-          dayjs(alquiler.fechaFin).isBefore(dayjs(untilDate))
-        );
-      });
-    }
-
-    if (sinceDate) {
-      return alquileres.filter((alquiler) => {
-        return dayjs(alquiler.fechaInicio).isAfter(dayjs(sinceDate));
-      });
-    }
-
-    // untilDate
-    return alquileres.filter((alquiler) => {
-      return dayjs(alquiler.fechaFin).isBefore(dayjs(untilDate));
-    });
   };
 
   const deleteAlquiler = (id: number) => {
@@ -146,9 +125,10 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         deleteNewAlquiler,
         selectedAlquiler,
         setSelectedAlquiler,
-        getAlquileresBetweenDates,
         alquilerProductos,
         setAlquilerProductos,
+        alquilerProductoRemaining,
+        setAlquilerProductoRemaining,
         createEmptyAlquilerProducto,
       }}
     >
