@@ -53,15 +53,7 @@ export function AlquileresPage() {
   }, []);
 
   return (
-    <Flex
-      component="div"
-      id="alquileres-page"
-      direction="row"
-      h="100%"
-      mah="100%"
-      style={{ overflowY: "auto" }}
-      gap="xs"
-    >
+    <Stack id="alquileres-page" h="100%" mah="100%" style={{ overflowY: "auto" }} gap="xs">
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
         getSummary={getSummary}
@@ -74,6 +66,6 @@ export function AlquileresPage() {
         </AlquilerDetailsContainer>
       )}
       {!selectedAlquiler && <AlquilerNoneSelected />}
-    </Flex>
+    </Stack>
   );
 }
