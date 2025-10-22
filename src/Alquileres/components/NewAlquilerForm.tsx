@@ -10,14 +10,13 @@ import { ProductoEntity, useProductosContext } from "@/Productos";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
-import { useAlquileresContext } from "../stores";
+import { useAlquilerContext } from "../stores";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
-import { produce } from "immer";
 
 export function NewAlquilerForm() {
   const { productos } = useProductosContext();
   const { createEmptyAlquilerProducto, setSelectedAlquiler, selectedAlquiler } =
-    useAlquileresContext();
+    useAlquilerContext();
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);

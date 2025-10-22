@@ -1,24 +1,24 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { AlquilerSummaryItem } from "@/Alquileres/entities";
+import { AlquilerSummaryItem, AlquilerSummaryItemCreate } from "@/Alquileres/entities";
 import { Card, Group, Stack, Text } from "@mantine/core";
 import { DeleteAlquilerModal } from "@/Alquileres/pages";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 export function AlquilerListEntry({
   alquiler,
-  dateRange,
   isSelected,
   onSelectAlquiler,
   onDeleteAlquiler,
 }: {
-  alquiler: AlquilerSummaryItem;
-  dateRange: string;
+  alquiler: AlquilerSummaryItem | AlquilerSummaryItemCreate;
   isSelected: boolean;
   onSelectAlquiler: () => void;
   onDeleteAlquiler: () => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const dateRange = `${dayjs(alquiler.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(alquiler.fechaFin).format("DD/MM/YYYY")}`;
 
   return (
     <Card

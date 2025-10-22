@@ -12,7 +12,7 @@ import {
 } from "../entities";
 import { ProductoEntity } from "@/Productos";
 
-export type AlquileresContextType = {
+export type AlquilerContextType = {
   getSummary: () => AlquilerSummaryItem[];
   alquileres: AlquilerEntity[];
   setAlquileres: React.Dispatch<React.SetStateAction<AlquilerEntity[]>>;
@@ -35,9 +35,9 @@ export type AlquileresContextType = {
   ) => AlquilerProductoCreate;
 };
 
-export const AlquileresContext = createContext<AlquileresContextType | null>(null);
+export const AlquilerContext = createContext<AlquilerContextType | null>(null);
 
-export function AlquileresContextProvider({ children }: { children: ReactNode }) {
+export function AlquilerContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<AlquilerEntity[]>([]);
   const [, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
@@ -111,7 +111,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
   };
 
   return (
-    <AlquileresContext.Provider
+    <AlquilerContext.Provider
       value={{
         alquileres,
         getSummary,
@@ -131,12 +131,12 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       }}
     >
       {children}
-    </AlquileresContext.Provider>
+    </AlquilerContext.Provider>
   );
 }
 
-export const useAlquilerContext = (): AlquileresContextType => {
-  const ctx = useContext(AlquileresContext);
-  if (!ctx) throw new Error("useAlquileresContext must be used within AlquileresContextProvider");
+export const useAlquilerContext = (): AlquilerContextType => {
+  const ctx = useContext(AlquilerContext);
+  if (!ctx) throw new Error("useAlquilerContext must be used within AlquilerContextProvider");
   return ctx;
 };

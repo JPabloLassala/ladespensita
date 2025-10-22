@@ -1,1 +1,1 @@
-export * from "./Alquileres.context";
+export * from "./Alquiler.context";
