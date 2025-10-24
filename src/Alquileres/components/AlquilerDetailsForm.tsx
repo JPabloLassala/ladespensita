@@ -1,4 +1,6 @@
-import { Flex, Grid, TextInput } from "@mantine/core";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Grid, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 
 export function AlquilerDetailsForm({ form }: { form: any }) {
@@ -20,6 +22,8 @@ export function AlquilerDetailsForm({ form }: { form: any }) {
       </Grid.Col>
       <Grid.Col span="auto">
         <DatePickerInput
+          leftSection={<FontAwesomeIcon icon={faCalendar} />}
+          leftSectionPointerEvents="none"
           w="15rem"
           label="Fecha de inicio"
           placeholder="Pick date"
@@ -28,6 +32,8 @@ export function AlquilerDetailsForm({ form }: { form: any }) {
           {...form.getInputProps("fechaInicio")}
         />
         <DatePickerInput
+          leftSection={<FontAwesomeIcon icon={faCalendar} />}
+          leftSectionPointerEvents="none"
           w="15rem"
           label="Fecha de fin"
           placeholder="Pick date"

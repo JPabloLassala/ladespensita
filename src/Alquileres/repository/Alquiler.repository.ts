@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 import { useCallback } from "react";
 import { useState } from "react";
 import axios from "axios";
-import { AlquilerEntity } from "../entities";
+import { AlquilerCreate, AlquilerEntity } from "../entities";
 
 export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
   const cookies = new Cookies();
@@ -37,27 +37,17 @@ export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(
-    data: AlquilerEntity,
-  ): Promise<AlquilerEntity | undefined> {
+  const sendCreate = useCallback(async function sendCreate(data: AlquilerCreate): Promise<void> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await axios.post<AlquilerEntity>(
-        `${apiHost}/alquiler`,
-        JSON.stringify(data),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+      await axios.post<AlquilerEntity>(`${apiHost}/alquiler`, JSON.stringify(data), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-      );
-
-      const alquiler = await resData.data;
-
-      return alquiler;
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
@@ -74,17 +64,12 @@ export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/alquiler/${data.id}`, {
-        method: "PUT",
+      await axios.put<AlquilerEntity>(`${apiHost}/alquiler/${data.id}`, JSON.stringify(data), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       });
-
-      const producto = await resData.json();
-      return producto;
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
@@ -99,14 +84,13 @@ export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/alquiler`, {
-        method: "GET",
+      const resData = await axios.get<AlquilerEntity[]>(`${apiHost}/alquiler`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      const alquileres = await resData.json();
+      const alquileres = resData.data;
 
       setData(alquileres);
     } catch (error: unknown) {
