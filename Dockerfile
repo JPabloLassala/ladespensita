@@ -1,23 +1,29 @@
 # ---- Build stage ----
+FROM node:20-alpine AS development
+
+WORKDIR /app
+
+# Install deps first (better layer caching)
+COPY . .
+RUN npm g i yarn;
+# pick your installer; default to npm
+RUN yarn install --frozen-lockfile;
+
+RUN ["yarn", "start"]
+
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 # Install deps first (better layer caching)
-COPY yarn.lock* ./
-RUN npm g i yarn;
-# pick your installer; default to npm
-RUN yarn --frozen-lockfile;
-
-# Copy the rest and build
 COPY . .
+RUN npm g i yarn;
 
+RUN yarn install --frozen-lockfile; 
 
-# Build (make sure your build script runs `vite build`)
-RUN yarn build 
+RUN yarn build
 
-# ---- Serve stage ----
-FROM nginx:alpine
+FROM nginx:alpine AS production
 
 # Basic SPA nginx config (handles client-side routing)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
