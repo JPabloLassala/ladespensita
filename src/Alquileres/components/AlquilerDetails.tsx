@@ -33,9 +33,9 @@ export function AlquilerDetails({
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
 
-  useEffect(() => {
-    sendList(selectedAlquiler?.id);
-  }, []);
+  // useEffect(() => {
+  //   sendList(selectedAlquiler?.id);
+  // }, []);
 
   const form = useForm<AlquilerUpdate>({
     initialValues: {
