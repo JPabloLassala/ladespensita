@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
-import { PartialAlquiler } from "@/Alquileres/entities";
 import { APP_STATE } from "@/Common";
 import { Card, Collapse, Group, Stack, Text } from "@mantine/core";
+import { Alquiler } from "@/Alquileres/entities";
 
 export function NewAlquilerListEntry({
   onCancelCreateAlquiler,
@@ -11,7 +11,7 @@ export function NewAlquilerListEntry({
   appState,
 }: {
   onCancelCreateAlquiler: () => void;
-  newAlquiler: PartialAlquiler;
+  newAlquiler: Alquiler;
   appState: string;
 }) {
   let fechaInicio = "";

@@ -11,14 +11,15 @@ import { ProductoEntity } from "@/Productos";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
-  newAlquiler: PartialAlquiler;
+  newAlquilerIdx: number;
   setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
-  setNewAlquiler: React.Dispatch<React.SetStateAction<PartialAlquiler>>;
   deleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
+  createNewAlquiler: () => Alquiler;
+  deleteNewAlquiler: () => void;
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
   alquilerProductos: AlquilerProductoEntity[];
-  selectedAlquiler: Alquiler | undefined;
+  selectedAlquiler: PartialAlquiler | undefined;
   setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   createEmptyAlquilerProducto: (
@@ -31,7 +32,7 @@ export const AlquileresContext = createContext<AlquileresContextType | null>(nul
 
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
-  const [newAlquiler, setNewAlquiler] = useState<PartialAlquiler>({});
+  const [newAlquilerIdx, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
   const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler | undefined>(undefined);
 
@@ -78,6 +79,28 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     setAlquileres((prev) => prev.filter((alquiler) => alquiler.id !== id));
   };
 
+  const createNewAlquiler = (): Alquiler => {
+    const newAlquiler = {
+      id: -1,
+      productora: "",
+      proyecto: "",
+      productos: [],
+      fechaPresupuesto: new Date(),
+      fechaAlquiler: {
+        inicio: new Date(),
+        fin: new Date(),
+      },
+    };
+    setAlquileres((prev) => [newAlquiler, ...prev]);
+    setNewAlquilerIdx(0);
+    return newAlquiler;
+  };
+
+  const deleteNewAlquiler = (): void => {
+    setAlquileres((prev) => prev.filter((a) => a.id !== -1));
+    setNewAlquilerIdx(-1);
+  };
+
   const createEmptyAlquilerProducto = (
     alquilerId: number,
     producto: ProductoEntity,
@@ -107,10 +130,11 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       value={{
         alquileres,
         getSummary,
-        newAlquiler,
+        newAlquilerIdx,
         setAlquileres,
         deleteAlquiler,
-        setNewAlquiler,
+        createNewAlquiler,
+        deleteNewAlquiler,
         selectedAlquiler,
         setSelectedAlquiler,
         getAlquileresBetweenDates,

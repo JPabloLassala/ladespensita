@@ -1,7 +1,7 @@
 # ---- Build stage ----
 FROM node:20-alpine AS development
 
-WORKDIR /app
+WORKDIR /front
 
 # Install deps first (better layer caching)
 COPY . .
@@ -13,7 +13,7 @@ CMD ["yarn", "start", "--host", "0.0.0.0"]
 
 FROM node:20-alpine AS builder
 
-WORKDIR /app
+WORKDIR /front
 
 # Install deps first (better layer caching)
 COPY . .
@@ -29,7 +29,7 @@ FROM nginx:alpine AS production
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy static assets
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /front/dist /usr/share/nginx/html
 
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost/ || exit 1

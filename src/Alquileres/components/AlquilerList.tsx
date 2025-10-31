@@ -22,7 +22,7 @@ export function AlquilerList({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlquilerForDelete, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
-  const { newAlquiler, selectedAlquiler } = useAlquileresContext();
+  const { selectedAlquiler } = useAlquileresContext();
   const { appState } = useAppStateContext();
 
   function handleCloseModal() {
@@ -62,7 +62,7 @@ export function AlquilerList({
         <Button variant="filled" onClick={onStartCreateNewAlquiler}>
           Nuevo Alquiler
         </Button>
-        <Button variant="outline" onClick={() => onSelectAlquiler(0)}>
+        <Button variant="outline" onClick={onCancelCreateNewAlquiler}>
           Reset
         </Button>
       </Center>
@@ -75,14 +75,7 @@ export function AlquilerList({
         />
       )}
       <div style={{ height: "100%", overflow: "scroll" }}>
-        <Stack gap="0.25rem">
-          <NewAlquilerListEntry
-            onCancelCreateAlquiler={onCancelCreateNewAlquiler}
-            newAlquiler={newAlquiler}
-            appState={appState}
-          />
-          {summary}
-        </Stack>
+        <Stack gap="0.25rem">{summary}</Stack>
       </div>
     </AlquilerListContainer>
   );

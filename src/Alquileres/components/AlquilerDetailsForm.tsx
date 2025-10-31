@@ -8,18 +8,8 @@ export function AlquilerDetailsForm() {
   return (
     <Flex direction="row" gap="1rem">
       <Flex direction="column" gap="1rem">
-        <TextInput
-          w="15rem"
-          label="Productora"
-          value={selectedAlquiler?.productora}
-          onChange={(value) => console.log(value)}
-        />
-        <TextInput
-          w="15rem"
-          label="Proyecto"
-          value={selectedAlquiler?.proyecto}
-          onChange={(value) => console.log(value)}
-        />
+        <TextInput w="15rem" label="Productora" defaultValue={selectedAlquiler?.productora} />
+        <TextInput w="15rem" label="Proyecto" defaultValue={selectedAlquiler?.proyecto} />
       </Flex>
       <Flex direction="column" gap="1rem">
         <DateTimePicker
