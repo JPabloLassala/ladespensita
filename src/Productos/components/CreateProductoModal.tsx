@@ -1,12 +1,12 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
 import { UploadFileCreate } from "./UploadFileCreate";
-import { NewProductoForm } from "./NewProductoForm";
+import { CreateProductoForm } from "./CreateProductoForm";
 import { useForm } from "@mantine/form";
 import { ProductoEntityCreate } from "../entities";
 import { useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 
-export const NewProductoModal = ({
+export const CreateProductoModal = ({
   onClose,
   opened,
   onCreate,
@@ -41,7 +41,7 @@ export const NewProductoModal = ({
         <Stack justify="center">
           <Group justify="center">
             <UploadFileCreate file={file} onSetFile={handleSetFile} onSetTmpURL={setTmpURL} />
-            <NewProductoForm form={form} />
+            <CreateProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
             <Button color="gray" onClick={onClose}>
