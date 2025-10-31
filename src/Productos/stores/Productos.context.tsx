@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
+import { produce } from "immer";
 
 export type ProductosContextType = {
   productos: ProductoEntity[];
@@ -14,47 +15,37 @@ export const ProductosContext = createContext<ProductosContextType | null>(null)
 export function ProductosContextProvider({ children }: { children: React.ReactNode }) {
   const [productos, setProductos] = useState<ProductoEntity[]>([]);
 
-  const updateProducto = (newProducto: ProductoEntityUpdate) => {
-    const productoToUpdate = productos.find((p) => p.id === newProducto.id);
+  const updateProducto = (productoNewData: ProductoEntityUpdate) => {
+    const newProductosArray = produce(productos, (oldProductos) => {
+      const index = oldProductos.findIndex((p) => p.id === productoNewData.id);
+      if (index === -1) return;
 
-    if (!productoToUpdate) {
-      console.error("Producto not found");
-      return;
-    }
+      oldProductos[index].nombre = productoNewData.nombre;
+      oldProductos[index].unidadesMetroLineal = productoNewData.unidadesMetroLineal;
+      oldProductos[index].totales = productoNewData.totales;
+      oldProductos[index].medidas.altura = productoNewData.altura;
+      oldProductos[index].medidas.diametro = productoNewData.diametro;
+      oldProductos[index].medidas.ancho = productoNewData.ancho;
+      oldProductos[index].medidas.profundidad = productoNewData.profundidad;
+      oldProductos[index].valor.unitarioGarantia = productoNewData.valorUnitarioGarantia;
+      oldProductos[index].valor.unitarioAlquiler = productoNewData.valorUnitarioAlquiler;
+      oldProductos[index].valor.x1 = productoNewData.valorx1;
+      oldProductos[index].valor.x3 = productoNewData.valorx3;
+      oldProductos[index].valor.x6 = productoNewData.valorx6;
+      oldProductos[index].valor.x12 = productoNewData.valorx12;
 
-    productoToUpdate.nombre = newProducto.nombre;
-    productoToUpdate.unidadesMetroLineal = newProducto.unidadesMetroLineal;
-    productoToUpdate.totales = newProducto.totales;
-    productoToUpdate.medidas.altura = newProducto.altura;
-    productoToUpdate.medidas.diametro = newProducto.diametro;
-    productoToUpdate.medidas.ancho = newProducto.ancho;
-    productoToUpdate.medidas.profundidad = newProducto.profundidad;
-    productoToUpdate.valor.unitarioGarantia = newProducto.valorUnitarioGarantia;
-    productoToUpdate.valor.unitarioAlquiler = newProducto.valorUnitarioAlquiler;
-    productoToUpdate.valor.x1 = newProducto.valorx1;
-    productoToUpdate.valor.x3 = newProducto.valorx3;
-    productoToUpdate.valor.x6 = newProducto.valorx6;
-    productoToUpdate.valor.x12 = newProducto.valorx12;
+      if (productoNewData.tmpURL) {
+        oldProductos[index].image = {
+          createdAt: new Date(),
+          id: Math.floor(Math.random() * 1000),
+          isMain: true,
+          productoId: productoNewData.id,
+          url: productoNewData.tmpURL || "",
+        };
+      }
+    });
 
-    if (newProducto.tmpURL) {
-      productoToUpdate.image = {
-        createdAt: new Date(),
-        id: Math.floor(Math.random() * 1000),
-        isMain: true,
-        productoId: newProducto.id,
-        url: newProducto.tmpURL || "",
-      };
-    }
-
-    setProductos((prev) =>
-      prev.map((p) => {
-        if (p.id === productoToUpdate.id) {
-          console.log("Updating producto", p.id);
-          console.log("New producto ID", newProducto.id);
-        }
-        return p.id === productoToUpdate.id ? { ...p, ...productoToUpdate } : p;
-      }),
-    );
+    setProductos(newProductosArray);
   };
 
   const createProducto = (newProducto: ProductoEntityCreate) => {
