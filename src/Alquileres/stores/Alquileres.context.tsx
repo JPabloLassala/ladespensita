@@ -10,17 +10,18 @@ import {
 import { ProductoEntity } from "@/Productos";
 
 export type AlquileresContextType = {
+  getSummary: () => AlquilerSummaryItem[];
   alquileres: Alquiler[];
   setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
+  selectedAlquiler: PartialAlquiler | undefined;
+  alquilerProductos: AlquilerProductoEntity[];
+  setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
+  setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   deleteAlquiler: (id: number) => void;
-  getSummary: () => AlquilerSummaryItem[];
+  updateAlquiler: (alquilerId: number, updatedAlquiler: Partial<Alquiler>) => void;
   createNewAlquiler: () => Alquiler;
   deleteNewAlquiler: () => void;
   getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
-  alquilerProductos: AlquilerProductoEntity[];
-  selectedAlquiler: PartialAlquiler | undefined;
-  setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
-  setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   createEmptyAlquilerProducto: (
     alquilerId: number,
     producto: ProductoEntity,
@@ -46,6 +47,14 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         totalProductos: 0,
       };
     });
+  };
+
+  const updateAlquiler = (alquilerId: number, updatedAlquiler: Partial<Alquiler>) => {
+    setAlquileres((prev) =>
+      prev.map((alquiler) =>
+        alquiler.id === alquilerId ? { ...alquiler, ...updatedAlquiler } : alquiler,
+      ),
+    );
   };
 
   const getAlquileresBetweenDates = (sinceDate: string, untilDate: string) => {
@@ -131,6 +140,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         getSummary,
         setAlquileres,
         deleteAlquiler,
+        updateAlquiler,
         createNewAlquiler,
         deleteNewAlquiler,
         selectedAlquiler,
