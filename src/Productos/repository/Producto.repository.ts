@@ -37,11 +37,13 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(data: FormData): Promise<void> {
+  const sendCreate = useCallback(async function sendCreate(
+    newProductoFormData: FormData,
+  ): Promise<void> {
     setIsLoading(true);
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await axios.post<ProductoEntity>(`${apiHost}/producto`, data, {
+      const resData = await axios.post<ProductoEntity>(`${apiHost}/producto`, newProductoFormData, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,9 +53,9 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
 
       const producto = await resData.data;
 
-      console.log("productos", producto);
-
-      setData((oldData) => [...oldData, producto]);
+      setData((oldData) => {
+        return [...oldData, producto];
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
