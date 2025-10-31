@@ -69,6 +69,7 @@ export function AlquilerProductoContextProvider({ children }: { children: ReactN
 
 export const useAlquilerProductoContext = (): AlquilerProductoContextType => {
   const ctx = useContext(AlquilerProductoContext);
+  console.log("test");
   if (!ctx)
     throw new Error(
       "useAlquilerProductoContext must be used within AlquilerProductoContextProvider",
