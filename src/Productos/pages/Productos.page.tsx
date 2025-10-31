@@ -10,7 +10,8 @@ import { FileWithPath } from "@mantine/dropzone";
 
 export function ProductosPage() {
   const [firstLoad, setFirstLoad] = useState(true);
-  const { productos, setProductos, updateProducto, deleteProducto } = useContext(ProductosContext)!;
+  const { productos, setProductos, updateProducto, deleteProducto, createProducto } =
+    useContext(ProductosContext)!;
   const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
 
   useEffect(() => {
@@ -71,6 +72,7 @@ export function ProductosPage() {
     formData.append("valorx12", producto.valorx12.toString());
 
     sendCreate(formData);
+    createProducto(producto);
   };
 
   return (

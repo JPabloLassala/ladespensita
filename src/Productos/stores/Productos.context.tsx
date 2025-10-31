@@ -64,16 +64,21 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     producto.unidadesMetroLineal = newProducto.unidadesMetroLineal;
     producto.totales = newProducto.totales;
     producto.disponibles = newProducto.totales;
-    producto.medidas.altura = newProducto.altura;
-    producto.medidas.diametro = newProducto.diametro;
-    producto.medidas.ancho = newProducto.ancho;
-    producto.medidas.profundidad = newProducto.profundidad;
-    producto.valor.unitarioGarantia = newProducto.valorUnitarioGarantia;
-    producto.valor.unitarioAlquiler = newProducto.valorUnitarioAlquiler;
-    producto.valor.x1 = newProducto.valorx1;
-    producto.valor.x3 = newProducto.valorx3;
-    producto.valor.x6 = newProducto.valorx6;
-    producto.valor.x12 = newProducto.valorx12;
+    producto.medidas = {
+      altura: newProducto.altura,
+      diametro: newProducto.diametro,
+      ancho: newProducto.ancho,
+      profundidad: newProducto.profundidad,
+    };
+    producto.valor = {
+      unitarioGarantia: newProducto.valorUnitarioGarantia,
+      unitarioAlquiler: newProducto.valorUnitarioAlquiler,
+      x1: newProducto.valorx1,
+      x3: newProducto.valorx3,
+      x6: newProducto.valorx6,
+      x12: newProducto.valorx12,
+    };
+
     producto.image = {
       createdAt: new Date(),
       id: Math.floor(Math.random() * 1000),
