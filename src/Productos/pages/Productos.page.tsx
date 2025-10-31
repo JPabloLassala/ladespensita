@@ -4,6 +4,7 @@ import { ProductosContext } from "../stores";
 import { FilterContextProvider } from "@/Common";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "../components";
 import { useProductoRepository } from "../repository";
+import { CreateNewProducto } from "../components/CreateNewProducto";
 
 export function ProductosPage() {
   const { productos, setProductos } = useContext(ProductosContext)!;
@@ -24,6 +25,7 @@ export function ProductosPage() {
       <ProductosPageContainer>
         <FilterProducts />
         <ProductosListContainer>
+          <CreateNewProducto />
           {productos.map((p) => (
             <ProductoCard key={p.id} producto={p} dimmed={false} disabled={false} />
           ))}
