@@ -23,13 +23,9 @@ RUN yarn build
 
 USER node
 
-FROM node:20-alpine AS production
+FROM nginx:1.27-alpine AS production
 
-ENV NODE_ENV production
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=build /app/dist /usr/share/nginx/html
 
-WORKDIR /app
-
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
-COPY --chown=node:node --from=build /app/dist ./dist
-
-CMD [ "node", "dist/src/main.js" ]
+EXPOSE 80
