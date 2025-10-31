@@ -14,7 +14,7 @@ export class ProductoEntity {
   unidadesMetroLineal: number;
   img: string;
   totales: number;
-  disponibles: number;
+  disponibles?: number;
   medidas: {
     altura?: number;
     diametro?: number;
@@ -23,6 +23,7 @@ export class ProductoEntity {
   };
   valor: {
     unitarioGarantia: number;
+    unitarioAlquiler: number;
     x1: number;
     x3: number;
     x6: number;
@@ -39,11 +40,10 @@ export class ProductoEntity {
 }
 
 export type ProductoEntityCreate = {
-  id?: number;
   nombre: string;
   unidadesMetroLineal: number;
-  stock: number;
-  disponibles: number;
+  totales: number;
+  disponibles?: number;
   altura?: number;
   diametro?: number;
   ancho?: number;
@@ -56,4 +56,8 @@ export type ProductoEntityCreate = {
   valorx12: number;
   file?: FileWithPath;
 };
-export type ProductoEntityUpdate = Omit<ProductoEntity, "createdAt" | "updatedAt">;
+
+export type ProductoEntityUpdate = Omit<ProductoEntityCreate, "createdAt" | "updatedAt"> & {
+  id: number;
+  file?: FileWithPath;
+};
