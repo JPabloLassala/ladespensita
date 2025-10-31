@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { Dayjs } from "dayjs";
 
 export type FilterContextType = {
@@ -98,3 +98,9 @@ export function FilterContextProvider({ children }: { children: ReactNode }) {
     </FilterContext.Provider>
   );
 }
+
+export const useFilterContext = (): FilterContextType => {
+  const ctx = useContext(FilterContext);
+  if (!ctx) throw new Error("useFilterContext must be used within FilterContextProvider");
+  return ctx;
+};

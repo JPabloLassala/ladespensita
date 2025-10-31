@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductoCard } from "../components/ProductoCard";
-import { ProductosContext } from "../stores";
+import { useProductosContext } from "../stores";
 import { FilterContextProvider } from "@/Common";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "../components";
 import { useProductoRepository } from "../repository";
@@ -11,7 +11,7 @@ import { FileWithPath } from "@mantine/dropzone";
 export function ProductosPage() {
   const [firstLoad, setFirstLoad] = useState(true);
   const { productos, setProductos, updateProducto, deleteProducto, createProducto } =
-    useContext(ProductosContext)!;
+    useProductosContext();
   const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
 
   useEffect(() => {

@@ -1,10 +1,9 @@
 import { Flex, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
-import { useContext } from "react";
-import { AlquileresContext } from "../stores";
+import { useAlquileresContext } from "../stores";
 
 export function AlquilerDetailsForm() {
-  const { selectedAlquiler } = useContext(AlquileresContext)!;
+  const { selectedAlquiler } = useAlquileresContext();
 
   return (
     <Flex direction="row" gap="1rem">

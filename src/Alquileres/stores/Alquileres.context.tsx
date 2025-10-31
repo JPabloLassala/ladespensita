@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 import dayjs from "dayjs";
 import {
@@ -123,3 +123,9 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     </AlquileresContext.Provider>
   );
 }
+
+export const useAlquileresContext = (): AlquileresContextType => {
+  const ctx = useContext(AlquileresContext);
+  if (!ctx) throw new Error("useAlquileresContext must be used within AlquileresContextProvider");
+  return ctx;
+};

@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { AlquilerProductoEntity } from "@/Alquileres/entities";
-import { AlquileresContext } from "../stores";
+import { useAlquileresContext } from "../stores";
 import { Button, Flex, Group, Title } from "@mantine/core";
-import { ProductoEntity, ProductosContext } from "@/Productos";
+import { ProductoEntity, useProductosContext } from "@/Productos";
 import { useAlquilerProductoRepository } from "../repository/AlquilerProductos.repository";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
@@ -11,9 +11,9 @@ import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosContainer, AlquilerProductosScrollContainer } from "./UI";
 
 export function AlquilerDetails() {
-  const { productos } = useContext(ProductosContext)!;
+  const { productos } = useProductosContext();
   const { selectedAlquiler, setAlquilerProductos, alquilerProductos, createEmptyAlquilerProducto } =
-    useContext(AlquileresContext)!;
+    useAlquileresContext();
   const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
     undefined,
   );

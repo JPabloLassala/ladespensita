@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 
 export type ProductosContextType = {
@@ -107,4 +107,10 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
       {children}
     </ProductosContext.Provider>
   );
+}
+
+export function useProductosContext(): ProductosContextType {
+  const ctx = useContext(ProductosContext);
+  if (!ctx) throw new Error("useProductosContext must be used within ProductosContextProvider");
+  return ctx;
 }
