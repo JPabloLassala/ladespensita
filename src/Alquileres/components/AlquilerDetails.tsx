@@ -48,7 +48,6 @@ export function AlquilerDetails({
       createdAt: selectedAlquiler!.createdAt || new Date(),
     },
     onValuesChange: (values) => {
-      console.log("values", values);
       setSelectedAlquiler({ ...selectedAlquiler, ...values });
       updateAlquiler(selectedAlquiler.id, values);
     },
@@ -62,11 +61,15 @@ export function AlquilerDetails({
         }),
       },
       onValuesChange: (values) => {
-        console.log("ap values", values);
         setAlquilerProductos(values.productos);
       },
     },
   );
+
+  useEffect(() => {
+    form.setValues({ ...selectedAlquiler });
+    sendList(selectedAlquiler.id);
+  }, [selectedAlquiler.id]);
 
   useEffect(() => {
     setAlquilerProductos(
@@ -96,15 +99,29 @@ export function AlquilerDetails({
   );
 
   return (
-    <Stack component="div" h="100%" mih="100%" id="alquiler-details-outer-flex">
+    <Stack component="section" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         id="alquiler-details-form"
         style={{ height: "100%", overflowY: "auto" }}
         onSubmit={form.onSubmit(onUpdateAlquiler)}
       >
-        <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
-          <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="md">
+        <Group
+          component="div"
+          h="100%"
+          style={{ overflowY: "auto" }}
+          align="flex-start"
+          gap="md"
+          wrap="nowrap"
+        >
+          <Stack
+            component="div"
+            mih="100%"
+            h="100%"
+            id="alquiler-details-inner-flex"
+            align="center"
+            gap="md"
+          >
             <AlquilerDetailsForm form={form} />
             <AlquilerProductosScrollContainer>
               {productos.map((producto) => {
@@ -132,8 +149,9 @@ export function AlquilerDetails({
           </Stack>
           {selectedProducto && (
             <AlquilerProductoDetails
+              productoIdx={selectedProductoIdx}
               selectedProducto={selectedProducto}
-              inputProps={productosForm.getInputProps(`productos.${selectedProductoIdx}`)}
+              form={productosForm}
             />
           )}
         </Group>

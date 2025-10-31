@@ -11,7 +11,7 @@ import {
 } from "../components";
 import { useAlquilerProductoRepository, useAlquilerRepository } from "../repository";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
-import { AlquilerEntity } from "../entities";
+import { AlquilerEntity, AlquilerSummaryItem } from "../entities";
 
 export function AlquileresPage() {
   const {
@@ -22,9 +22,12 @@ export function AlquileresPage() {
     selectedAlquiler,
     setSelectedAlquiler,
     setNewAlquiler,
-    createNewAlquiler,
+    createEmptyAlquiler,
+    createAlquiler,
+    updateAlquiler,
+    deleteAlquiler,
   } = useAlquilerContext();
-  const { data, sendList, sendCreate, sendUpdate } = useAlquilerRepository([]);
+  const { data, sendList, sendCreate, sendUpdate, sendDelete } = useAlquilerRepository([]);
   const { sendCreate: sendCreateAlquilerProducto, sendUpdate: sendUpdateAlquilerProducto } =
     useAlquilerProductoRepository();
   const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
@@ -34,12 +37,12 @@ export function AlquileresPage() {
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
+    handleCancelCreateNewAlquiler();
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
   }
   function handleStartCreateNewAlquiler() {
     setAppState(APP_STATE.creating);
-    const alquiler = createNewAlquiler();
-    setNewAlquiler(alquiler);
+    setNewAlquiler(createEmptyAlquiler());
     setSelectedAlquiler(undefined);
   }
   function handleCancelCreateNewAlquiler() {
@@ -53,22 +56,24 @@ export function AlquileresPage() {
 
     const alquilerWithId = (await sendCreate(newAlquiler)) as AlquilerEntity;
     await sendCreateAlquilerProducto(alquilerProductos, alquilerWithId.id);
-
-    setAlquilerProductos([]);
+    createAlquiler(alquilerWithId);
+    setSelectedAlquiler(alquilerWithId);
     setNewAlquiler(undefined);
-    setSelectedAlquiler(undefined);
-    sendList();
   }
   async function handleUpdateAlquiler() {
     if (!selectedAlquiler) return;
     setAppState(APP_STATE.loading);
-
     await sendUpdate(selectedAlquiler);
     await sendUpdateAlquilerProducto(alquilerProductos, selectedAlquiler.id);
+    updateAlquiler(selectedAlquiler.id, selectedAlquiler);
+  }
+  async function handleDeleteAlquiler(alquiler: AlquilerSummaryItem) {
+    setAppState(APP_STATE.loading);
 
+    await sendDelete(alquiler.id);
     setAlquilerProductos([]);
+    deleteAlquiler(alquiler.id);
     setSelectedAlquiler(undefined);
-    sendList();
   }
 
   useEffect(() => {
@@ -91,12 +96,14 @@ export function AlquileresPage() {
       style={{ overflowY: "auto" }}
       align="start"
       gap="xs"
+      wrap="nowrap"
     >
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
         getSummary={getSummary}
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
+        onDeleteAlquiler={handleDeleteAlquiler}
       />
       {selectedAlquiler && !isCreating && (
         <AlquilerDetails

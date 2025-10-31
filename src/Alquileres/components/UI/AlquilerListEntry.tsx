@@ -15,7 +15,7 @@ export function AlquilerListEntry({
   alquiler: AlquilerSummaryItem | AlquilerSummaryItemCreate;
   isSelected: boolean;
   onSelectAlquiler: () => void;
-  onDeleteAlquiler: () => void;
+  onDeleteAlquiler: (a: AlquilerSummaryItem) => void;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dateRange = `${dayjs(alquiler.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(alquiler.fechaFin).format("DD/MM/YYYY")}`;
@@ -37,7 +37,7 @@ export function AlquilerListEntry({
             <Text fw={700}>{alquiler.proyecto}</Text>
           </Group>
           <DeleteAlquilerModal
-            onAccept={onDeleteAlquiler}
+            onAccept={() => onDeleteAlquiler(alquiler as AlquilerSummaryItem)}
             isModalOpen={isModalOpen}
             onCloseModal={() => setIsModalOpen(false)}
           >

@@ -7,6 +7,7 @@ export function AlquilerProductosScrollContainer({ children }: { children: React
       direction="column"
       h="100%"
       gap="1rem"
+      w="100%"
       id="alquiler-productos-scroll-container"
       style={{ overflowY: "auto" }}
     >

@@ -17,10 +17,11 @@ export function DeleteAlquilerModal({
     <Popover
       position="bottom-end"
       withArrow
-      arrowPosition="side"
-      arrowOffset={5}
-      shadow="lg"
+      arrowPosition="center"
+      shadow="md"
+      radius="md"
       clickOutsideEvents={["mouseup", "touchend"]}
+      styles={{ dropdown: { border: "2px solid lightgray" } }}
       onDismiss={onCloseModal}
       opened={isModalOpen}
       onClose={onCloseModal}

@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
+import { useMemo } from "react";
 import { AlquilerSummaryItem, AlquilerSummaryItemCreate } from "../entities";
 import { useAlquilerContext } from "../stores";
 import { Button, Group, Stack } from "@mantine/core";
-import { APP_STATE, useAppStateContext } from "@/Common";
 import { AlquilerListEntry, NewAlquilerListEntry } from "./UI";
 
 export function AlquilerList({
@@ -11,19 +9,18 @@ export function AlquilerList({
   getSummary,
   onStartCreateNewAlquiler,
   onCancelCreateNewAlquiler,
+  onDeleteAlquiler,
 }: {
   onSelectAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
   onStartCreateNewAlquiler: () => void;
   onCancelCreateNewAlquiler: () => void;
+  onDeleteAlquiler: (a: AlquilerSummaryItem) => void;
 }) {
-  const [, setIsModalOpen] = useState(false);
-  const [, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
   const { selectedAlquiler, newAlquiler } = useAlquilerContext();
 
-  function handleOpenConfirmation(alquiler: AlquilerSummaryItem) {
-    setIsModalOpen(true);
-    setSelectedAlquilerForDelete(alquiler);
+  function handleDeleteAlquiler(alquiler: AlquilerSummaryItem) {
+    onDeleteAlquiler(alquiler);
   }
 
   const summary = useMemo(
@@ -34,7 +31,7 @@ export function AlquilerList({
           alquiler={alquiler}
           isSelected={selectedAlquiler?.id === alquiler.id}
           onSelectAlquiler={() => onSelectAlquiler(alquiler.id)}
-          onDeleteAlquiler={() => handleOpenConfirmation(alquiler)}
+          onDeleteAlquiler={() => handleDeleteAlquiler(alquiler)}
         />
       )),
     [getSummary],
@@ -51,7 +48,15 @@ export function AlquilerList({
     : undefined;
 
   return (
-    <Stack component="section" id="alquiler-sidebar" w="17.5%" miw="350px" gap="md">
+    <Stack
+      component="section"
+      id="alquiler-sidebar"
+      w="20%"
+      miw="350px"
+      gap="md"
+      h="100%"
+      style={{ overflowY: "auto" }}
+    >
       <Group w="100%" justify="center" gap="1rem" id="newAlquilerContainer">
         <Button variant="filled" onClick={onStartCreateNewAlquiler}>
           Nuevo Alquiler

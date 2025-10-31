@@ -63,9 +63,7 @@ export function NewAlquilerDetails({
 
   function handleSelectProducto(producto: ProductoEntity) {
     if (selectedProducto?.productoId === producto.id) return;
-
     const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
-
     setSelectedProducto(alquilerProducto);
   }
 
@@ -110,8 +108,9 @@ export function NewAlquilerDetails({
           </Stack>
           {selectedProducto && (
             <AlquilerProductoDetails
+              productoIdx={selectedProductoIdx}
               selectedProducto={selectedProducto}
-              inputProps={productosForm.getInputProps(`productos.${selectedProductoIdx}`)}
+              form={productosForm}
             />
           )}
         </Group>

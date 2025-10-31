@@ -23,9 +23,10 @@ export type AlquilerContextType = {
   setAlquilerProductoRemaining: React.Dispatch<React.SetStateAction<AlquilerProductoRemaining[]>>;
   deleteAlquiler: (id: number) => void;
   updateAlquiler: (alquilerId: number, updatedAlquiler: Partial<AlquilerEntity>) => void;
+  createAlquiler: (alquiler: AlquilerEntity) => void;
   newAlquiler: AlquilerCreate | undefined;
   setNewAlquiler: React.Dispatch<React.SetStateAction<AlquilerCreate | undefined>>;
-  createNewAlquiler: () => AlquilerCreate;
+  createEmptyAlquiler: () => AlquilerCreate;
   createEmptyAlquilerProducto: (
     producto: ProductoEntity,
     alquilerId?: number,
@@ -68,7 +69,11 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
     setAlquileres((prev) => prev.filter((alquiler) => alquiler.id !== id));
   };
 
-  const createNewAlquiler = (): AlquilerCreate => {
+  const createAlquiler = (alquiler: AlquilerEntity) => {
+    setAlquileres((prev) => [alquiler, ...prev]);
+  };
+
+  const createEmptyAlquiler = (): AlquilerCreate => {
     const newAlquiler = {
       proyecto: "Nuevo proyecto",
       productora: "Nueva productora",
@@ -93,9 +98,7 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
       valorTotalGarantia: 0,
       costoDiseno: producto.costoDiseno,
       costoGrafica: producto.costoGrafica,
-      costoProducto: producto.costoProducto,
       costoTotal: producto.costoTotal,
-      valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
       valorUnitarioGarantia: producto.valorUnitarioGarantia,
       valorX1: producto.valorX1,
       valorX3: producto.valorX3,
@@ -114,7 +117,8 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
         updateAlquiler,
         newAlquiler,
         setNewAlquiler,
-        createNewAlquiler,
+        createEmptyAlquiler,
+        createAlquiler,
         selectedAlquiler,
         setSelectedAlquiler,
         alquilerProductos,

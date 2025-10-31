@@ -4,93 +4,76 @@ import {
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
 } from "../entities";
-import { GetInputPropsReturnType, UseFormReturnType } from "node_modules/@mantine/form/lib/types";
-import { useForm } from "@mantine/form";
+import type { UseFormReturnType } from "@mantine/form";
 
 export function AlquilerProductoDetails({
-  inputProps,
+  form,
   selectedProducto,
+  productoIdx,
 }: {
-  inputProps: GetInputPropsReturnType;
+  form: UseFormReturnType<{
+    productos: (AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity)[];
+  }>;
   selectedProducto: AlquilerProductoEntity | AlquilerProductoCreate | AlquilerProductoUpdate;
+  productoIdx: number;
 }) {
-  const innerForm = useForm<Partial<AlquilerProductoEntity>>({
-    initialValues: {
-      productoId: selectedProducto.productoId,
-      valorUnitarioGarantia: inputProps.value?.valorUnitarioGarantia || 0,
-      valorTotalGarantia: inputProps.value?.valorTotalGarantia || 0,
-      costoGrafica: inputProps.value?.costoGrafica || 0,
-      costoDiseno: inputProps.value?.costoDiseno || 0,
-      costoTotal: inputProps.value?.costoTotal || 0,
-      valorX1: inputProps.value?.valorX1 || 0,
-      valorX3: inputProps.value?.valorX3 || 0,
-      valorX6: inputProps.value?.valorX6 || 0,
-      valorX12: inputProps.value?.valorX12 || 0,
-    },
-    onValuesChange: (values) => {
-      inputProps.onChange({
-        ...inputProps.value,
-        ...values,
-        productoId: selectedProducto.productoId,
-      });
-    },
-  });
+  console.log("selected inside details", selectedProducto);
 
   return (
-    <Stack component="div" gap="0.5rem">
+    <Stack component="div" gap="0.5rem" w="20%">
       <NumberInput
         hideControls
         w="15rem"
         label="Garantia unitario"
-        {...innerForm.getInputProps("valorUnitarioGarantia")}
+        {...form.getInputProps(`productos.${productoIdx}.valorUnitarioGarantia`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Garantia total"
-        {...innerForm.getInputProps("valorTotalGarantia")}
+        {...form.getInputProps(`productos.${productoIdx}.valorTotalGarantia`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Costo gráfica"
-        {...innerForm.getInputProps("costoGrafica")}
+        {...form.getInputProps(`productos.${productoIdx}.costoGrafica`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Costo diseño"
-        {...innerForm.getInputProps("costoDiseno")}
+        {...form.getInputProps(`productos.${productoIdx}.costoDiseno`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Costo total"
-        {...innerForm.getInputProps("costoTotal")}
+        {...form.getInputProps(`productos.${productoIdx}.costoTotal`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Valor x1"
-        {...innerForm.getInputProps("valorX1")}
+        {...form.getInputProps(`productos.${productoIdx}.valorX1`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Valor x3"
-        {...innerForm.getInputProps("valorX3")}
+        {...form.getInputProps(`productos.${productoIdx}.valorX3`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Valor x6"
-        {...innerForm.getInputProps("valorX6")}
+        {...form.getInputProps(`productos.${productoIdx}.valorX6`)}
       />
       <NumberInput
         hideControls
         w="15rem"
         label="Valor x12"
-        {...innerForm.getInputProps("valorX12")}
+        {...form.getInputProps(`productos.${productoIdx}.valorX12`)}
       />
     </Stack>
   );
