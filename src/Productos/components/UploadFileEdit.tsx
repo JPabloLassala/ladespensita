@@ -9,7 +9,7 @@ export const UploadFileEdit = ({
   file,
   dirty,
   onSetFile,
-  // onSetTmpURL,
+  onSetTmpURL,
   onClearFile,
   setDirty,
   image,
@@ -37,7 +37,14 @@ export const UploadFileEdit = ({
     if (dirty) {
       if (!file) return fallback;
 
-      return <Image fit="contain" h={200} src={URL.createObjectURL(file as File)} />;
+      return (
+        <Image
+          fit="contain"
+          h={200}
+          src={URL.createObjectURL(file as File)}
+          onLoad={() => URL.revokeObjectURL(file.name)}
+        />
+      );
     }
 
     if (image)
@@ -55,6 +62,7 @@ export const UploadFileEdit = ({
 
   const handleDrop = (acceptedFiles: FileWithPath[]) => {
     setDirty(true);
+    onSetTmpURL(URL.createObjectURL(acceptedFiles[0]));
     onSetFile(acceptedFiles[0]);
   };
 
