@@ -1,13 +1,17 @@
-import {
-  AlquilerProductoCreate,
-  AlquilerProductoEntity,
-  AlquilerProductoUpdate,
-} from "./AlquilerProducto.entity";
+import { AlquilerProductoEntity } from "./AlquilerProducto.entity";
+
+export enum ALQUILER_STATUS {
+  PENDING = "pending",
+  ACTIVE = "active",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}
 
 export class AlquilerEntity {
   id: number;
   productora: string;
   proyecto: string;
+  status: ALQUILER_STATUS;
   fechaPresupuesto: Date;
   fechaInicio: Date;
   fechaFin: Date;
@@ -24,6 +28,7 @@ export type AlquilerSummaryItem = {
   id: number;
   productora: string;
   proyecto: string;
+  status: ALQUILER_STATUS;
   fechaInicio: string;
   fechaFin: string;
   totalProductos: number;

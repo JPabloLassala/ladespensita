@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useState } from "react";
 
 import dayjs from "dayjs";
 import {
+  ALQUILER_STATUS,
   AlquilerCreate,
   AlquilerEntity,
   AlquilerProductoCreate,
@@ -48,6 +49,7 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
     return alquileres.map((alquiler) => {
       return {
         id: alquiler.id,
+        status: alquiler.status,
         productora: alquiler.productora,
         proyecto: alquiler.proyecto,
         fechaInicio: alquiler.fechaInicio?.toString(),
@@ -77,6 +79,7 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
     const newAlquiler = {
       proyecto: "Nuevo proyecto",
       productora: "Nueva productora",
+      status: ALQUILER_STATUS.PENDING,
       fechaInicio: dayjs().toDate(),
       fechaFin: dayjs().add(7, "day").toDate(),
       fechaPresupuesto: dayjs().toDate(),

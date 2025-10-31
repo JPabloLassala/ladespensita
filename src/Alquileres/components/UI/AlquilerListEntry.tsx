@@ -1,7 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { AlquilerSummaryItem, AlquilerSummaryItemCreate } from "@/Alquileres/entities";
-import { Card, Group, Stack, Text } from "@mantine/core";
+import {
+  ALQUILER_STATUS,
+  AlquilerSummaryItem,
+  AlquilerSummaryItemCreate,
+} from "@/Alquileres/entities";
+import { Badge, Card, Group, Stack, Text } from "@mantine/core";
 import { DeleteAlquilerModal } from "@/Alquileres/pages";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -19,6 +23,18 @@ export function AlquilerListEntry({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dateRange = `${dayjs(alquiler.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(alquiler.fechaFin).format("DD/MM/YYYY")}`;
+  const getBadgeColor = () => {
+    switch (alquiler.status) {
+      case ALQUILER_STATUS.PENDING:
+        return "gray";
+      case ALQUILER_STATUS.ACTIVE:
+        return "blue";
+      case ALQUILER_STATUS.COMPLETED:
+        return "green";
+      case ALQUILER_STATUS.CANCELLED:
+        return "red";
+    }
+  };
 
   return (
     <Card
@@ -49,9 +65,9 @@ export function AlquilerListEntry({
         <Stack gap="0.5rem">
           <Text>{alquiler.productora}</Text>
           <Text>{dateRange}</Text>
-          <Text>
-            Cantidad de productos: <span className="font-semibold">{0}</span>
-          </Text>
+          <Badge color={getBadgeColor()} variant="light">
+            {alquiler.status}
+          </Badge>
         </Stack>
       </Card.Section>
     </Card>

@@ -39,10 +39,11 @@ export function AlquilerList({
 
   const newAlquilersummary: AlquilerSummaryItemCreate | undefined = newAlquiler
     ? {
-        fechaInicio: newAlquiler.fechaInicio.toISOString(),
-        fechaFin: newAlquiler.fechaFin.toISOString(),
         productora: newAlquiler.productora,
         proyecto: newAlquiler.proyecto,
+        status: newAlquiler.status,
+        fechaInicio: newAlquiler.fechaInicio.toISOString(),
+        fechaFin: newAlquiler.fechaFin.toISOString(),
         totalProductos: 0,
       }
     : undefined;
