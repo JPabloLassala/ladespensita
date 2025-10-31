@@ -1,39 +1,43 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Modal } from "@/Shared";
-import { Button } from "@mantine/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Flex, Group, Popover, Stack, Text } from "@mantine/core";
 
 export function DeleteAlquilerModal({
   isModalOpen,
-  onCloseModal,
   onAccept,
-  title,
+  onCloseModal,
+  children,
 }: {
   isModalOpen: boolean;
-  onCloseModal: () => void;
   onAccept: () => void;
-  title: string;
+  onCloseModal: () => void;
+  children: React.ReactNode;
 }) {
   return (
-    <Modal open={isModalOpen} onClose={onCloseModal}>
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-row gap-2">
-          <div className="flex-grow flex-col end">
-            <p className="text-xl font-bold">¿Estás segur@ de que querés borrar este alquiler?</p>
-            <p className="text-lg">{title}</p>
-            <p className="text-sm">Esta acción no se puede deshacer.</p>
-          </div>
-          <FontAwesomeIcon
-            icon={faXmark}
-            className="font-bold text-4xl cursor-pointer block"
-            onClick={onCloseModal}
-          />
-        </div>
-        <div className="self-end flex flex-row gap-2">
-          <Button onClick={onAccept}>Acepter</Button>
-          <Button onClick={onCloseModal}>Cancelar</Button>
-        </div>
-      </div>
-    </Modal>
+    <Popover
+      position="bottom-end"
+      withArrow
+      arrowPosition="side"
+      arrowOffset={5}
+      shadow="lg"
+      clickOutsideEvents={["mouseup", "touchend"]}
+      onDismiss={onCloseModal}
+      opened={isModalOpen}
+      onClose={onCloseModal}
+    >
+      <Popover.Target>{children}</Popover.Target>
+      <Popover.Dropdown>
+        <Stack component="div" gap="2rem">
+          <Stack component="div">
+            <Text fw={700}>¿Estás segur@ de que querés borrar este alquiler?</Text>
+            <Text size="sm">Esta acción no se puede deshacer.</Text>
+          </Stack>
+          <Group justify="end">
+            <Button onClick={onAccept}>Aceptar</Button>
+            <Button onClick={onCloseModal}>Cancelar</Button>
+          </Group>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
