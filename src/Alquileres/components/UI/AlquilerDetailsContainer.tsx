@@ -7,7 +7,6 @@ export function AlquilerDetailsContainer({ children }: { children: React.ReactNo
         flexDirection: "column",
         gap: "1rem",
         height: "100%",
-        width: "100%",
       }}
     >
       {children}

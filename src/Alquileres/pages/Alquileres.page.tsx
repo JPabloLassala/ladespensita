@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useAlquileresContext } from "../stores";
+import { useAlquilerContext } from "../stores";
 import { APP_STATE, useAppStateContext } from "@/Common";
-import { Flex } from "@mantine/core";
+import { Flex, Group, Stack } from "@mantine/core";
 import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
 import {
@@ -19,9 +19,9 @@ export function AlquileresPage() {
     setAlquileres,
     selectedAlquiler,
     setSelectedAlquiler,
+    setNewAlquiler,
     createNewAlquiler,
-    deleteNewAlquiler,
-  } = useAlquileresContext();
+  } = useAlquilerContext();
   const { setAppState } = useAppStateContext();
   const { data, sendList } = useAlquilerRepository([]);
   const { setProductos } = useProductosContext();
@@ -38,7 +38,7 @@ export function AlquileresPage() {
   }
   function handleCancelCreateNewAlquiler() {
     setAppState(APP_STATE.loaded);
-    deleteNewAlquiler();
+    setNewAlquiler(undefined);
     setSelectedAlquiler(undefined);
   }
 
@@ -53,7 +53,14 @@ export function AlquileresPage() {
   }, []);
 
   return (
-    <Stack id="alquileres-page" h="100%" mah="100%" style={{ overflowY: "auto" }} gap="xs">
+    <Group
+      id="alquileres-page"
+      h="100%"
+      mah="100%"
+      style={{ overflowY: "auto" }}
+      align="start"
+      gap="xs"
+    >
       <AlquilerList
         onSelectAlquiler={handleSelectAlquiler}
         getSummary={getSummary}
@@ -66,6 +73,6 @@ export function AlquileresPage() {
         </AlquilerDetailsContainer>
       )}
       {!selectedAlquiler && <AlquilerNoneSelected />}
-    </Stack>
+    </Group>
   );
 }

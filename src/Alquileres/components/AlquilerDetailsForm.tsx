@@ -1,11 +1,10 @@
-import { Flex, TextInput } from "@mantine/core";
+import { Flex, Grid, TextInput } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
-import { useAlquileresContext } from "../stores";
 
 export function AlquilerDetailsForm({ form }: { form: any }) {
   return (
-    <Flex direction="row" gap="1rem">
-      <Flex direction="column" gap="1rem">
+    <Grid gutter="md">
+      <Grid.Col span="auto">
         <TextInput
           w="15rem"
           key={form.key("proyecto")}
@@ -18,8 +17,8 @@ export function AlquilerDetailsForm({ form }: { form: any }) {
           label="Productora"
           {...form.getInputProps("productora")}
         />
-      </Flex>
-      <Flex direction="column" gap="1rem">
+      </Grid.Col>
+      <Grid.Col span="auto">
         <DatePickerInput
           w="15rem"
           label="Fecha de inicio"
@@ -36,7 +35,7 @@ export function AlquilerDetailsForm({ form }: { form: any }) {
           key={form.key("fechaFin")}
           {...form.getInputProps("fechaFin")}
         />
-      </Flex>
-    </Flex>
+      </Grid.Col>
+    </Grid>
   );
 }

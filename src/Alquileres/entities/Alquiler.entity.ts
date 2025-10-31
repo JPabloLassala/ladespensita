@@ -21,7 +21,6 @@ export type AlquilerCreate = Omit<
   "id" | "createdAt" | "updatedAt" | "productos"
 > & {
   productos?: AlquilerProductoCreate[];
-  id?: number;
 };
 
 export type AlquilerUpdate = Partial<Omit<AlquilerEntity, "productos">> & {
@@ -32,7 +31,9 @@ export type AlquilerSummaryItem = {
   id: number;
   productora: string;
   proyecto: string;
-  since: string;
-  until: string;
+  fechaInicio: string;
+  fechaFin: string;
   totalProductos: number;
 };
+
+export type AlquilerSummaryItemCreate = Omit<AlquilerSummaryItem, "id">;

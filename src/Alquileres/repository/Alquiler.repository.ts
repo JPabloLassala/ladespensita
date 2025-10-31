@@ -1,9 +1,10 @@
 import Cookies from "universal-cookie";
-import { Alquiler } from "../entities";
 import { useCallback } from "react";
 import { useState } from "react";
+import axios from "axios";
+import { AlquilerEntity } from "../entities";
 
-export function useAlquilerRepository(initialData: Alquiler[] = []) {
+export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [data, setData] = useState(initialData);
@@ -36,23 +37,27 @@ export function useAlquilerRepository(initialData: Alquiler[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(data: Alquiler): Promise<void> {
+  const sendCreate = useCallback(async function sendCreate(
+    data: AlquilerEntity,
+  ): Promise<AlquilerEntity | undefined> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/producto`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const resData = await axios.post<AlquilerEntity>(
+        `${apiHost}/alquiler`,
+        JSON.stringify(data),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-        body: JSON.stringify(data),
-      });
+      );
 
-      const productos = await resData.json();
+      const alquiler = await resData.data;
 
-      return productos;
+      return alquiler;
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
@@ -62,12 +67,14 @@ export function useAlquilerRepository(initialData: Alquiler[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendUpdate = useCallback(async function sendUpdate(data: Partial<Alquiler>): Promise<void> {
+  const sendUpdate = useCallback(async function sendUpdate(
+    data: Partial<AlquilerEntity>,
+  ): Promise<void> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await await fetch(`${apiHost}/alquiler/${data.id}`, {
+      const resData = await fetch(`${apiHost}/alquiler/${data.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
