@@ -11,7 +11,6 @@ import { ProductoEntity } from "@/Productos";
 
 export type AlquileresContextType = {
   alquileres: Alquiler[];
-  newAlquilerIdx: number;
   setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
   deleteAlquiler: (id: number) => void;
   getSummary: () => AlquilerSummaryItem[];
@@ -32,7 +31,7 @@ export const AlquileresContext = createContext<AlquileresContextType | null>(nul
 
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
-  const [newAlquilerIdx, setNewAlquilerIdx] = useState<number>(-1);
+  const [, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
   const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler | undefined>(undefined);
 
@@ -130,7 +129,6 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
       value={{
         alquileres,
         getSummary,
-        newAlquilerIdx,
         setAlquileres,
         deleteAlquiler,
         createNewAlquiler,
