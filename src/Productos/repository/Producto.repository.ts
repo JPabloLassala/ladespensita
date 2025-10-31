@@ -2,6 +2,7 @@ import Cookies from "universal-cookie";
 import { ProductoEntity } from "../entities";
 import { useCallback } from "react";
 import { useState } from "react";
+import axios from "axios";
 
 export function useProductoRepository(initialData: ProductoEntity[] = []) {
   const cookies = new Cookies();
@@ -36,23 +37,23 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(data: ProductoEntity): Promise<void> {
+  const sendCreate = useCallback(async function sendCreate(data: FormData): Promise<void> {
     setIsLoading(true);
-
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      const resData = await fetch(`${apiHost}/producto`, {
+      const resData = await axios.post<ProductoEntity>(`${apiHost}/producto`, data, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify(data),
       });
 
-      const productos = await resData.json();
+      const producto = await resData.data;
 
-      setData((oldData) => [...oldData, productos]);
+      console.log("productos", producto);
+
+      setData((oldData) => [...oldData, producto]);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
