@@ -75,7 +75,7 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
   };
 
   const deleteAlquiler = (id: number) => {
-    setAlquileres(alquileres.filter((alquiler) => alquiler.id !== id));
+    setAlquileres((prev) => prev.filter((alquiler) => alquiler.id !== id));
   };
 
   const createEmptyAlquilerProducto = (
