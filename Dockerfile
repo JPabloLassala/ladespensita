@@ -9,7 +9,7 @@ RUN npm g i yarn;
 # pick your installer; default to npm
 RUN yarn install --frozen-lockfile;
 
-RUN ["yarn", "start"]
+CMD ["yarn", "start", "--host", "0.0.0.0"]
 
 FROM node:20-alpine AS builder
 
