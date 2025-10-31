@@ -65,7 +65,7 @@ export function AlquileresPage() {
     <Flex
       id="alquileres-page"
       direction="row"
-      style={{ height: "100%", maxHeight: "100%" }}
+      style={{ height: "100%", maxHeight: "100%", overflowY: "auto" }}
       gap="xs"
     >
       <AlquilerList
