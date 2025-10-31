@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { AppStateProvider } from "./Common/index.ts";
-import { AlquilerContextProvider } from "./Alquileres/index.ts";
+import { AlquilerContextProvider, AlquilerProductoContextProvider } from "./Alquileres/index.ts";
 import { ProductosContextProvider } from "./Productos/index.ts";
 
 dayjs.extend(utc);
@@ -21,9 +21,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppStateProvider>
       <AlquilerContextProvider>
-        <ProductosContextProvider>
-          <App />
-        </ProductosContextProvider>
+        <AlquilerProductoContextProvider>
+          <ProductosContextProvider>
+            <App />
+          </ProductosContextProvider>
+        </AlquilerProductoContextProvider>
       </AlquilerContextProvider>
     </AppStateProvider>
   </React.StrictMode>,

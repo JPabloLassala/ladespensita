@@ -5,14 +5,12 @@ export type AlquilerProductoEntity = {
   id: number;
   productoId: number;
   alquilerId: number;
-  costoProducto: number;
   costoGrafica: number;
   costoDiseno: number;
   costoTotal: number;
   cantidad: number;
   valorUnitarioGarantia: number;
   valorTotalGarantia: number;
-  valorUnitarioAlquiler: number;
   valorX1: number;
   valorX3: number;
   valorX6: number;
@@ -28,10 +26,14 @@ export type AlquilerProductoCreate = Omit<
   AlquilerProductoEntity,
   "id" | "alquilerId" | "createdAt" | "updatedAt" | "producto" | "alquiler"
 > & {
-  id?: number;
   alquilerId?: number;
 };
 
-export type AlquilerProductoUpdate = Partial<AlquilerProductoEntity> & {
+export type AlquilerProductoUpdate = Omit<
+  AlquilerProductoEntity,
+  "id" | "alquilerId" | "createdAt" | "updatedAt" | "producto" | "alquiler"
+> & {
   id?: number;
+  alquilerId?: number;
+  createdAt?: Date;
 };

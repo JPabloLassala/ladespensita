@@ -1,22 +1,20 @@
-import { Flex, NumberInput, Stack, TextInput } from "@mantine/core";
+import { NumberInput, Stack } from "@mantine/core";
 import {
   AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
-  AlquilerUpdate,
 } from "../entities";
 import { GetInputPropsReturnType, UseFormReturnType } from "node_modules/@mantine/form/lib/types";
 import { useForm } from "@mantine/form";
-import { useEffect } from "react";
 
 export function AlquilerProductoDetails({
   inputProps,
   selectedProducto,
 }: {
   inputProps: GetInputPropsReturnType;
-  selectedProducto: AlquilerProductoEntity | AlquilerProductoCreate;
+  selectedProducto: AlquilerProductoEntity | AlquilerProductoCreate | AlquilerProductoUpdate;
 }) {
-  const innerForm = useForm<AlquilerProductoUpdate>({
+  const innerForm = useForm<Partial<AlquilerProductoEntity>>({
     initialValues: {
       productoId: selectedProducto.productoId,
       valorUnitarioGarantia: inputProps.value?.valorUnitarioGarantia || 0,

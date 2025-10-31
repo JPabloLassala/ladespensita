@@ -1,9 +1,8 @@
-import { useEffect } from "react";
-import { useAlquilerContext } from "../stores";
 import { APP_STATE, useAppStateContext } from "@/Common";
-import { Group } from "@mantine/core";
 import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
+import { Group } from "@mantine/core";
+import { useEffect } from "react";
 import {
   AlquilerDetails,
   AlquilerList,
@@ -11,6 +10,8 @@ import {
   NewAlquilerDetails,
 } from "../components";
 import { useAlquilerProductoRepository, useAlquilerRepository } from "../repository";
+import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
+import { AlquilerEntity } from "../entities";
 
 export function AlquileresPage() {
   const {
@@ -22,28 +23,16 @@ export function AlquileresPage() {
     setSelectedAlquiler,
     setNewAlquiler,
     createNewAlquiler,
-    setAlquilerProductoRemaining,
   } = useAlquilerContext();
   const { data, sendList, sendCreate, sendUpdate } = useAlquilerRepository([]);
+  const { sendCreate: sendCreateAlquilerProducto } = useAlquilerProductoRepository();
+  const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
   const { setProductos } = useProductosContext();
   const { isCreating, setAppState } = useAppStateContext();
-  const { sendGetRemaining, stockData } = useAlquilerProductoRepository();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
-
-  useEffect(() => {
-    sendGetRemaining();
-  }, []);
-
-  useEffect(() => {
-    setAlquilerProductoRemaining(stockData);
-  }, [stockData]);
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
-    console.log(
-      "selected alquiler",
-      alquileres.find((alquiler) => alquiler.id === id),
-    );
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
   }
   function handleStartCreateNewAlquiler() {
@@ -61,21 +50,20 @@ export function AlquileresPage() {
     if (!newAlquiler) return;
     setAppState(APP_STATE.loading);
 
-    await sendCreate({
-      ...newAlquiler,
-      productos: newAlquiler.productos?.filter((ap) => ap.cantidad && ap.cantidad > 0),
-    });
+    const alquilerWithId = (await sendCreate(newAlquiler)) as AlquilerEntity;
+    console.log("alquilerWithId", alquilerWithId);
+    await sendCreateAlquilerProducto(alquilerProductos, alquilerWithId.id);
+
+    setAlquilerProductos([]);
     setNewAlquiler(undefined);
+    setSelectedAlquiler(undefined);
     sendList();
   }
   async function handleUpdateAlquiler() {
     setAppState(APP_STATE.loading);
     if (!selectedAlquiler) return;
 
-    await sendUpdate({
-      ...selectedAlquiler,
-      productos: selectedAlquiler.productos?.filter((ap) => ap.cantidad > 0),
-    });
+    await sendUpdate(selectedAlquiler);
     sendList();
   }
 

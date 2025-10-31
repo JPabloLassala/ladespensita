@@ -1,20 +1,13 @@
 import { ProductoEntity } from "@/Productos";
-import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
-import {
-  AlquilerProductoCreate,
-  AlquilerProductoEntity,
-  AlquilerProductoRemaining,
-} from "../entities";
-import { GetInputPropsReturnType, UseFormReturnType } from "node_modules/@mantine/form/lib/types";
+import { Button, Group, Image, NumberInput, Paper, Text } from "@mantine/core";
+import { GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
 
 export function AlquilerProductoItem({
   producto,
-  remaining,
   onSelectProducto,
   inputProps,
 }: {
   producto: ProductoEntity;
-  remaining: AlquilerProductoRemaining;
   onSelectProducto: (productoId: number) => void;
   inputProps: GetInputPropsReturnType;
 }) {
@@ -47,10 +40,7 @@ export function AlquilerProductoItem({
             w={75}
             alt={producto.nombre}
           />
-          <Stack>
-            <Text fw={700}>{producto.nombre}</Text>
-            <Text>Disponibles: {remaining?.remaining || 0}</Text>
-          </Stack>
+          <Text fw={700}>{producto.nombre}</Text>
         </Group>
         <Group>
           <Button size="compact-md" variant="outline" onClick={handleDecreaseQuantity}>

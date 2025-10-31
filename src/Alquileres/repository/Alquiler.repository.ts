@@ -37,17 +37,25 @@ export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(data: AlquilerCreate): Promise<void> {
+  const sendCreate = useCallback(async function sendCreate(
+    data: AlquilerCreate,
+  ): Promise<AlquilerEntity | undefined> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      await axios.post<AlquilerEntity>(`${apiHost}/alquiler`, JSON.stringify(data), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+      const newAlquiler = await axios.post<AlquilerEntity>(
+        `${apiHost}/alquiler`,
+        JSON.stringify(data),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
+
+      return newAlquiler.data;
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message || "Something went wrong");
