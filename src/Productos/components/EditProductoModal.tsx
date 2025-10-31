@@ -62,6 +62,7 @@ export const EditProductoModal = ({
 
     form.reset();
     setFile(undefined);
+    setUploadDirty(false);
     onClose();
   };
 
