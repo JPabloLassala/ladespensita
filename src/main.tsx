@@ -15,6 +15,7 @@ import { ProductosContextProvider } from "./Productos/index.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+console.log("VITE_API_HOST", import.meta.env.VITE_API_HOST);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
