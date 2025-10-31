@@ -37,7 +37,7 @@ export const CreateProductoModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title="Crear nuevo" centered size="100%">
+    <Modal opened={opened} onClose={onClose} centered size="100%">
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
