@@ -1,31 +1,42 @@
 import { useEffect } from "react";
 import { useAlquilerContext } from "../stores";
 import { APP_STATE, useAppStateContext } from "@/Common";
-import { Flex, Group, Stack } from "@mantine/core";
+import { Group } from "@mantine/core";
 import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
 import {
   AlquilerDetails,
-  AlquilerDetailsContainer,
   AlquilerList,
   AlquilerNoneSelected,
+  NewAlquilerDetails,
 } from "../components";
-import { useAlquilerRepository } from "../repository";
+import { useAlquilerProductoRepository, useAlquilerRepository } from "../repository";
 
 export function AlquileresPage() {
   const {
     getSummary,
+    newAlquiler,
     alquileres,
     setAlquileres,
     selectedAlquiler,
     setSelectedAlquiler,
     setNewAlquiler,
     createNewAlquiler,
+    setAlquilerProductoRemaining,
   } = useAlquilerContext();
-  const { setAppState } = useAppStateContext();
-  const { data, sendList } = useAlquilerRepository([]);
+  const { data, sendList, sendCreate, sendUpdate } = useAlquilerRepository([]);
   const { setProductos } = useProductosContext();
+  const { isCreating, setAppState } = useAppStateContext();
+  const { sendGetRemaining, stockData } = useAlquilerProductoRepository();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
+
+  useEffect(() => {
+    sendGetRemaining();
+  }, []);
+
+  useEffect(() => {
+    setAlquilerProductoRemaining(stockData);
+  }, [stockData]);
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
@@ -34,20 +45,41 @@ export function AlquileresPage() {
   function handleStartCreateNewAlquiler() {
     setAppState(APP_STATE.creating);
     const alquiler = createNewAlquiler();
-    setSelectedAlquiler(alquiler);
+    setNewAlquiler(alquiler);
+    setSelectedAlquiler(undefined);
   }
   function handleCancelCreateNewAlquiler() {
     setAppState(APP_STATE.loaded);
     setNewAlquiler(undefined);
     setSelectedAlquiler(undefined);
   }
+  async function handleCreateAlquiler() {
+    if (!newAlquiler) return;
+    setAppState(APP_STATE.loading);
+
+    await sendCreate({
+      ...newAlquiler,
+      productos: newAlquiler.productos?.filter((ap) => ap.cantidad && ap.cantidad > 0),
+    });
+    setNewAlquiler(undefined);
+    sendList();
+  }
+  async function handleUpdateAlquiler() {
+    setAppState(APP_STATE.loading);
+    if (!selectedAlquiler) return;
+
+    await sendUpdate(selectedAlquiler);
+    sendList();
+  }
 
   useEffect(() => {
     setProductos(productosData);
     setAlquileres(data);
+    setAppState(APP_STATE.loaded);
   }, [data, productosData]);
 
   useEffect(() => {
+    setAppState(APP_STATE.loading);
     sendListProductos();
     sendList();
   }, []);
@@ -67,12 +99,13 @@ export function AlquileresPage() {
         onStartCreateNewAlquiler={handleStartCreateNewAlquiler}
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
-      {selectedAlquiler && (
-        <AlquilerDetailsContainer>
-          <AlquilerDetails />
-        </AlquilerDetailsContainer>
+      {selectedAlquiler && !isCreating && (
+        <AlquilerDetails onUpdateAlquiler={handleUpdateAlquiler} />
       )}
-      {!selectedAlquiler && <AlquilerNoneSelected />}
+      {!selectedAlquiler && isCreating && (
+        <NewAlquilerDetails onCreateAlquiler={handleCreateAlquiler} />
+      )}
+      {!selectedAlquiler && !isCreating && <AlquilerNoneSelected />}
     </Group>
   );
 }

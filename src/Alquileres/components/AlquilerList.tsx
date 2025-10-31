@@ -4,7 +4,7 @@ import { AlquilerSummaryItem, AlquilerSummaryItemCreate } from "../entities";
 import { useAlquilerContext } from "../stores";
 import { Button, Group, Stack } from "@mantine/core";
 import { APP_STATE, useAppStateContext } from "@/Common";
-import { AlquilerListEntry } from "./UI";
+import { AlquilerListEntry, NewAlquilerListEntry } from "./UI";
 
 export function AlquilerList({
   onSelectAlquiler,
@@ -20,7 +20,6 @@ export function AlquilerList({
   const [, setIsModalOpen] = useState(false);
   const [, setSelectedAlquilerForDelete] = useState<AlquilerSummaryItem>();
   const { selectedAlquiler, newAlquiler } = useAlquilerContext();
-  const { appState } = useAppStateContext();
 
   function handleOpenConfirmation(alquiler: AlquilerSummaryItem) {
     setIsModalOpen(true);
@@ -64,12 +63,7 @@ export function AlquilerList({
       <div style={{ height: "100%", overflowY: "auto" }}>
         <Stack gap="0.25rem">
           {newAlquilersummary && newAlquiler && (
-            <AlquilerListEntry
-              alquiler={newAlquilersummary}
-              isSelected={true}
-              onSelectAlquiler={() => {}}
-              onDeleteAlquiler={onCancelCreateNewAlquiler}
-            />
+            <NewAlquilerListEntry onDeleteAlquiler={onCancelCreateNewAlquiler} />
           )}
           {summary}
         </Stack>

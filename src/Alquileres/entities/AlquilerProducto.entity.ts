@@ -26,9 +26,10 @@ export type AlquilerProductoEntity = {
 
 export type AlquilerProductoCreate = Omit<
   AlquilerProductoEntity,
-  "id" | "createdAt" | "updatedAt" | "producto" | "alquiler"
+  "id" | "alquilerId" | "createdAt" | "updatedAt" | "producto" | "alquiler"
 > & {
   id?: number;
+  alquilerId?: number;
 };
 
 export type AlquilerProductoUpdate = Partial<AlquilerProductoEntity> & {

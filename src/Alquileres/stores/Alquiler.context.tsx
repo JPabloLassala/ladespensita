@@ -8,7 +8,6 @@ import {
   AlquilerProductoEntity,
   AlquilerProductoRemaining,
   AlquilerSummaryItem,
-  AlquilerUpdate,
 } from "../entities";
 import { ProductoEntity } from "@/Productos";
 
@@ -16,10 +15,8 @@ export type AlquilerContextType = {
   getSummary: () => AlquilerSummaryItem[];
   alquileres: AlquilerEntity[];
   setAlquileres: React.Dispatch<React.SetStateAction<AlquilerEntity[]>>;
-  selectedAlquiler: AlquilerUpdate | undefined;
-  setSelectedAlquiler: React.Dispatch<
-    React.SetStateAction<AlquilerEntity | AlquilerCreate | undefined>
-  >;
+  selectedAlquiler: AlquilerEntity | undefined;
+  setSelectedAlquiler: React.Dispatch<React.SetStateAction<AlquilerEntity | undefined>>;
   alquilerProductos: AlquilerProductoEntity[];
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   alquilerProductoRemaining: AlquilerProductoRemaining[];
@@ -30,8 +27,8 @@ export type AlquilerContextType = {
   setNewAlquiler: React.Dispatch<React.SetStateAction<AlquilerCreate | undefined>>;
   createNewAlquiler: () => AlquilerCreate;
   createEmptyAlquilerProducto: (
-    alquilerId: number,
     producto: ProductoEntity,
+    alquilerId?: number,
   ) => AlquilerProductoCreate;
 };
 
@@ -40,9 +37,7 @@ export const AlquilerContext = createContext<AlquilerContextType | null>(null);
 export function AlquilerContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<AlquilerEntity[]>([]);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
-  const [selectedAlquiler, setSelectedAlquiler] = useState<
-    AlquilerEntity | AlquilerCreate | undefined
-  >(undefined);
+  const [selectedAlquiler, setSelectedAlquiler] = useState<AlquilerEntity | undefined>(undefined);
   const [alquilerProductoRemaining, setAlquilerProductoRemaining] = useState<
     AlquilerProductoRemaining[]
   >([]);
@@ -88,12 +83,12 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
   };
 
   const createEmptyAlquilerProducto = (
-    alquilerId: number,
     producto: ProductoEntity,
+    alquilerId?: number,
   ): AlquilerProductoCreate => {
     return {
       productoId: producto.id,
-      alquilerId,
+      alquilerId: alquilerId || undefined,
       cantidad: alquilerProductos.find((p) => p.productoId === producto.id)?.cantidad || 0,
       valorTotalGarantia: 0,
       costoDiseno: producto.costoDiseno,
