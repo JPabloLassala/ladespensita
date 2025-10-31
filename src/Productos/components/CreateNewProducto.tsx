@@ -1,11 +1,12 @@
 import { Button, Card, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { NewProductoModal } from "./NewProductoModal";
+import { ProductoEntityCreate } from "../entities";
 
 export const CreateNewProducto = ({
   onCreate,
 }: {
-  onCreate: (data: FormData) => Promise<void>;
+  onCreate: (data: ProductoEntityCreate) => void;
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
 

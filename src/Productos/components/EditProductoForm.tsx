@@ -48,11 +48,11 @@ export const EditProductoForm = ({
       </Stack>
       <Stack justify="start" align="start" gap="xs">
         <NumberInput
-          label="Stock"
-          placeholder="Stock"
+          label="Totales"
+          placeholder="Totales"
           hideControls
-          key={form.key("stock")}
-          {...form.getInputProps("stock")}
+          key={form.key("totales")}
+          {...form.getInputProps("totales")}
         />
         <NumberInput
           label="Unidades metro lineal"

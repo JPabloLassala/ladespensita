@@ -13,37 +13,26 @@ export const NewProductoModal = ({
 }: {
   onClose: () => void;
   opened: boolean;
-  onCreate: (data: FormData) => Promise<void>;
+  onCreate: (data: ProductoEntityCreate) => void;
 }) => {
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
+  const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
+
   const form = useForm<ProductoEntityCreate>({
     mode: "uncontrolled",
   });
 
-  const handleSetFile = async (newFile: FileWithPath): Promise<void> => {
+  const handleSetFile = (newFile: FileWithPath): void => {
     form.setFieldValue("file", newFile);
 
     setFile(newFile);
   };
 
-  const handleSubmitForm = async (values: ProductoEntityCreate) => {
-    const formData = new FormData();
-    formData.append("file", values.file as FileWithPath);
-    formData.append("nombre", values.nombre);
-    formData.append("unidadesMetroLineal", values.unidadesMetroLineal.toString());
-    formData.append("totales", values.totales?.toString() || "");
-    formData.append("altura", values.altura?.toString() || "");
-    formData.append("diametro", values.diametro?.toString() || "");
-    formData.append("ancho", values.ancho?.toString() || "");
-    formData.append("profundidad", values.profundidad?.toString() || "");
-    formData.append("valorUnitarioGarantia", values.valorUnitarioGarantia.toString());
-    formData.append("valorUnitarioAlquiler", values.valorUnitarioAlquiler.toString());
-    formData.append("valorx1", values.valorx1.toString());
-    formData.append("valorx3", values.valorx3.toString());
-    formData.append("valorx6", values.valorx6.toString());
-    formData.append("valorx12", values.valorx12.toString());
-
-    onCreate(formData);
+  const handleSubmitForm = (values: ProductoEntityCreate) => {
+    onCreate({ ...values, tmpURL: tmpURL });
+    form.reset();
+    setFile(undefined);
+    onClose();
   };
 
   return (
@@ -51,7 +40,7 @@ export const NewProductoModal = ({
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
-            <UploadFile file={file} onSetFile={handleSetFile} />
+            <UploadFile file={file} onSetFile={handleSetFile} onSetTmpURL={setTmpURL} />
             <NewProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
