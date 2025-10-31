@@ -11,7 +11,7 @@ import {
 } from "../components";
 import { useAlquilerProductoRepository, useAlquilerRepository } from "../repository";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
-import { AlquilerEntity, AlquilerSummaryItem } from "../entities";
+import { ALQUILER_STATUS, AlquilerEntity, AlquilerSummaryItem } from "../entities";
 
 export function AlquileresPage() {
   const {
@@ -75,6 +75,14 @@ export function AlquileresPage() {
     deleteAlquiler(alquiler.id);
     setSelectedAlquiler(undefined);
   }
+  async function handleChangeStatus(id: number, status: ALQUILER_STATUS) {
+    if (!selectedAlquiler) return;
+    setAppState(APP_STATE.loading);
+    const updatedAlquiler = { ...selectedAlquiler, status };
+    await sendUpdate(updatedAlquiler);
+    updateAlquiler(id, updatedAlquiler);
+    setSelectedAlquiler(updatedAlquiler);
+  }
 
   useEffect(() => {
     setProductos(productosData);
@@ -109,6 +117,7 @@ export function AlquileresPage() {
         <AlquilerDetails
           selectedAlquiler={selectedAlquiler}
           onUpdateAlquiler={handleUpdateAlquiler}
+          onChangeStatus={handleChangeStatus}
         />
       )}
       {!selectedAlquiler && isCreating && (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
+  ALQUILER_STATUS,
   AlquilerEntity,
   AlquilerProductoCreate,
   AlquilerProductoEntity,
@@ -16,12 +17,15 @@ import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { useAlquilerProductoRepository } from "../repository";
+import { AlquilerStatus } from "./AlquilerStatus";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
+  onChangeStatus,
   selectedAlquiler,
 }: {
   onUpdateAlquiler: () => void;
+  onChangeStatus: (id: number, status: ALQUILER_STATUS) => void;
   selectedAlquiler: AlquilerEntity;
 }) {
   const { productos } = useProductosContext();
@@ -101,6 +105,7 @@ export function AlquilerDetails({
   return (
     <Stack component="section" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
+      <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
       <form
         id="alquiler-details-form"
         style={{ height: "100%", overflowY: "auto" }}
