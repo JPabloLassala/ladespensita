@@ -34,15 +34,16 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     productoToUpdate.valor.x3 = newProducto.valorx3;
     productoToUpdate.valor.x6 = newProducto.valorx6;
     productoToUpdate.valor.x12 = newProducto.valorx12;
-    productoToUpdate.image = {
-      createdAt: new Date(),
-      id: Math.floor(Math.random() * 1000),
-      isMain: true,
-      productoId: newProducto.id,
-      url: newProducto.tmpURL || "",
-    };
 
-    console.log(productoToUpdate.image);
+    if (newProducto.tmpURL) {
+      productoToUpdate.image = {
+        createdAt: new Date(),
+        id: Math.floor(Math.random() * 1000),
+        isMain: true,
+        productoId: newProducto.id,
+        url: newProducto.tmpURL || "",
+      };
+    }
 
     setProductos((prev) =>
       prev.map((p) => {
