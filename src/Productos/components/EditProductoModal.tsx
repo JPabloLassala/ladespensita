@@ -22,23 +22,22 @@ export const EditProductoModal = ({
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
   const form = useForm<ProductoEntityUpdate>({
     mode: "uncontrolled",
-    initialValues: {
-      id: producto.id,
-      nombre: producto.nombre,
-      unidadesMetroLineal: producto.unidadesMetroLineal,
-      totales: producto.totales,
-      altura: producto.medidas.altura,
-      diametro: producto.medidas.diametro,
-      ancho: producto.medidas.ancho,
-      profundidad: producto.medidas.profundidad,
-      valorUnitarioGarantia: producto.valor.unitarioGarantia,
-      valorUnitarioAlquiler: producto.valor.unitarioAlquiler,
-      valorx1: producto.valor.x1,
-      valorx3: producto.valor.x3,
-      valorx6: producto.valor.x6,
-      valorx12: producto.valor.x12,
-    },
   });
+
+  form.setFieldValue("id", producto.id);
+  form.setFieldValue("nombre", producto.nombre);
+  form.setFieldValue("unidadesMetroLineal", producto.unidadesMetroLineal);
+  form.setFieldValue("totales", producto.totales);
+  form.setFieldValue("altura", producto.medidas.altura);
+  form.setFieldValue("diametro", producto.medidas.diametro);
+  form.setFieldValue("ancho", producto.medidas.ancho);
+  form.setFieldValue("profundidad", producto.medidas.profundidad);
+  form.setFieldValue("valorUnitarioGarantia", producto.valor.unitarioGarantia);
+  form.setFieldValue("valorUnitarioAlquiler", producto.valor.unitarioAlquiler);
+  form.setFieldValue("valorx1", producto.valor.x1);
+  form.setFieldValue("valorx3", producto.valor.x3);
+  form.setFieldValue("valorx6", producto.valor.x6);
+  form.setFieldValue("valorx12", producto.valor.x12);
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
