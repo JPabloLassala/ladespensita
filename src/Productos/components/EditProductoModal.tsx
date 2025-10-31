@@ -1,10 +1,10 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
-import { UploadFile } from "./UploadFile";
 import { useForm } from "@mantine/form";
 import { ProductoEntity, ProductoEntityUpdate } from "../entities";
 import { useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 import { EditProductoForm } from "./EditProductoForm";
+import { UploadFileEdit } from "./UploadFileEdit";
 
 export const EditProductoModal = ({
   onClose,
@@ -17,6 +17,7 @@ export const EditProductoModal = ({
   producto: ProductoEntity;
   onUpdate: (producto: ProductoEntityUpdate, id: number) => void;
 }) => {
+  const [uploadDirty, setUploadDirty] = useState(false);
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
   const form = useForm<ProductoEntityUpdate>({
@@ -49,17 +50,19 @@ export const EditProductoModal = ({
     setFile(newFile);
   };
 
+  const handleClearFile = () => {
+    setFile(undefined);
+    setTmpURL(undefined);
+    form.setFieldValue("file", undefined);
+    setUploadDirty(true);
+  };
+
   const handleSubmitForm = (values: ProductoEntityUpdate) => {
     onUpdate({ ...values, tmpURL: tmpURL }, producto.id);
+
     form.reset();
     setFile(undefined);
     onClose();
-  };
-
-  const handleResetFile = () => {
-    form.setFieldValue("file", undefined);
-    setFile(undefined);
-    setTmpURL(undefined);
   };
 
   return (
@@ -67,12 +70,14 @@ export const EditProductoModal = ({
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
-            <UploadFile
+            <UploadFileEdit
               file={file}
               onSetFile={handleSetFile}
               image={producto.image}
+              onClearFile={handleClearFile}
               onSetTmpURL={setTmpURL}
-              onResetFile={handleResetFile}
+              dirty={uploadDirty}
+              setDirty={setUploadDirty}
             />
             <EditProductoForm form={form} />
           </Group>

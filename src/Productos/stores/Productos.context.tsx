@@ -42,6 +42,8 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
       url: newProducto.tmpURL || "",
     };
 
+    console.log(productoToUpdate.image);
+
     setProductos((prev) =>
       prev.map((p) => {
         if (p.id === productoToUpdate.id) {

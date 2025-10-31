@@ -1,5 +1,5 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
-import { UploadFile } from "./UploadFile";
+import { UploadFileCreate } from "./UploadFileCreate";
 import { NewProductoForm } from "./NewProductoForm";
 import { useForm } from "@mantine/form";
 import { ProductoEntityCreate } from "../entities";
@@ -40,7 +40,7 @@ export const NewProductoModal = ({
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
-            <UploadFile file={file} onSetFile={handleSetFile} onSetTmpURL={setTmpURL} />
+            <UploadFileCreate file={file} onSetFile={handleSetFile} onSetTmpURL={setTmpURL} />
             <NewProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
