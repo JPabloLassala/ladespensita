@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductoCard } from "../components/ProductoCard";
 import { ProductosContext } from "../stores";
 import { FilterContextProvider } from "@/Common";
@@ -9,12 +9,18 @@ import { ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 import { FileWithPath } from "@mantine/dropzone";
 
 export function ProductosPage() {
+  const [firstLoad, setFirstLoad] = useState(true);
   const { productos, setProductos, updateProducto, deleteProducto } = useContext(ProductosContext)!;
   const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
 
   useEffect(() => {
-    setProductos(data);
-  }, [data]);
+    if (firstLoad) {
+      setProductos(data);
+    }
+    if (data.length > 0) {
+      setFirstLoad(false);
+    }
+  }, [data, firstLoad]);
 
   useEffect(() => {
     sendList();
@@ -22,6 +28,7 @@ export function ProductosPage() {
 
   const handleUpdate = (producto: ProductoEntityUpdate, id: number) => {
     const formData = new FormData();
+
     formData.append("file", producto.file as FileWithPath);
     formData.append("nombre", producto.nombre);
     formData.append("unidadesMetroLineal", producto.unidadesMetroLineal.toString());
