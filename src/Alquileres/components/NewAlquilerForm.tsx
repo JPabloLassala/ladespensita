@@ -5,7 +5,7 @@ import { Button, Flex, Group, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
-import { AlquilerProductosContainer, AlquilerProductosScrollContainer } from "./UI";
+import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquileresContext } from "../stores";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { produce } from "immer";
@@ -19,7 +19,7 @@ export function NewAlquilerForm() {
   );
 
   function handleSelectProducto(producto: ProductoEntity) {
-    const alquilerProducto = createEmptyAlquilerProducto(newAlquiler.id, producto);
+    const alquilerProducto = createEmptyAlquilerProducto(selectedAlquiler?.id || 0, producto);
     setSelectedProducto(alquilerProducto);
   }
 
@@ -64,20 +64,18 @@ export function NewAlquilerForm() {
         }}
       >
         <Flex direction="column">
-          <AlquilerDetailsForm form={form} />
-          <AlquilerProductosContainer>
-            <AlquilerProductosScrollContainer>
-              {productos.map((producto) => {
-                return (
-                  <AlquilerProductoItem
-                    key={producto.id}
-                    producto={producto}
-                    onSelectProducto={() => handleSelectProducto(producto)}
-                  />
-                );
-              })}
-            </AlquilerProductosScrollContainer>
-          </AlquilerProductosContainer>
+          <AlquilerDetailsForm />
+          <AlquilerProductosScrollContainer>
+            {productos.map((producto) => {
+              return (
+                <AlquilerProductoItem
+                  key={producto.id}
+                  producto={producto}
+                  onSelectProducto={() => handleSelectProducto(producto)}
+                />
+              );
+            })}
+          </AlquilerProductosScrollContainer>
           {selectedProducto && (
             <Group mt="1rem">
               <Button type="submit" color="blue" size="lg">
