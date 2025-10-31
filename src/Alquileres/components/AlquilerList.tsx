@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
-// import { DeleteAlquilerModal } from "../pages/DeleteAlquilerModal.page";
 import { AlquilerListContainer, AlquilerListEntry, NewAlquilerListEntry } from "./UI";
 import dayjs from "dayjs";
 import { AlquilerSummaryItem } from "../entities";
 import { AlquileresContext } from "../stores";
 import { AppStateContext } from "@/Common";
 import { Button, Center, Stack } from "@mantine/core";
+import { DeleteAlquilerModal } from "../pages";
 
 export function AlquilerList({
   onSelectAlquiler,
@@ -51,14 +51,14 @@ export function AlquilerList({
           Reset
         </Button>
       </Center>
-      {/* {selectedAlquilerForDelete && (
+      {selectedAlquilerForDelete && (
         <DeleteAlquilerModal
           isModalOpen={isModalOpen}
           onCloseModal={handleCloseModal}
           onAccept={() => handleDeleteAlquiler(selectedAlquilerForDelete.id)}
           title={selectedAlquilerForDelete.proyecto}
         />
-      )} */}
+      )}
       <div style={{ height: "100%", overflow: "scroll" }}>
         <Stack gap="0.25rem">
           <NewAlquilerListEntry
