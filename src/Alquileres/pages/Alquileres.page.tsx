@@ -40,6 +40,10 @@ export function AlquileresPage() {
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
+    console.log(
+      "selected alquiler",
+      alquileres.find((alquiler) => alquiler.id === id),
+    );
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
   }
   function handleStartCreateNewAlquiler() {
@@ -68,7 +72,10 @@ export function AlquileresPage() {
     setAppState(APP_STATE.loading);
     if (!selectedAlquiler) return;
 
-    await sendUpdate(selectedAlquiler);
+    await sendUpdate({
+      ...selectedAlquiler,
+      productos: selectedAlquiler.productos?.filter((ap) => ap.cantidad > 0),
+    });
     sendList();
   }
 
@@ -100,7 +107,10 @@ export function AlquileresPage() {
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
       />
       {selectedAlquiler && !isCreating && (
-        <AlquilerDetails onUpdateAlquiler={handleUpdateAlquiler} />
+        <AlquilerDetails
+          selectedAlquiler={selectedAlquiler}
+          onUpdateAlquiler={handleUpdateAlquiler}
+        />
       )}
       {!selectedAlquiler && isCreating && (
         <NewAlquilerDetails onCreateAlquiler={handleCreateAlquiler} />

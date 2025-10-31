@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 import { useCallback } from "react";
 import { useState } from "react";
 import axios from "axios";
-import { AlquilerCreate, AlquilerEntity } from "../entities";
+import { AlquilerCreate, AlquilerEntity, AlquilerUpdate } from "../entities";
 
 export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
   const cookies = new Cookies();
@@ -57,14 +57,12 @@ export function useAlquilerRepository(initialData: AlquilerEntity[] = []) {
     setIsLoading(false);
   }, []);
 
-  const sendUpdate = useCallback(async function sendUpdate(
-    data: Partial<AlquilerEntity>,
-  ): Promise<void> {
+  const sendUpdate = useCallback(async function sendUpdate(data: AlquilerUpdate): Promise<void> {
     setIsLoading(true);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
-      await axios.put<AlquilerEntity>(`${apiHost}/alquiler/${data.id}`, JSON.stringify(data), {
+      await axios.put<AlquilerEntity>(`${apiHost}/alquiler`, JSON.stringify(data), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

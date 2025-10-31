@@ -5,45 +5,28 @@ import {
   AlquilerProductoEntity,
   AlquilerProductoRemaining,
 } from "../entities";
-import { GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
-import { useForm } from "@mantine/form";
+import { GetInputPropsReturnType, UseFormReturnType } from "node_modules/@mantine/form/lib/types";
 
 export function AlquilerProductoItem({
   producto,
   remaining,
-  alquilerProducto,
   onSelectProducto,
   inputProps,
 }: {
   producto: ProductoEntity;
   remaining: AlquilerProductoRemaining;
-  alquilerProducto: AlquilerProductoEntity | AlquilerProductoCreate | undefined;
   onSelectProducto: (productoId: number) => void;
   inputProps: GetInputPropsReturnType;
 }) {
-  const form = useForm({
-    initialValues: {
-      cantidad: inputProps.value?.cantidad || 0,
-    },
-    onValuesChange: (values) => {
-      inputProps.onChange({
-        ...inputProps.value,
-        ...values,
-        productoId: producto.id,
-        cantidad: values.cantidad,
-      });
-    },
-  });
-
   function handleIncreaseQuantity() {
-    const newQuantity = (form.values.cantidad || 0) + 1;
-    form.setFieldValue("cantidad", newQuantity);
+    const newQuantity = (inputProps.value as number) || 0;
+    inputProps.onChange(newQuantity + 1);
   }
 
   function handleDecreaseQuantity() {
-    const newQuantity = (form.values.cantidad || 0) - 1;
+    const newQuantity = (inputProps.value as number) || 0;
     if (newQuantity >= 0) {
-      form.setFieldValue("cantidad", newQuantity);
+      inputProps.onChange(newQuantity - 1 > 0 ? newQuantity - 1 : 0);
     }
   }
 
@@ -73,13 +56,7 @@ export function AlquilerProductoItem({
           <Button size="compact-md" variant="outline" onClick={handleDecreaseQuantity}>
             -
           </Button>
-          <NumberInput
-            hideControls
-            w="4rem"
-            fw={700}
-            value={alquilerProducto?.cantidad || 0}
-            {...form.getInputProps("cantidad")}
-          />
+          <NumberInput hideControls w="4rem" fw={700} {...inputProps} />
           <Button size="compact-md" variant="outline" onClick={handleIncreaseQuantity}>
             +
           </Button>

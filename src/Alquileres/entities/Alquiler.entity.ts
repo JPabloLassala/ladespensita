@@ -24,7 +24,7 @@ export type AlquilerCreate = Omit<
 };
 
 export type AlquilerUpdate = Partial<Omit<AlquilerEntity, "productos">> & {
-  productos?: AlquilerProductoUpdate[];
+  productos: AlquilerProductoUpdate[] | AlquilerProductoEntity[];
 };
 
 export type AlquilerSummaryItem = {

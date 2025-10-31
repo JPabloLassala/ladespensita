@@ -38,23 +38,6 @@ export function AlquilerProductoDetails({
     },
   });
 
-  useEffect(() => {
-    innerForm.setValues({
-      productoId: selectedProducto.productoId,
-      valorUnitarioAlquiler: inputProps.value?.valorUnitarioAlquiler || 0,
-      valorUnitarioGarantia: inputProps.value?.valorUnitarioGarantia || 0,
-      valorTotalGarantia: inputProps.value?.valorTotalGarantia || 0,
-      costoGrafica: inputProps.value?.costoGrafica || 0,
-      costoDiseno: inputProps.value?.costoDiseno || 0,
-      costoTotal: inputProps.value?.costoTotal || 0,
-      costoProducto: inputProps.value?.costoProducto || 0,
-      valorX1: inputProps.value?.valorX1 || 0,
-      valorX3: inputProps.value?.valorX3 || 0,
-      valorX6: inputProps.value?.valorX6 || 0,
-      valorX12: inputProps.value?.valorX12 || 0,
-    });
-  }, [selectedProducto?.productoId]);
-
   return (
     <Stack component="div" gap="0.5rem">
       <NumberInput
