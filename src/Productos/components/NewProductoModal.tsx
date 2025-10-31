@@ -2,17 +2,20 @@ import { Button, Group, Modal, Stack } from "@mantine/core";
 import { UploadFile } from "./UploadFile";
 import { NewProductoForm } from "./NewProductoForm";
 import { useForm } from "@mantine/form";
-import { useProductoRepository } from "../repository";
 import { ProductoEntityCreate } from "../entities";
-import { useContext, useEffect, useState } from "react";
-import { ProductosContext } from "../stores";
+import { useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 
-export const NewProductoModal = ({ onClose, opened }: { onClose: () => void; opened: boolean }) => {
-  const { setProductos, productos } = useContext(ProductosContext)!;
-  const { data, sendCreate } = useProductoRepository(productos);
+export const NewProductoModal = ({
+  onClose,
+  opened,
+  onCreate,
+}: {
+  onClose: () => void;
+  opened: boolean;
+  onCreate: (data: FormData) => Promise<void>;
+}) => {
   const [file, setFile] = useState<FileWithPath | undefined>(undefined);
-  // const { getNextId } = useProductoRepository();
   const form = useForm<ProductoEntityCreate>({
     mode: "uncontrolled",
   });
@@ -41,14 +44,8 @@ export const NewProductoModal = ({ onClose, opened }: { onClose: () => void; ope
     formData.append("valorx6", values.valorx6.toString());
     formData.append("valorx12", values.valorx12.toString());
 
-    sendCreate(formData);
+    onCreate(formData);
   };
-
-  useEffect(() => {
-    if (data) {
-      setProductos(data);
-    }
-  }, [data]);
 
   return (
     <Modal opened={opened} onClose={onClose} title="Crear nuevo" centered size="100%">
