@@ -39,7 +39,7 @@ export function AlquilerProductoContextProvider({ children }: { children: ReactN
     return {
       productoId: producto.id,
       alquilerId: alquilerId || undefined,
-      cantidad: alquilerProductos.find((p) => p.productoId === producto.id)?.cantidad || 0,
+      cantidad: 0,
       valorTotalGarantia: 0,
       costoDiseno: producto.costoDiseno,
       costoGrafica: producto.costoGrafica,
