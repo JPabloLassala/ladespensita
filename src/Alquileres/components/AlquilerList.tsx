@@ -41,7 +41,7 @@ export function AlquilerList({
   );
 
   return (
-    <AlquilerListContainer>
+    <Stack component="section" id="alquiler-sidebar" w="17.5%" miw="350px" gap="md">
       <Group w="100%" justify="center" gap="1rem" id="newAlquilerContainer">
         <Button variant="filled" onClick={onStartCreateNewAlquiler}>
           Nuevo Alquiler
@@ -53,6 +53,6 @@ export function AlquilerList({
       <div style={{ height: "100%", overflowY: "auto" }}>
         <Stack gap="0.25rem">{summary}</Stack>
       </div>
-    </AlquilerListContainer>
+    </Stack>
   );
 }
