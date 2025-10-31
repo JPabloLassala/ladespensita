@@ -2,39 +2,40 @@ import { ReactNode, createContext, useContext, useState } from "react";
 
 import dayjs from "dayjs";
 import {
-  Alquiler,
+  AlquilerEntity,
+  AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerSummaryItem,
-  PartialAlquiler,
+  AlquilerUpdate,
 } from "../entities";
 import { ProductoEntity } from "@/Productos";
 
 export type AlquileresContextType = {
   getSummary: () => AlquilerSummaryItem[];
-  alquileres: Alquiler[];
-  setAlquileres: React.Dispatch<React.SetStateAction<Alquiler[]>>;
-  selectedAlquiler: PartialAlquiler | undefined;
+  alquileres: AlquilerEntity[];
+  setAlquileres: React.Dispatch<React.SetStateAction<AlquilerEntity[]>>;
+  selectedAlquiler: AlquilerUpdate | undefined;
   alquilerProductos: AlquilerProductoEntity[];
-  setSelectedAlquiler: React.Dispatch<React.SetStateAction<Alquiler | undefined>>;
+  setSelectedAlquiler: React.Dispatch<React.SetStateAction<AlquilerEntity | undefined>>;
   setAlquilerProductos: React.Dispatch<React.SetStateAction<AlquilerProductoEntity[]>>;
   deleteAlquiler: (id: number) => void;
-  updateAlquiler: (alquilerId: number, updatedAlquiler: Partial<Alquiler>) => void;
-  createNewAlquiler: () => Alquiler;
+  updateAlquiler: (alquilerId: number, updatedAlquiler: Partial<AlquilerEntity>) => void;
+  createNewAlquiler: () => AlquilerEntity;
   deleteNewAlquiler: () => void;
-  getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => Alquiler[];
+  getAlquileresBetweenDates: (sinceDate: string, untilDate: string) => AlquilerEntity[];
   createEmptyAlquilerProducto: (
     alquilerId: number,
     producto: ProductoEntity,
-  ) => AlquilerProductoEntity;
+  ) => AlquilerProductoCreate;
 };
 
 export const AlquileresContext = createContext<AlquileresContextType | null>(null);
 
 export function AlquileresContextProvider({ children }: { children: ReactNode }) {
-  const [alquileres, setAlquileres] = useState<Alquiler[]>([]);
+  const [alquileres, setAlquileres] = useState<AlquilerEntity[]>([]);
   const [, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
-  const [selectedAlquiler, setSelectedAlquiler] = useState<Alquiler | undefined>(undefined);
+  const [selectedAlquiler, setSelectedAlquiler] = useState<AlquilerEntity | undefined>(undefined);
 
   const getSummary = (): AlquilerSummaryItem[] => {
     return alquileres.map((alquiler) => {
@@ -42,14 +43,14 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
         id: alquiler.id,
         productora: alquiler.productora,
         proyecto: alquiler.proyecto,
-        since: alquiler.fechaAlquiler?.inicio?.toString(),
-        until: alquiler.fechaAlquiler?.fin?.toString(),
+        since: alquiler.fechaInicio?.toString(),
+        until: alquiler.fechaFin?.toString(),
         totalProductos: 0,
       };
     });
   };
 
-  const updateAlquiler = (alquilerId: number, updatedAlquiler: Partial<Alquiler>) => {
+  const updateAlquiler = (alquilerId: number, updatedAlquiler: Partial<AlquilerEntity>) => {
     setAlquileres((prev) =>
       prev.map((alquiler) =>
         alquiler.id === alquilerId ? { ...alquiler, ...updatedAlquiler } : alquiler,
@@ -65,21 +66,21 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     if (sinceDate && untilDate) {
       return alquileres.filter((alquiler) => {
         return (
-          dayjs(alquiler.fechaAlquiler.inicio).isAfter(dayjs(sinceDate)) &&
-          dayjs(alquiler.fechaAlquiler.fin).isBefore(dayjs(untilDate))
+          dayjs(alquiler.fechaInicio).isAfter(dayjs(sinceDate)) &&
+          dayjs(alquiler.fechaFin).isBefore(dayjs(untilDate))
         );
       });
     }
 
     if (sinceDate) {
       return alquileres.filter((alquiler) => {
-        return dayjs(alquiler.fechaAlquiler.inicio).isAfter(dayjs(sinceDate));
+        return dayjs(alquiler.fechaInicio).isAfter(dayjs(sinceDate));
       });
     }
 
     // untilDate
     return alquileres.filter((alquiler) => {
-      return dayjs(alquiler.fechaAlquiler.fin).isBefore(dayjs(untilDate));
+      return dayjs(alquiler.fechaFin).isBefore(dayjs(untilDate));
     });
   };
 
@@ -87,17 +88,17 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
     setAlquileres((prev) => prev.filter((alquiler) => alquiler.id !== id));
   };
 
-  const createNewAlquiler = (): Alquiler => {
-    const newAlquiler = {
+  const createNewAlquiler = (): AlquilerEntity => {
+    const newAlquiler: AlquilerEntity = {
       id: -1,
       productora: "",
       proyecto: "",
       productos: [],
       fechaPresupuesto: new Date(),
-      fechaAlquiler: {
-        inicio: new Date(),
-        fin: new Date(),
-      },
+      fechaInicio: new Date(),
+      fechaFin: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     setAlquileres((prev) => [newAlquiler, ...prev]);
     setNewAlquilerIdx(0);
@@ -112,24 +113,24 @@ export function AlquileresContextProvider({ children }: { children: ReactNode })
   const createEmptyAlquilerProducto = (
     alquilerId: number,
     producto: ProductoEntity,
-  ): AlquilerProductoEntity => {
-    const { unitarioGarantia, x1, x3, x6, x12 } = producto.valor;
+  ): AlquilerProductoCreate => {
     return {
-      id: 0,
       productoId: producto.id,
       alquilerId,
       cantidad: alquilerProductos.find((p) => p.productoId === producto.id)?.cantidad || 0,
       unidadesAlquiladas: 0,
       unidadesCotizadas: 0,
-      valor: {
-        totalGarantia: unitarioGarantia,
-        unitarioAlquiler: 0,
-        unitarioGarantia,
-        x1,
-        x3,
-        x6,
-        x12,
-      },
+      valorTotalGarantia: 0,
+      costoDiseno: producto.costoDiseno,
+      costoGrafica: producto.costoGrafica,
+      costoProducto: producto.costoProducto,
+      costoTotal: producto.costoTotal,
+      valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
+      valorUnitarioGarantia: producto.valorUnitarioGarantia,
+      valorX1: producto.valorX1,
+      valorX3: producto.valorX3,
+      valorX6: producto.valorX6,
+      valorX12: producto.valorX12,
     };
   };
 

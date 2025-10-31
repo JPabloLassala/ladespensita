@@ -1,4 +1,5 @@
 import { FileWithPath } from "@mantine/dropzone";
+import { ImageEntity } from "./Image.entity";
 
 export class ProductoImage {
   id: number;
@@ -12,52 +13,35 @@ export class ProductoEntity {
   id: number;
   nombre: string;
   unidadesMetroLineal: number;
-  img: string;
   totales: number;
-  disponibles?: number;
-  medidas: {
-    altura?: number;
-    diametro?: number;
-    ancho?: number;
-    profundidad?: number;
-  };
-  valor: {
-    unitarioGarantia: number;
-    unitarioAlquiler: number;
-    x1: number;
-    x3: number;
-    x6: number;
-    x12: number;
-  };
-  costo: {
-    producto: number;
-    grafica: number;
-    diseno: number;
-    total: number;
-  };
-  etiquetas: string[];
-  image?: ProductoImage;
-}
-
-export type ProductoEntityCreate = {
-  nombre: string;
-  unidadesMetroLineal: number;
-  totales: number;
-  disponibles?: number;
-  altura?: number;
-  diametro?: number;
-  ancho?: number;
-  profundidad?: number;
+  medidasAltura: number;
+  medidasAncho?: number;
+  medidasProfundidad?: number;
+  medidasDiametro?: number;
+  costoProducto: number;
+  costoGrafica: number;
+  costoDiseno: number;
+  costoTotal: number;
   valorUnitarioGarantia: number;
   valorUnitarioAlquiler: number;
-  valorx1: number;
-  valorx3: number;
-  valorx6: number;
-  valorx12: number;
+  valorX1: number;
+  valorX3: number;
+  valorX6: number;
+  valorX12: number;
+  image: ImageEntity;
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
+export type ProductoEntityCreate = Omit<
+  ProductoEntity,
+  "id" | "createdAt" | "updatedAt" | "image"
+> & {
   file?: FileWithPath;
   tmpURL?: string;
 };
 
-export type ProductoEntityUpdate = Omit<ProductoEntityCreate, "createdAt" | "updatedAt"> & {
+export type ProductoEntityUpdate = Partial<ProductoEntityCreate> & {
   id: number;
+  tmpURL?: string;
 };

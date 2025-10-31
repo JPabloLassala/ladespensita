@@ -1,10 +1,10 @@
 import { Flex, TextInput } from "@mantine/core";
-import { AlquilerProductoEntity } from "../entities";
+import { AlquilerProductoCreate, AlquilerProductoEntity } from "../entities";
 
 export function AlquilerProductoDetails({
   selectedProducto,
 }: {
-  selectedProducto: AlquilerProductoEntity;
+  selectedProducto: AlquilerProductoEntity | AlquilerProductoCreate;
 }) {
   return (
     <Flex direction="column" gap="0.5rem" w="50%">

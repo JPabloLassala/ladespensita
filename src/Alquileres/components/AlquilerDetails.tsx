@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
-import { AlquilerProductoEntity } from "@/Alquileres/entities";
+import { AlquilerProductoCreate, AlquilerProductoEntity } from "@/Alquileres/entities";
 import { useAlquileresContext } from "../stores";
 import { Button, Group, Stack, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
@@ -20,9 +20,9 @@ export function AlquilerDetails() {
     setAlquilerProductos,
     createEmptyAlquilerProducto,
   } = useAlquileresContext();
-  const [selectedProducto, setSelectedProducto] = useState<AlquilerProductoEntity | undefined>(
-    undefined,
-  );
+  const [selectedProducto, setSelectedProducto] = useState<
+    AlquilerProductoEntity | AlquilerProductoCreate | undefined
+  >(undefined);
   const { data, sendList } = useAlquilerProductoRepository();
   const { data: productosData, sendList: sendProductosList } = useProductoRepository([]);
 
@@ -43,29 +43,23 @@ export function AlquilerDetails() {
   }, [selectedAlquiler?.id]);
 
   function handleSelectProducto(alquilerId: number, producto: ProductoEntity) {
-    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
+    const alquilerProducto =
+      alquilerProductos?.find((p) => p.productoId === producto.id) ||
+      createEmptyAlquilerProducto(alquilerId, producto);
 
-    setSelectedProducto(alquilerProducto || createEmptyAlquilerProducto(alquilerId, producto));
+    setSelectedProducto(alquilerProducto);
   }
 
   const form = useForm({
     initialValues: {
       productora: selectedAlquiler?.productora || "",
       proyecto: selectedAlquiler?.proyecto || "",
-      fechaInicio: selectedAlquiler?.fechaAlquiler?.inicio || new Date(),
-      fechaFin: selectedAlquiler?.fechaAlquiler?.fin || new Date(),
+      fechaInicio: selectedAlquiler?.fechaInicio || new Date(),
+      fechaFin: selectedAlquiler?.fechaFin || new Date(),
       productos: [],
     },
     onValuesChange: (values) => {
-      updateAlquiler(selectedAlquiler?.id || 0, {
-        productora: values.productora,
-        proyecto: values.proyecto,
-        fechaAlquiler: {
-          inicio: values.fechaInicio,
-          fin: values.fechaFin,
-        },
-        productos: values.productos,
-      });
+      updateAlquiler(selectedAlquiler?.id || 0, { ...values });
     },
   });
 

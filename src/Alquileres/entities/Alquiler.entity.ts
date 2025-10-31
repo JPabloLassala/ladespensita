@@ -1,20 +1,32 @@
-import { AlquilerProductoEntity } from "./AlquilerProducto.entity";
+import {
+  AlquilerProductoCreate,
+  AlquilerProductoEntity,
+  AlquilerProductoUpdate,
+} from "./AlquilerProducto.entity";
 
-export type Alquiler = {
+export class AlquilerEntity {
   id: number;
   productora: string;
   proyecto: string;
-  productos: AlquilerProductoEntity[];
   fechaPresupuesto: Date;
-  fechaAlquiler: {
-    inicio: Date;
-    fin: Date;
-  };
-  createdAt?: Date;
+  fechaInicio: Date;
+  fechaFin: Date;
+  productos: AlquilerProductoEntity[];
+  createdAt: Date;
   updatedAt?: Date;
+}
+
+export type AlquilerCreate = Omit<
+  AlquilerEntity,
+  "id" | "createdAt" | "updatedAt" | "productos"
+> & {
+  productos?: AlquilerProductoCreate[];
+  id?: number;
 };
 
-export type AlquilerEntityCreate = Omit<Alquiler, "productos" | "createdAt" | "updatedAt">;
+export type AlquilerUpdate = Partial<AlquilerEntity> & {
+  productos?: AlquilerProductoUpdate[];
+};
 
 export type AlquilerSummaryItem = {
   id: number;
@@ -24,5 +36,3 @@ export type AlquilerSummaryItem = {
   until: string;
   totalProductos: number;
 };
-
-export type PartialAlquiler = Partial<Alquiler>;

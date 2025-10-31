@@ -1,15 +1,6 @@
 import { ProductoEntity } from "@/Productos";
-import {
-  AspectRatio,
-  Button,
-  Group,
-  Image,
-  NumberInput,
-  Paper,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import { AlquilerProductoEntity } from "../entities";
+import { Button, Group, Image, NumberInput, Paper, Text } from "@mantine/core";
+import { AlquilerProductoCreate, AlquilerProductoEntity } from "../entities";
 
 export function AlquilerProductoItem({
   producto,
@@ -17,7 +8,7 @@ export function AlquilerProductoItem({
   onSelectProducto,
 }: {
   producto: ProductoEntity;
-  alquilerProducto: AlquilerProductoEntity | undefined;
+  alquilerProducto: AlquilerProductoEntity | AlquilerProductoCreate | undefined;
   onSelectProducto: (productoId: number) => void;
 }) {
   return (
