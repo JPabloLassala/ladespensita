@@ -38,7 +38,6 @@ export function AlquilerListEntry({
           </Group>
           <DeleteAlquilerModal
             onAccept={onDeleteAlquiler}
-            key={alquiler.id}
             isModalOpen={isModalOpen}
             onCloseModal={() => setIsModalOpen(false)}
           >

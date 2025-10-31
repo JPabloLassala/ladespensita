@@ -39,7 +39,6 @@ export const AlquilerContext = createContext<AlquilerContextType | null>(null);
 
 export function AlquilerContextProvider({ children }: { children: ReactNode }) {
   const [alquileres, setAlquileres] = useState<AlquilerEntity[]>([]);
-  const [, setNewAlquilerIdx] = useState<number>(-1);
   const [alquilerProductos, setAlquilerProductos] = useState<AlquilerProductoEntity[]>([]);
   const [selectedAlquiler, setSelectedAlquiler] = useState<
     AlquilerEntity | AlquilerCreate | undefined
@@ -55,8 +54,8 @@ export function AlquilerContextProvider({ children }: { children: ReactNode }) {
         id: alquiler.id,
         productora: alquiler.productora,
         proyecto: alquiler.proyecto,
-        since: alquiler.fechaInicio?.toString(),
-        until: alquiler.fechaFin?.toString(),
+        fechaInicio: alquiler.fechaInicio?.toString(),
+        fechaFin: alquiler.fechaFin?.toString(),
         totalProductos: 0,
       };
     });
