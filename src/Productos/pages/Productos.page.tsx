@@ -42,6 +42,10 @@ export function ProductosPage() {
     updateProducto(producto);
   };
 
+  const handleDelete = (id: number) => {
+    console.log("Deleting producto", id);
+  };
+
   const handleCreate = (producto: ProductoEntityCreate) => {
     const formData = new FormData();
     formData.append("file", producto.file as FileWithPath);
@@ -75,6 +79,7 @@ export function ProductosPage() {
               dimmed={false}
               disabled={false}
               onUpdate={handleUpdate}
+              onDelete={handleDelete}
             />
           ))}
         </ProductosListContainer>

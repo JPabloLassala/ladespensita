@@ -1,17 +1,21 @@
-import { Badge, Card, Group, Image, Overlay, Text } from "@mantine/core";
+import { Card, Group, Image, Overlay, Text } from "@mantine/core";
 import { ProductoEntity, ProductoEntityUpdate } from "../entities";
 import { useDisclosure } from "@mantine/hooks";
 import { EditProductoModal } from "./EditProductoModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function ProductoCard({
   producto,
   disabled,
   onUpdate,
+  onDelete,
 }: {
   producto: ProductoEntity;
   disabled: boolean;
   dimmed: boolean;
   onUpdate: (_: ProductoEntityUpdate, id: number) => void;
+  onDelete: (id: number) => void;
 }) {
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -30,7 +34,7 @@ export function ProductoCard({
 
         <Group justify="space-between" mt="md" mb="xs">
           <Text fw={500}>{producto.nombre}</Text>
-          <Badge color="pink">On Sale</Badge>
+          <FontAwesomeIcon icon={faTrash} onClick={() => onDelete(producto.id)} className="p-4" />
         </Group>
       </Card>
     </>
