@@ -49,15 +49,14 @@ export function AlquilerDetails() {
   }
 
   const form = useForm({
-    mode: "uncontrolled",
     initialValues: {
       productora: selectedAlquiler?.productora || "",
       proyecto: selectedAlquiler?.proyecto || "",
       fechaInicio: selectedAlquiler?.fechaAlquiler?.inicio || new Date(),
       fechaFin: selectedAlquiler?.fechaAlquiler?.fin || new Date(),
+      productos: [],
     },
     onValuesChange: (values) => {
-      console.log("values", values);
       updateAlquiler(selectedAlquiler?.id || 0, {
         productora: values.productora,
         proyecto: values.proyecto,
@@ -65,6 +64,7 @@ export function AlquilerDetails() {
           inicio: values.fechaInicio,
           fin: values.fechaFin,
         },
+        productos: values.productos,
       });
     },
   });
@@ -87,9 +87,11 @@ export function AlquilerDetails() {
           <AlquilerDetailsForm form={form} />
           <AlquilerProductosScrollContainer>
             {productos.map((producto) => {
+              const alquilerProducto = alquilerProductos.find((p) => p.productoId === producto.id);
               return (
                 <AlquilerProductoItem
                   key={producto.id}
+                  alquilerProducto={alquilerProducto}
                   producto={producto}
                   onSelectProducto={() => handleSelectProducto(selectedAlquiler?.id || 0, producto)}
                 />
