@@ -9,15 +9,14 @@ import { ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 import { FileWithPath } from "@mantine/dropzone";
 
 export function ProductosPage() {
-  const { productos, setProductos, updateProducto } = useContext(ProductosContext)!;
-  const { data, sendList, sendCreate, sendUpdate } = useProductoRepository(productos);
+  const { productos, setProductos, updateProducto, deleteProducto } = useContext(ProductosContext)!;
+  const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
 
   useEffect(() => {
     setProductos(data);
   }, [data]);
 
   useEffect(() => {
-    console.log("sending list");
     sendList();
   }, []);
 
@@ -43,7 +42,8 @@ export function ProductosPage() {
   };
 
   const handleDelete = (id: number) => {
-    console.log("Deleting producto", id);
+    sendDelete(id);
+    deleteProducto(id);
   };
 
   const handleCreate = (producto: ProductoEntityCreate) => {
