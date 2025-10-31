@@ -18,7 +18,7 @@ export class AlquilerEntity {
 
 export type AlquilerCreate = Omit<AlquilerEntity, "id" | "createdAt" | "updatedAt" | "productos">;
 
-export type AlquilerUpdate = Omit<Partial<AlquilerEntity>, "createdAt" | "updatedAt" | "productos">;
+export type AlquilerUpdate = Omit<Partial<AlquilerEntity>, "updatedAt" | "productos">;
 
 export type AlquilerSummaryItem = {
   id: number;

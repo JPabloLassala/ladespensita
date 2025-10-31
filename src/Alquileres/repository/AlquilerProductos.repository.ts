@@ -49,6 +49,31 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
     }
   }, []);
 
+  const sendUpdate = useCallback(async function sendUpdate(
+    alquilerProducto: AlquilerProductoUpdate[],
+    alquilerId: number,
+  ) {
+    setIsLoading(true);
+    setError(undefined);
+    try {
+      const apiHost = import.meta.env.VITE_API_HOST;
+      await axios.put(`${apiHost}/alquilerProducto/${alquilerId}`, alquilerProducto, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
+        setError(error.message || "Something went wrong");
+      } else {
+        setError("Something went wrong");
+      }
+    }
+  }, []);
+
   const sendList = useCallback(async function sendGet(id: number) {
     setIsLoading(true);
     setError(undefined);
@@ -116,6 +141,7 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
   return {
     data,
     sendCreate,
+    sendUpdate,
     stockData,
     clearData,
     sendList,

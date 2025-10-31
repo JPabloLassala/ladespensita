@@ -25,7 +25,8 @@ export function AlquileresPage() {
     createNewAlquiler,
   } = useAlquilerContext();
   const { data, sendList, sendCreate, sendUpdate } = useAlquilerRepository([]);
-  const { sendCreate: sendCreateAlquilerProducto } = useAlquilerProductoRepository();
+  const { sendCreate: sendCreateAlquilerProducto, sendUpdate: sendUpdateAlquilerProducto } =
+    useAlquilerProductoRepository();
   const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
   const { setProductos } = useProductosContext();
   const { isCreating, setAppState } = useAppStateContext();
@@ -51,7 +52,6 @@ export function AlquileresPage() {
     setAppState(APP_STATE.loading);
 
     const alquilerWithId = (await sendCreate(newAlquiler)) as AlquilerEntity;
-    console.log("alquilerWithId", alquilerWithId);
     await sendCreateAlquilerProducto(alquilerProductos, alquilerWithId.id);
 
     setAlquilerProductos([]);
@@ -60,10 +60,14 @@ export function AlquileresPage() {
     sendList();
   }
   async function handleUpdateAlquiler() {
-    setAppState(APP_STATE.loading);
     if (!selectedAlquiler) return;
+    setAppState(APP_STATE.loading);
 
     await sendUpdate(selectedAlquiler);
+    await sendUpdateAlquilerProducto(alquilerProductos, selectedAlquiler.id);
+
+    setAlquilerProductos([]);
+    setSelectedAlquiler(undefined);
     sendList();
   }
 

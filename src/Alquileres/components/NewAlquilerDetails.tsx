@@ -63,9 +63,9 @@ export function NewAlquilerDetails({
 
   function handleSelectProducto(producto: ProductoEntity) {
     if (selectedProducto?.productoId === producto.id) return;
-    const alquilerProducto =
-      alquilerProductos?.find((p) => p.productoId === producto.id) ||
-      createEmptyAlquilerProducto(producto);
+
+    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
+
     setSelectedProducto(alquilerProducto);
   }
 
