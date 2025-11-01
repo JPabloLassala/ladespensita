@@ -36,6 +36,18 @@ export function AlquilerProductoDetails({
       <NumberInput
         hideControls
         w="15rem"
+        label="Valor unitario alquiler"
+        {...form.getInputProps(`productos.${productoIdx}.valorUnitarioAlquiler`)}
+      />
+      <NumberInput
+        hideControls
+        w="15rem"
+        label="Costo producto"
+        {...form.getInputProps(`productos.${productoIdx}.costoProducto`)}
+      />
+      <NumberInput
+        hideControls
+        w="15rem"
         label="Costo gráfica"
         {...form.getInputProps(`productos.${productoIdx}.costoGrafica`)}
       />
