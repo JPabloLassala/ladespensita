@@ -1,5 +1,6 @@
-import { Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Badge, Button, Group, Stack, Text, Title } from "@mantine/core";
 import { ALQUILER_STATUS, AlquilerEntity } from "../entities";
+import { APP_STATE, useAppStateContext } from "@/Common";
 
 export const AlquilerStatus = ({
   alquiler,
@@ -8,10 +9,13 @@ export const AlquilerStatus = ({
   alquiler: AlquilerEntity;
   onChangeStatus: (id: number, status: ALQUILER_STATUS) => void;
 }) => {
+  const { appState } = useAppStateContext();
   const getBadgeColor = (status: ALQUILER_STATUS) => {
     switch (status) {
       case ALQUILER_STATUS.PENDING:
         return "gray";
+      case ALQUILER_STATUS.BUDGETED:
+        return "orange";
       case ALQUILER_STATUS.ACTIVE:
         return "blue";
       case ALQUILER_STATUS.COMPLETED:
@@ -25,27 +29,29 @@ export const AlquilerStatus = ({
     <Stack>
       <Group component="div">
         <Text>Status</Text>
-        <Button style={{ textTransform: "capitalize" }} color={getBadgeColor(alquiler.status)}>
+        <Badge
+          size="lg"
+          style={{ textTransform: "uppercase" }}
+          color={getBadgeColor(alquiler.status)}
+        >
           {alquiler.status}
-        </Button>
+        </Badge>
       </Group>
       <Group>
         <Text>Change to</Text>
         {Object.values(ALQUILER_STATUS)
           .filter((status) => status !== alquiler.status)
-          .map((status) => {
-            console.log("get", status);
-            return (
-              <Button
-                key={status}
-                style={{ textTransform: "capitalize" }}
-                color={getBadgeColor(status)}
-                onClick={() => onChangeStatus(alquiler.id, status)}
-              >
-                {status}
-              </Button>
-            );
-          })}
+          .map((status) => (
+            <Button
+              key={status}
+              disabled={appState === APP_STATE.loading}
+              style={{ textTransform: "capitalize" }}
+              color={getBadgeColor(status)}
+              onClick={() => onChangeStatus(alquiler.id, status)}
+            >
+              {status}
+            </Button>
+          ))}
       </Group>
     </Stack>
   );

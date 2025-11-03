@@ -18,6 +18,7 @@ import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { useAlquilerProductoRepository } from "../repository";
 import { AlquilerStatus } from "./AlquilerStatus";
+import { APP_STATE, useAppStateContext } from "@/Common";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -28,6 +29,7 @@ export function AlquilerDetails({
   onChangeStatus: (id: number, status: ALQUILER_STATUS) => void;
   selectedAlquiler: AlquilerEntity;
 }) {
+  const { appState } = useAppStateContext();
   const { productos } = useProductosContext();
   const { updateAlquiler, setSelectedAlquiler } = useAlquilerContext();
   const { alquilerProductos, createEmptyAlquilerProducto, setAlquilerProductos } =
@@ -36,6 +38,8 @@ export function AlquilerDetails({
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
+
+  console.log("appState", appState);
 
   // useEffect(() => {
   //   sendList(selectedAlquiler?.id);
@@ -144,20 +148,21 @@ export function AlquilerDetails({
               })}
             </AlquilerProductosScrollContainer>
             <Group mb="1rem">
-              <Button type="submit" color="blue" size="lg">
-                Guardar
+              <Button
+                disabled={appState === APP_STATE.loading}
+                type="submit"
+                color="blue"
+                size="lg"
+              >
+                {appState === APP_STATE.loading ? "Guardando..." : "Guardar"}
               </Button>
-              <Button type="button" color="red" size="lg">
+              <Button disabled={appState === APP_STATE.loading} type="button" color="red" size="lg">
                 Cancelar
               </Button>
             </Group>
           </Stack>
           {selectedProducto && (
-            <AlquilerProductoDetails
-              productoIdx={selectedProductoIdx}
-              selectedProducto={selectedProducto}
-              form={productosForm}
-            />
+            <AlquilerProductoDetails productoIdx={selectedProductoIdx} form={productosForm} />
           )}
         </Group>
       </form>

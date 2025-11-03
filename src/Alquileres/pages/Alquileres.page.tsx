@@ -32,7 +32,7 @@ export function AlquileresPage() {
     useAlquilerProductoRepository();
   const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
   const { setProductos } = useProductosContext();
-  const { isCreating, setAppState } = useAppStateContext();
+  const { appState, setAppState } = useAppStateContext();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
   function handleSelectAlquiler(id: number) {
@@ -65,6 +65,7 @@ export function AlquileresPage() {
     setAppState(APP_STATE.loading);
     await sendUpdate(selectedAlquiler);
     await sendUpdateAlquilerProducto(alquilerProductos, selectedAlquiler.id);
+    setAppState(APP_STATE.loaded);
     updateAlquiler(selectedAlquiler.id, selectedAlquiler);
   }
   async function handleDeleteAlquiler(alquiler: AlquilerSummaryItem) {
@@ -74,6 +75,7 @@ export function AlquileresPage() {
     setAlquilerProductos([]);
     deleteAlquiler(alquiler.id);
     setSelectedAlquiler(undefined);
+    setAppState(APP_STATE.loaded);
   }
   async function handleChangeStatus(id: number, status: ALQUILER_STATUS) {
     if (!selectedAlquiler) return;
@@ -82,6 +84,7 @@ export function AlquileresPage() {
     await sendUpdate(updatedAlquiler);
     updateAlquiler(id, updatedAlquiler);
     setSelectedAlquiler(updatedAlquiler);
+    setAppState(APP_STATE.loaded);
   }
 
   useEffect(() => {
@@ -113,17 +116,17 @@ export function AlquileresPage() {
         onCancelCreateNewAlquiler={handleCancelCreateNewAlquiler}
         onDeleteAlquiler={handleDeleteAlquiler}
       />
-      {selectedAlquiler && !isCreating && (
+      {selectedAlquiler && appState !== APP_STATE.creating && (
         <AlquilerDetails
           selectedAlquiler={selectedAlquiler}
           onUpdateAlquiler={handleUpdateAlquiler}
           onChangeStatus={handleChangeStatus}
         />
       )}
-      {!selectedAlquiler && isCreating && (
+      {!selectedAlquiler && appState === APP_STATE.creating && (
         <NewAlquilerDetails onCreateAlquiler={handleCreateAlquiler} />
       )}
-      {!selectedAlquiler && !isCreating && <AlquilerNoneSelected />}
+      {!selectedAlquiler && appState !== APP_STATE.creating && <AlquilerNoneSelected />}
     </Group>
   );
 }
