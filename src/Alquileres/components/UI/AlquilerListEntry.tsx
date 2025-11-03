@@ -47,13 +47,15 @@ export function AlquilerListEntry({
       mx="0.5rem"
       withBorder
       onClick={onSelectAlquiler}
+      style={{
+        cursor: "pointer",
+        backgroundColor: isSelected ? "#e0f7fa" : "white",
+        transition: "background-color 0.3s",
+      }}
     >
-      <Card.Section color="red" withBorder py="1rem">
+      <Card.Section withBorder py="1rem">
         <Group justify="space-between" px="1rem" wrap="nowrap">
-          <Group wrap="nowrap">
-            {isSelected && <FontAwesomeIcon icon={faChevronRight} />}
-            <Text fw={700}>{alquiler.proyecto}</Text>
-          </Group>
+          <Text fw={700}>{alquiler.proyecto}</Text>
           <DeleteAlquilerModal
             onAccept={() => onDeleteAlquiler(alquiler as AlquilerSummaryItem)}
             isModalOpen={isModalOpen}
@@ -67,7 +69,7 @@ export function AlquilerListEntry({
         <Stack gap="0.5rem">
           <Text>{alquiler.productora}</Text>
           <Text>{dateRange}</Text>
-          <Badge color={getBadgeColor()} variant="light">
+          <Badge color={getBadgeColor()} variant="outline">
             {alquiler.status}
           </Badge>
         </Stack>

@@ -52,8 +52,8 @@ export function AlquilerList({
     <Stack
       component="section"
       id="alquiler-sidebar"
-      w="20%"
-      miw="350px"
+      w="20rem"
+      miw="20rem"
       gap="md"
       h="100%"
       style={{ overflowY: "auto" }}

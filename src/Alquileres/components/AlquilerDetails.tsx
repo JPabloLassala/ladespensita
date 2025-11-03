@@ -41,10 +41,6 @@ export function AlquilerDetails({
 
   console.log("appState", appState);
 
-  // useEffect(() => {
-  //   sendList(selectedAlquiler?.id);
-  // }, []);
-
   const form = useForm<AlquilerUpdate>({
     initialValues: {
       id: selectedAlquiler?.id || 0,
@@ -141,6 +137,7 @@ export function AlquilerDetails({
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
+                    isSelected={selectedProducto?.productoId === producto.id}
                     inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
                     onSelectProducto={() => handleSelectProducto(producto)}
                   />

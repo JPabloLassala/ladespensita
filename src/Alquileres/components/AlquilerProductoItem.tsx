@@ -5,10 +5,12 @@ import { GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
 export function AlquilerProductoItem({
   producto,
   onSelectProducto,
+  isSelected,
   inputProps,
 }: {
   producto: ProductoEntity;
   onSelectProducto: (productoId: number) => void;
+  isSelected: boolean;
   inputProps: GetInputPropsReturnType;
 }) {
   function handleIncreaseQuantity() {
@@ -31,6 +33,11 @@ export function AlquilerProductoItem({
       p="xs"
       key={producto.id}
       onClick={() => onSelectProducto(producto.id)}
+      style={{
+        cursor: "pointer",
+        backgroundColor: isSelected ? "#e0f7fa" : "white",
+        transition: "background-color 0.3s",
+      }}
     >
       <Group wrap="nowrap" justify="space-between" align="center">
         <Group>

@@ -12,7 +12,7 @@ export function NewAlquilerListEntry({ onDeleteAlquiler }: { onDeleteAlquiler: (
   const dateRange = `${dayjs(newAlquiler!.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(newAlquiler!.fechaFin).format("DD/MM/YYYY")}`;
 
   return (
-    <Card key={newAlquiler!.productora} shadow="xs" padding="lg" radius="md" mx="0.5rem" withBorder>
+    <Card shadow="xs" padding="lg" radius="md" mx="0.5rem" withBorder>
       <Card.Section withBorder py="1rem">
         <Group justify="space-between" px="1rem" wrap="nowrap">
           <Group wrap="nowrap">
@@ -32,9 +32,6 @@ export function NewAlquilerListEntry({ onDeleteAlquiler }: { onDeleteAlquiler: (
         <Stack gap="0.5rem">
           <Text>{newAlquiler!.productora}</Text>
           <Text>{dateRange}</Text>
-          <Text>
-            Cantidad de productos: <span className="font-semibold">{0}</span>
-          </Text>
         </Stack>
       </Card.Section>
     </Card>
