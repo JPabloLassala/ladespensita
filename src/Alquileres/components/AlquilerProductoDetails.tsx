@@ -8,17 +8,13 @@ import type { UseFormReturnType } from "@mantine/form";
 
 export function AlquilerProductoDetails({
   form,
-  selectedProducto,
   productoIdx,
 }: {
   form: UseFormReturnType<{
     productos: (AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity)[];
   }>;
-  selectedProducto: AlquilerProductoEntity | AlquilerProductoCreate | AlquilerProductoUpdate;
   productoIdx: number;
 }) {
-  console.log("selected inside details", selectedProducto);
-
   return (
     <Stack component="div" gap="0.5rem" w="20%">
       <NumberInput

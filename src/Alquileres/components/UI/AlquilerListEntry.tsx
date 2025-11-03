@@ -27,6 +27,8 @@ export function AlquilerListEntry({
     switch (alquiler.status) {
       case ALQUILER_STATUS.PENDING:
         return "gray";
+      case ALQUILER_STATUS.BUDGETED:
+        return "orange";
       case ALQUILER_STATUS.ACTIVE:
         return "blue";
       case ALQUILER_STATUS.COMPLETED:
