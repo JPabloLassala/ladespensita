@@ -1,10 +1,11 @@
 import { AlquilerProductoEntity } from "./AlquilerProducto.entity";
 
 export enum ALQUILER_STATUS {
-  PENDING = "pending",
-  ACTIVE = "active",
-  COMPLETED = "completed",
-  CANCELLED = "cancelled",
+  PENDING = "pendiente",
+  ACTIVE = "activo",
+  BUDGETED = "presupuestado",
+  COMPLETED = "completado",
+  CANCELLED = "cancelado",
 }
 
 export class AlquilerEntity {
