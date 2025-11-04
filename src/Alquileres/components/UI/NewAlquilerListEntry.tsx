@@ -9,7 +9,11 @@ import { useAlquilerContext } from "@/Alquileres/stores";
 export function NewAlquilerListEntry({ onDeleteAlquiler }: { onDeleteAlquiler: () => void }) {
   const { newAlquiler } = useAlquilerContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dateRange = `${dayjs(newAlquiler!.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(newAlquiler!.fechaFin).format("DD/MM/YYYY")}`;
+  const dateInicio = newAlquiler?.fechaInicio
+    ? dayjs(newAlquiler.fechaInicio).format("DD/MM/YYYY")
+    : "";
+  const dateFin = newAlquiler?.fechaFin ? dayjs(newAlquiler.fechaFin).format("DD/MM/YYYY") : "";
+  const dateRange = `${dateInicio} - ${dateFin}`;
 
   return (
     <Card shadow="xs" padding="lg" radius="md" mx="0.5rem" withBorder>

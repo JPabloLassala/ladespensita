@@ -21,7 +21,13 @@ export class AlquilerEntity {
   updatedAt?: Date;
 }
 
-export type AlquilerCreate = Omit<AlquilerEntity, "id" | "createdAt" | "updatedAt" | "productos">;
+export type AlquilerCreate = Omit<
+  AlquilerEntity,
+  "id" | "createdAt" | "updatedAt" | "productos" | "fechaInicio" | "fechaFin"
+> & {
+  fechaInicio: Date | null;
+  fechaFin: Date | null;
+};
 
 export type AlquilerUpdate = Omit<Partial<AlquilerEntity>, "updatedAt" | "productos">;
 

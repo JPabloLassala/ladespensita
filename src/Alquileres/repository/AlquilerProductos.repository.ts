@@ -104,14 +104,19 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
     }
   }, []);
 
-  const sendGetRemaining = useCallback(async function sendGetRemaining() {
+  const sendGetStock = useCallback(async function sendGetStock(
+    since: Date,
+    until: Date,
+    alquilerId?: number,
+  ) {
     setIsLoading(true);
     setError(undefined);
 
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
+      const alquilerIdParam = alquilerId ? `&alquilerId=${alquilerId}` : "";
       const response = await axios.get<AlquilerProductoRemaining[]>(
-        `${apiHost}/alquilerProducto/stock`,
+        `${apiHost}/alquilerProducto/stock?since=${since.toISOString()}&until=${until.toISOString()}${alquilerIdParam}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -145,7 +150,7 @@ export function useAlquilerProductoRepository(initialData: AlquilerProductoEntit
     stockData,
     clearData,
     sendList,
-    sendGetRemaining,
+    sendGetStock,
     clearStockData,
     isLoading,
     error,

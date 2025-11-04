@@ -1,4 +1,5 @@
 import {
+  ALQUILER_STATUS,
   AlquilerCreate,
   AlquilerProductoCreate,
   AlquilerProductoEntity,
@@ -14,6 +15,7 @@ import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
+import { useAlquilerProductoRepository } from "../repository";
 
 export function NewAlquilerDetails({
   onCreateAlquiler,
@@ -25,31 +27,45 @@ export function NewAlquilerDetails({
   const { selectedAlquiler } = useAlquilerContext();
   const { createEmptyAlquilerProducto, alquilerProductos, setAlquilerProductos } =
     useAlquilerProductoContext();
+  const { sendGetStock, stockData } = useAlquilerProductoRepository();
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity | undefined
   >(undefined);
+  const [datesTouched, setDatesTouched] = useState<{ inicio: boolean; fin: boolean }>({
+    inicio: false,
+    fin: false,
+  });
 
   useEffect(() => {
     setAlquilerProductos(productos.map((producto) => createEmptyAlquilerProducto(producto)));
   }, [productos]);
 
-  const form = useForm<AlquilerCreate>({
+  useEffect(() => {
+    if (!datesTouched.inicio || !datesTouched.fin) return;
+
+    sendGetStock(newAlquiler?.fechaInicio!, newAlquiler?.fechaFin!);
+    setDatesTouched({ inicio: false, fin: false });
+  }, [datesTouched]);
+
+  const form = useForm<
+    Omit<AlquilerCreate, "fechaInicio" | "fechaFin"> & { fechas: (Date | null)[] }
+  >({
     initialValues: {
       productora: newAlquiler?.productora!,
       proyecto: newAlquiler?.proyecto!,
-      fechaInicio: newAlquiler?.fechaInicio || new Date(),
-      fechaFin: newAlquiler?.fechaFin || new Date(),
+      status: ALQUILER_STATUS.PENDING,
+      fechas: [null, null],
       fechaPresupuesto: newAlquiler?.fechaPresupuesto || new Date(),
     },
     onValuesChange: (values) => {
-      const newAlquiler = {
+      const newAlquilerValues = {
         ...selectedAlquiler,
         ...values,
-        fechaInicio: dayjs(values.fechaInicio).toDate(),
-        fechaFin: dayjs(values.fechaFin).toDate(),
+        fechaInicio: values.fechas[0] ? dayjs(values.fechas[0]).startOf("day").toDate() : null,
+        fechaFin: values.fechas[1] ? dayjs(values.fechas[1]).startOf("day").toDate() : null,
       };
 
-      setNewAlquiler(newAlquiler);
+      setNewAlquiler(newAlquilerValues);
     },
   });
   const productosForm = useForm<{ productos: (AlquilerProductoUpdate | AlquilerProductoCreate)[] }>(
@@ -60,6 +76,12 @@ export function NewAlquilerDetails({
       },
     },
   );
+  const handleCreateAlquiler = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAlquiler) return;
+
+    onCreateAlquiler(newAlquiler);
+  };
 
   function handleSelectProducto(producto: ProductoEntity) {
     if (selectedProducto?.productoId === producto.id) return;
@@ -77,22 +99,26 @@ export function NewAlquilerDetails({
       <form
         id="alquiler-details-form"
         style={{ height: "100%", overflowY: "auto" }}
-        onSubmit={form.onSubmit(onCreateAlquiler)}
+        onSubmit={handleCreateAlquiler}
       >
         <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
           <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="md">
-            <AlquilerDetailsForm form={form} />
+            <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
             <AlquilerProductosScrollContainer>
               {productos.map((producto) => {
                 const apFormIdx = productosForm.values.productos.findIndex(
                   (p) => p.productoId === producto.id,
                 );
+                const remaining =
+                  stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
                 return (
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
+                    isSelected={selectedProducto?.productoId === producto.id}
                     inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
                     onSelectProducto={() => handleSelectProducto(producto)}
+                    remaining={remaining}
                   />
                 );
               })}
@@ -107,11 +133,7 @@ export function NewAlquilerDetails({
             </Group>
           </Stack>
           {selectedProducto && (
-            <AlquilerProductoDetails
-              productoIdx={selectedProductoIdx}
-              selectedProducto={selectedProducto}
-              form={productosForm}
-            />
+            <AlquilerProductoDetails productoIdx={selectedProductoIdx} form={productosForm} />
           )}
         </Group>
       </form>

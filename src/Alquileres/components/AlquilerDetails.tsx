@@ -19,6 +19,7 @@ import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { useAlquilerProductoRepository } from "../repository";
 import { AlquilerStatus } from "./AlquilerStatus";
 import { APP_STATE, useAppStateContext } from "@/Common";
+import dayjs from "dayjs";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -34,25 +35,38 @@ export function AlquilerDetails({
   const { updateAlquiler, setSelectedAlquiler } = useAlquilerContext();
   const { alquilerProductos, createEmptyAlquilerProducto, setAlquilerProductos } =
     useAlquilerProductoContext();
-  const { sendList, data } = useAlquilerProductoRepository();
+  const { sendGetStock, stockData, sendList, data } = useAlquilerProductoRepository();
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
+  const [datesTouched, setDatesTouched] = useState<{ inicio: boolean; fin: boolean }>({
+    inicio: false,
+    fin: false,
+  });
 
-  console.log("appState", appState);
-
-  const form = useForm<AlquilerUpdate>({
+  const form = useForm<
+    Omit<AlquilerUpdate, "fechaFin" | "fechaInicio"> & { fechas: (Date | null)[] }
+  >({
     initialValues: {
       id: selectedAlquiler?.id || 0,
       productora: selectedAlquiler!.productora || "",
       proyecto: selectedAlquiler!.proyecto || "",
-      fechaInicio: selectedAlquiler!.fechaInicio || new Date(),
-      fechaFin: selectedAlquiler!.fechaFin || new Date(),
+      fechas: [
+        selectedAlquiler!.fechaInicio || new Date(),
+        selectedAlquiler!.fechaFin || new Date(),
+      ],
       fechaPresupuesto: selectedAlquiler!.fechaPresupuesto || new Date(),
       createdAt: selectedAlquiler!.createdAt || new Date(),
     },
     onValuesChange: (values) => {
-      setSelectedAlquiler({ ...selectedAlquiler, ...values });
+      const newValues = {
+        ...selectedAlquiler,
+        ...values,
+        fechaInicio: values.fechas[0] || undefined,
+        fechaFin: values.fechas[1] || undefined,
+      };
+
+      setSelectedAlquiler(newValues as AlquilerEntity);
       updateAlquiler(selectedAlquiler.id, values);
     },
   });
@@ -71,7 +85,24 @@ export function AlquilerDetails({
   );
 
   useEffect(() => {
+    if (!datesTouched.inicio || !datesTouched.fin) return;
+
+    const since = dayjs(selectedAlquiler.fechaInicio).toDate();
+    const until = dayjs(selectedAlquiler.fechaFin).toDate();
+    if (!since || !until) return;
+
+    sendGetStock(since, until, selectedAlquiler.id);
+    setDatesTouched({ inicio: false, fin: false });
+  }, [datesTouched]);
+
+  useEffect(() => {
     form.setValues({ ...selectedAlquiler });
+    const since = dayjs(selectedAlquiler.fechaInicio).toDate();
+    const until = dayjs(selectedAlquiler.fechaFin).toDate();
+
+    if (since && until) {
+      sendGetStock(since, until, selectedAlquiler.id);
+    }
     sendList(selectedAlquiler.id);
   }, [selectedAlquiler.id]);
 
@@ -127,12 +158,14 @@ export function AlquilerDetails({
             align="center"
             gap="md"
           >
-            <AlquilerDetailsForm form={form} />
+            <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
             <AlquilerProductosScrollContainer>
               {productos.map((producto) => {
                 const apFormIdx = productosForm.values.productos.findIndex(
                   (p) => p.productoId === producto.id,
                 );
+                const remaining =
+                  stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
                 return (
                   <AlquilerProductoItem
                     key={producto.id}
@@ -140,6 +173,7 @@ export function AlquilerDetails({
                     isSelected={selectedProducto?.productoId === producto.id}
                     inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
                     onSelectProducto={() => handleSelectProducto(producto)}
+                    remaining={remaining}
                   />
                 );
               })}

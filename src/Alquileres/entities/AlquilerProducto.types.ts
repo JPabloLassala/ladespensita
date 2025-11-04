@@ -8,4 +8,6 @@ export type AlquilerProductoStock = {
 export type AlquilerProductoRemaining = {
   productoId: number;
   remaining: number;
+  stock: number;
+  used: number;
 };
