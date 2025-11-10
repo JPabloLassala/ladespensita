@@ -30,7 +30,7 @@ export function ProductoCard({
   return (
     <>
       <EditProductoModal opened={opened} onClose={close} producto={producto} onUpdate={onUpdate} />
-      <Card shadow="sm" padding="md" radius="md" withBorder mt={3}>
+      <Card shadow="sm" padding="md" radius="md" withBorder mt={3} maw={230}>
         <Card.Section>
           <Image
             onClick={open}

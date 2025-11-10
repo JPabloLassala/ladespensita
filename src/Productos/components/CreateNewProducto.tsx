@@ -18,10 +18,16 @@ export const CreateNewProducto = ({
         radius="md"
         withBorder
         mt={3}
-        h={230}
-        style={{ borderStyle: "dashed", aspectRatio: "1/1" }}
+        maw={230}
+        style={{ borderStyle: "dashed", height: "100%" }}
       >
-        <Flex align="center" justify="center" style={{ height: "100%", origin }} onClick={open}>
+        <Flex
+          align="center"
+          justify="center"
+          h="100%"
+          style={{ cursor: "pointer" }}
+          onClick={open}
+        >
           <Button variant="outline" color="gray" style={{ borderStyle: "dashed" }}>
             Crear Nuevo
           </Button>
