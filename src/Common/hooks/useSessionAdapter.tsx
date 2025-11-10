@@ -25,8 +25,6 @@ export function useSessionAdapter() {
     try {
       const response = await axios.post(`${apiUrl}/auth/login`, { username, password });
 
-      console.log(response.data);
-
       setToken(response.data.access_token);
       setIsLoggedIn(true);
     } catch (error) {

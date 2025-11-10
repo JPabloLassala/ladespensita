@@ -33,7 +33,6 @@ export function LoginPage() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("logged in");
       return navigate("/productos");
     }
   }, [isLoggedIn]);
