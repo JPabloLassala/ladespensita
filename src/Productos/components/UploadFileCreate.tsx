@@ -60,7 +60,7 @@ export const UploadFileCreate = ({
 
   return (
     <Stack justify="center" align="center">
-      <Group justify="center">
+      <Stack justify="center" w="15rem">
         <Dropzone
           onDrop={handleDrop}
           radius="md"
@@ -77,13 +77,15 @@ export const UploadFileCreate = ({
           </Dropzone.Reject>
           <Dropzone.Idle>{preview()}</Dropzone.Idle>
         </Dropzone>
-        <Button onClick={handleClearFile}>Borrar imagen</Button>
+        <Button disabled={!file} onClick={handleClearFile}>
+          Borrar imagen
+        </Button>
         {onResetFile && file && (
           <Button onClick={onResetFile} color="red">
             Volver a imagen anterior
           </Button>
         )}
-      </Group>
+      </Stack>
     </Stack>
   );
 };
