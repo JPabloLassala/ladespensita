@@ -41,7 +41,7 @@ export function ProductoCard({
           {disabled && <Overlay color="#000" backgroundOpacity={0.35} blur={5} />}
         </Card.Section>
 
-        <Group justify="space-between" mt="md" mb="xs">
+        <Group justify="space-between" mt="md" mb="xs" wrap="nowrap" align="baselines">
           <Text fw={500}>{producto.nombre}</Text>
           <Popover
             width={300}
