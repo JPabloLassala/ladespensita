@@ -60,25 +60,9 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
   const getUpdateProductoFormData = (producto: ProductoEntityUpdate | ProductoEntityCreate) => {
     const formData = new FormData();
 
-    if (producto.file) formData.append("file", producto.file as FileWithPath);
-    if (producto.nombre) formData.append("nombre", producto.nombre as string);
-    if (producto.unidadesMetroLineal)
-      formData.append("unidadesMetroLineal", producto.unidadesMetroLineal?.toString());
-    if (producto.totales) formData.append("totales", producto.totales?.toString() as string);
-    if (producto.medidasAltura) formData.append("altura", producto.medidasAltura?.toString() || "");
-    if (producto.medidasDiametro)
-      formData.append("diametro", producto.medidasDiametro?.toString() || "");
-    if (producto.medidasAncho) formData.append("ancho", producto.medidasAncho?.toString() || "");
-    if (producto.medidasProfundidad)
-      formData.append("profundidad", producto.medidasProfundidad?.toString() || "");
-    if (producto.valorUnitarioGarantia)
-      formData.append("valorUnitarioGarantia", producto.valorUnitarioGarantia?.toString() || "");
-    if (producto.valorUnitarioAlquiler)
-      formData.append("valorUnitarioAlquiler", producto.valorUnitarioAlquiler.toString());
-    if (producto.valorX1) formData.append("valorX1", producto.valorX1.toString());
-    if (producto.valorX3) formData.append("valorX3", producto.valorX3.toString());
-    if (producto.valorX6) formData.append("valorX6", producto.valorX6.toString());
-    if (producto.valorX12) formData.append("valorX12", producto.valorX12.toString());
+    const { file, ...body } = producto;
+    if (file) formData.append("file", file as FileWithPath);
+    formData.append("body", JSON.stringify(body));
 
     return formData;
   };
