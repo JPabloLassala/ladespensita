@@ -1,9 +1,6 @@
 import { ProductoEntity } from "@/Productos";
 import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
 import { GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
-import { useAlquilerContext } from "../stores";
-import { useAlquilerProductoRepository } from "../repository";
-import { useEffect } from "react";
 
 export function AlquilerProductoItem({
   producto,
@@ -11,12 +8,14 @@ export function AlquilerProductoItem({
   isSelected,
   inputProps,
   remaining,
+  tabIndex,
 }: {
   producto: ProductoEntity;
   onSelectProducto: (productoId: number) => void;
   isSelected: boolean;
   inputProps: GetInputPropsReturnType;
   remaining: number | string;
+  tabIndex: number;
 }) {
   function handleIncreaseQuantity() {
     const quantity = (inputProps.value as number) || 0;
@@ -67,7 +66,7 @@ export function AlquilerProductoItem({
           </Stack>
         </Group>
         <Group>
-          <Button size="compact-md" variant="outline" onClick={handleDecreaseQuantity}>
+          <Button size="compact-md" variant="outline" onClick={handleDecreaseQuantity} tabIndex={-1}>
             -
           </Button>
           <NumberInput
@@ -75,9 +74,10 @@ export function AlquilerProductoItem({
             w="4rem"
             fw={700}
             {...inputProps}
+            tabIndex={tabIndex}
             max={remaining !== "-" ? +remaining : undefined}
           />
-          <Button size="compact-md" variant="outline" onClick={handleIncreaseQuantity}>
+          <Button size="compact-md" variant="outline" onClick={handleIncreaseQuantity} tabIndex={-1}>
             +
           </Button>
         </Group>

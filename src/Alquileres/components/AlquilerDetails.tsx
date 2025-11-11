@@ -160,7 +160,7 @@ export function AlquilerDetails({
           >
             <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
             <AlquilerProductosScrollContainer>
-              {productos.map((producto) => {
+              {productos.map((producto, index) => {
                 const apFormIdx = productosForm.values.productos.findIndex(
                   (p) => p.productoId === producto.id,
                 );
@@ -174,6 +174,7 @@ export function AlquilerDetails({
                     inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
                     onSelectProducto={() => handleSelectProducto(producto)}
                     remaining={remaining}
+                    tabIndex={index + 3}
                   />
                 );
               })}

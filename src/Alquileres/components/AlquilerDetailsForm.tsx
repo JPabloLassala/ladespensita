@@ -30,12 +30,14 @@ export function AlquilerDetailsForm({
           w="15rem"
           key={form.key("proyecto")}
           label="Proyecto"
+          tabIndex={1}
           {...form.getInputProps("proyecto")}
         />
         <TextInput
           w="15rem"
           key={form.key("productora")}
           label="Productora"
+          tabIndex={2}
           {...form.getInputProps("productora")}
         />
       </Grid.Col>
