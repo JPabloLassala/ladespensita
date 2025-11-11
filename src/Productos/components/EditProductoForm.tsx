@@ -13,90 +13,126 @@ export const EditProductoForm = ({
         <TextInput
           id="nombre"
           label="Nombre"
-          key={form.key("nombre")}
+          placeholder="Nombre"
+          withAsterisk
           {...form.getInputProps("nombre")}
         />
         <NumberInput
           label="Altura"
+          placeholder="Altura"
           hideControls
           suffix="cm"
-          key={form.key("altura")}
-          {...form.getInputProps("altura")}
+          {...form.getInputProps("medidasAltura")}
         />
         <NumberInput
           label="Ancho"
+          placeholder="Ancho"
           hideControls
           suffix="cm"
-          key={form.key("ancho")}
-          {...form.getInputProps("ancho")}
+          {...form.getInputProps("medidasAncho")}
         />
         <NumberInput
           label="Profundidad"
+          placeholder="Profundidad"
           hideControls
           suffix="cm"
-          key={form.key("profundidad")}
-          {...form.getInputProps("profundidad")}
+          {...form.getInputProps("medidasProfundidad")}
         />
         <NumberInput
           label="Diámetro"
           placeholder="Diámetro"
           hideControls
           suffix="cm"
-          key={form.key("diametro")}
-          {...form.getInputProps("diametro")}
+          {...form.getInputProps("medidasDiametro")}
+        />
+        <NumberInput
+          label="Costo producto"
+          placeholder="Costo producto"
+          hideControls
+          suffix="cm"
+          {...form.getInputProps("costoProducto")}
         />
       </Stack>
       <Stack justify="start" align="start" gap="xs">
         <NumberInput
-          label="Totales"
-          placeholder="Totales"
+          label="Stock inicial"
+          placeholder="Stock inicial"
           hideControls
-          key={form.key("totales")}
+          withAsterisk
           {...form.getInputProps("totales")}
         />
         <NumberInput
-          label="Unidades metro lineal"
-          suffix="u"
+          id="metroLineal"
+          label="Metro Lineal"
+          placeholder="Metro lineal"
           hideControls
-          key={form.key("unidadesMetroLineal")}
+          suffix="u"
+          withAsterisk
           {...form.getInputProps("unidadesMetroLineal")}
         />
         <NumberInput
           label="Valor unitario garantía"
+          placeholder="Valor unitario garantía"
           prefix="$"
           hideControls
-          key={form.key("valorUnitarioGarantia")}
+          withAsterisk
           {...form.getInputProps("valorUnitarioGarantia")}
+        />
+        <NumberInput
+          label="Valor unitario alquiler"
+          placeholder="Valor unitario alquiler"
+          prefix="$"
+          hideControls
+          withAsterisk
+          {...form.getInputProps("valorUnitarioAlquiler")}
+        />
+        <NumberInput
+          label="Costo gráfica"
+          placeholder="Costo gráfica"
+          hideControls
+          suffix="cm"
+          {...form.getInputProps("costoGrafica")}
+        />
+        <NumberInput
+          label="Costo diseño"
+          placeholder="Costo diseño"
+          hideControls
+          suffix="cm"
+          {...form.getInputProps("costoDiseno")}
         />
       </Stack>
       <Stack justify="start" align="start" gap="xs">
         <NumberInput
           label="Valor x1"
+          placeholder="Valor x1"
           prefix="$"
           hideControls
-          key={form.key("valorx1")}
-          {...form.getInputProps("valorx1")}
+          withAsterisk
+          {...form.getInputProps("valorX1")}
         />
         <NumberInput
           label="Valor x3"
+          placeholder="Valor x3"
           prefix="$"
           hideControls
-          key={form.key("valorx3")}
-          {...form.getInputProps("valorx3")}
+          withAsterisk
+          {...form.getInputProps("valorX3")}
         />
         <NumberInput
           label="Valor x6"
+          placeholder="Valor x6"
           prefix="$"
           hideControls
-          key={form.key("valorx6")}
-          {...form.getInputProps("valorx6")}
+          withAsterisk
+          {...form.getInputProps("valorX6")}
         />
         <NumberInput
           label="Valor x12"
+          placeholder="Valor x12"
           prefix="$"
           hideControls
-          key={form.key("valorx12")}
-          {...form.getInputProps("valorx12")}
+          withAsterisk
+          {...form.getInputProps("valorX12")}
         />
       </Stack>
     </Group>

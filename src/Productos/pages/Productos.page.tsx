@@ -38,7 +38,6 @@ export function ProductosPage() {
 
   const handleUpdate = (producto: ProductoEntityUpdate, id: number) => {
     const formData = getUpdateProductoFormData(producto);
-
     sendUpdate(formData, id);
     updateProducto(producto);
   };

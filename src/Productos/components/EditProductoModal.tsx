@@ -22,24 +22,26 @@ export const EditProductoModal = ({
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
   const form = useForm<ProductoEntityUpdate>({
     mode: "uncontrolled",
+    initialValues: {
+      id: producto.id,
+      nombre: producto.nombre,
+      unidadesMetroLineal: producto.unidadesMetroLineal,
+      totales: producto.totales,
+      medidasAltura: producto.medidasAltura,
+      medidasDiametro: producto.medidasDiametro,
+      medidasAncho: producto.medidasAncho,
+      costoDiseno: producto.costoDiseno,
+      costoGrafica: producto.costoGrafica,
+      costoProducto: producto.costoProducto,
+      medidasProfundidad: producto.medidasProfundidad,
+      valorUnitarioGarantia: producto.valorUnitarioGarantia,
+      valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
+      valorX1: producto.valorX1,
+      valorX3: producto.valorX3,
+      valorX6: producto.valorX6,
+      valorX12: producto.valorX12,
+    },
   });
-
-  if (!form.isDirty()) {
-    form.setFieldValue("id", producto.id);
-    form.setFieldValue("nombre", producto.nombre);
-    form.setFieldValue("unidadesMetroLineal", producto.unidadesMetroLineal);
-    form.setFieldValue("totales", producto.totales);
-    form.setFieldValue("medidasAltura", producto.medidasAltura);
-    form.setFieldValue("medidasDiametro", producto.medidasDiametro);
-    form.setFieldValue("medidasAncho", producto.medidasAncho);
-    form.setFieldValue("medidasProfundidad", producto.medidasProfundidad);
-    form.setFieldValue("valorUnitarioGarantia", producto.valorUnitarioGarantia);
-    form.setFieldValue("valorUnitarioAlquiler", producto.valorUnitarioAlquiler);
-    form.setFieldValue("valorX1", producto.valorX1);
-    form.setFieldValue("valorX3", producto.valorX3);
-    form.setFieldValue("valorX6", producto.valorX6);
-    form.setFieldValue("valorX12", producto.valorX12);
-  }
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
@@ -74,7 +76,7 @@ export const EditProductoModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} centered size="100%">
+    <Modal opened={opened} onClose={onClose} centered size="60%">
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">

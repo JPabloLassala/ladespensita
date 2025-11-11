@@ -56,7 +56,6 @@ export const UploadFileEdit = ({
           fallbackSrc="https://placehold.co/160x300?text=Sin%20Foto"
         />
       );
-
     return fallback;
   };
 
@@ -88,11 +87,7 @@ export const UploadFileEdit = ({
           <Dropzone.Reject>
             <FontAwesomeIcon icon={faX} size="2x" />
           </Dropzone.Reject>
-          <Dropzone.Idle>
-            {dirty && preview()}
-            {!dirty && file && preview()}
-            {!dirty && image && preview()}
-          </Dropzone.Idle>
+          <Dropzone.Idle>{preview()}</Dropzone.Idle>
         </Dropzone>
         {image && (
           <Button onClick={onClearFile} color="red">
