@@ -5,11 +5,15 @@ import { useFilterContext } from "@/Common";
 import { FilterProducts, ProductosListContainer, ProductosPageContainer } from "../components";
 import { useProductoRepository } from "../repository";
 import { CreateNewProducto } from "../components/CreateNewProducto";
-import { ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
+import { EditProductoModal } from "../components/EditProductoModal";
+import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 import { useAlquilerProductoRepository } from "@/Alquileres/repository";
+import { useDisclosure } from "@mantine/hooks";
 
 export function ProductosPage() {
   const [firstLoad, setFirstLoad] = useState(true);
+  const [selectedProducto, setSelectedProducto] = useState<ProductoEntity | undefined>(undefined);
+  const [isEditModalOpen, { open: openEditModal, close: closeEditModal }] = useDisclosure(false);
   const {
     productos,
     setProductos,
@@ -53,6 +57,16 @@ export function ProductosPage() {
     const formData = getUpdateProductoFormData(producto);
     sendCreate(formData);
     createProducto(producto);
+  };
+
+  const handleEditProducto = (producto: ProductoEntity) => {
+    setSelectedProducto(producto);
+    openEditModal();
+  };
+
+  const handleCloseEditModal = () => {
+    closeEditModal();
+    setSelectedProducto(undefined);
   };
 
   useEffect(() => {
@@ -99,11 +113,17 @@ export function ProductosPage() {
             producto={p}
             dimmed={false}
             disabled={false}
-            onUpdate={handleUpdate}
+            onEdit={handleEditProducto}
             onDelete={handleDelete}
           />
         ))}
       </ProductosListContainer>
+      <EditProductoModal
+        opened={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        producto={selectedProducto || ({} as ProductoEntity)}
+        onUpdate={handleUpdate}
+      />
     </ProductosPageContainer>
   );
 }

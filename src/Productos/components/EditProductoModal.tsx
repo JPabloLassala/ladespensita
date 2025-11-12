@@ -1,7 +1,7 @@
 import { Button, Group, Modal, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { ProductoEntity, ProductoEntityUpdate } from "../entities";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileWithPath } from "@mantine/dropzone";
 import { EditProductoForm } from "./EditProductoForm";
 import { UploadFileEdit } from "./UploadFileEdit";
@@ -43,6 +43,30 @@ export const EditProductoModal = ({
     },
   });
 
+  useEffect(() => {
+    if (!opened) return;
+    console.log("asda");
+    form.setValues({
+      id: producto.id,
+      nombre: producto.nombre,
+      unidadesMetroLineal: producto.unidadesMetroLineal,
+      totales: producto.totales,
+      medidasAltura: producto.medidasAltura,
+      medidasDiametro: producto.medidasDiametro,
+      medidasAncho: producto.medidasAncho,
+      costoDiseno: producto.costoDiseno,
+      costoGrafica: producto.costoGrafica,
+      costoProducto: producto.costoProducto,
+      medidasProfundidad: producto.medidasProfundidad,
+      valorUnitarioGarantia: producto.valorUnitarioGarantia,
+      valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
+      valorX1: producto.valorX1,
+      valorX3: producto.valorX3,
+      valorX6: producto.valorX6,
+      valorX12: producto.valorX12,
+    });
+  }, [producto]);
+
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
 
@@ -76,7 +100,13 @@ export const EditProductoModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} centered size="60%">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      centered
+      size="60%"
+      removeScrollProps={{ enabled: false }}
+    >
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">

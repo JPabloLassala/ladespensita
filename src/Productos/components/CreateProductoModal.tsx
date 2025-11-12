@@ -39,7 +39,13 @@ export const CreateProductoModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} centered size="65%">
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      centered
+      size="65%"
+      removeScrollProps={{ enabled: false }}
+    >
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
         <Stack justify="center">
           <Group justify="center">
