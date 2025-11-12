@@ -23,23 +23,27 @@ export function ProductosPage() {
   const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
 
   useEffect(() => {
+    if (!data.length) return;
     if (firstLoad) {
       setProductos(data);
-      setFilteredProductos(data);
     }
-    if (data.length > 0) {
-      setFirstLoad(false);
-    }
+
+    setFirstLoad(false);
   }, [data, firstLoad]);
 
   useEffect(() => {
     sendList();
   }, []);
 
+  useEffect(() => {
+    if (!productos.length) return;
+    setFilteredProductos(productos);
+  }, [productos]);
+
   const handleUpdate = (producto: ProductoEntityUpdate, id: number) => {
     const formData = getUpdateProductoFormData(producto);
     sendUpdate(formData, id);
-    updateProducto(producto);
+    updateProducto(producto.id, producto);
   };
   const handleDelete = (id: number) => {
     sendDelete(id);

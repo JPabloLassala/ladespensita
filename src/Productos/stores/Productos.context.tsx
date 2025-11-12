@@ -1,13 +1,12 @@
 import { createContext, useContext, useState } from "react";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
-import { produce } from "immer";
 import { FileWithPath } from "@mantine/dropzone";
 
 export type ProductosContextType = {
   productos: ProductoEntity[];
   setProductos: React.Dispatch<React.SetStateAction<ProductoEntity[]>>;
   getUpdateProductoFormData: (producto: ProductoEntityUpdate | ProductoEntityCreate) => FormData;
-  updateProducto: (newProducto: ProductoEntityUpdate) => void;
+  updateProducto: (productoId: number, newProducto: ProductoEntityUpdate) => void;
   createProducto: (newProducto: ProductoEntityCreate) => void;
   deleteProducto: (id: number) => void;
 };
@@ -17,44 +16,15 @@ export const ProductosContext = createContext<ProductosContextType | null>(null)
 export function ProductosContextProvider({ children }: { children: React.ReactNode }) {
   const [productos, setProductos] = useState<ProductoEntity[]>([]);
 
-  const updateProducto = (productoNewData: ProductoEntityUpdate) => {
-    const newProductosArray = produce(productos, (oldProductos) => {
-      const index = oldProductos.findIndex((p) => p.id === productoNewData.id);
-      if (index === -1) return;
-
-      if (productoNewData.nombre) oldProductos[index].nombre = productoNewData.nombre;
-      if (productoNewData.unidadesMetroLineal)
-        oldProductos[index].unidadesMetroLineal = productoNewData.unidadesMetroLineal;
-      if (productoNewData.totales) oldProductos[index].totales = productoNewData.totales;
-      if (productoNewData.medidasAltura)
-        oldProductos[index].medidasAltura = productoNewData.medidasAltura;
-      if (productoNewData.medidasDiametro)
-        oldProductos[index].medidasDiametro = productoNewData.medidasDiametro;
-      if (productoNewData.medidasAncho)
-        oldProductos[index].medidasAncho = productoNewData.medidasAncho;
-      if (productoNewData.medidasProfundidad)
-        oldProductos[index].medidasProfundidad = productoNewData.medidasProfundidad;
-      if (productoNewData.valorUnitarioGarantia)
-        oldProductos[index].valorUnitarioGarantia = productoNewData.valorUnitarioGarantia;
-      if (productoNewData.valorUnitarioAlquiler)
-        oldProductos[index].valorUnitarioAlquiler = productoNewData.valorUnitarioAlquiler;
-      if (productoNewData.valorX1) oldProductos[index].valorX1 = productoNewData.valorX1;
-      if (productoNewData.valorX3) oldProductos[index].valorX3 = productoNewData.valorX3;
-      if (productoNewData.valorX6) oldProductos[index].valorX6 = productoNewData.valorX6;
-      if (productoNewData.valorX12) oldProductos[index].valorX12 = productoNewData.valorX12;
-
-      if (productoNewData.tmpURL) {
-        oldProductos[index].image = {
-          createdAt: new Date(),
-          id: Math.floor(Math.random() * 1000),
-          isMain: true,
-          productoId: productoNewData.id,
-          url: productoNewData.tmpURL || "",
-        };
-      }
+  const updateProducto = (productoId: number, productoNewData: ProductoEntityUpdate) => {
+    setProductos((oldProductos) => {
+      return oldProductos.map((producto) => {
+        if (producto.id === productoId) {
+          return { ...producto, ...productoNewData };
+        }
+        return producto;
+      });
     });
-
-    setProductos(newProductosArray);
   };
 
   const getUpdateProductoFormData = (producto: ProductoEntityUpdate | ProductoEntityCreate) => {
@@ -68,7 +38,7 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
   };
 
   const createProducto = (newProducto: ProductoEntityCreate) => {
-    const producto = new ProductoEntity();
+    const producto: ProductoEntity = new ProductoEntity();
     producto.id = Math.floor(Math.random() * 1000);
     producto.nombre = newProducto.nombre;
     producto.unidadesMetroLineal = newProducto.unidadesMetroLineal;
