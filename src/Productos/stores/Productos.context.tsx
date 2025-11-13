@@ -7,7 +7,7 @@ export type ProductosContextType = {
   setProductos: React.Dispatch<React.SetStateAction<ProductoEntity[]>>;
   getUpdateProductoFormData: (producto: ProductoEntityUpdate | ProductoEntityCreate) => FormData;
   updateProducto: (productoId: number, newProducto: ProductoEntityUpdate) => void;
-  createProducto: (newProducto: ProductoEntity) => void;
+  createProducto: (newProducto: ProductoEntityCreate) => void;
   deleteProducto: (id: number) => void;
 };
 
@@ -37,8 +37,33 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     return formData;
   };
 
-  const createProducto = (newProducto: ProductoEntity) => {
-    setProductos((prev) => [newProducto, ...prev]);
+  const createProducto = (newProducto: ProductoEntityCreate) => {
+    const producto: ProductoEntity = new ProductoEntity();
+    producto.id = Math.floor(Math.random() * 1000);
+    producto.nombre = newProducto.nombre;
+    producto.unidadesMetroLineal = newProducto.unidadesMetroLineal;
+    producto.totales = newProducto.totales;
+    producto.totales = newProducto.totales;
+    producto.medidasAltura = newProducto.medidasAltura;
+    producto.medidasDiametro = newProducto.medidasDiametro;
+    producto.medidasAncho = newProducto.medidasAncho;
+    producto.medidasProfundidad = newProducto.medidasProfundidad;
+    producto.valorUnitarioGarantia = newProducto.valorUnitarioGarantia;
+    producto.valorUnitarioAlquiler = newProducto.valorUnitarioAlquiler;
+    producto.valorX1 = newProducto.valorX1;
+    producto.valorX3 = newProducto.valorX3;
+    producto.valorX6 = newProducto.valorX6;
+    producto.valorX12 = newProducto.valorX12;
+
+    producto.image = {
+      createdAt: new Date(),
+      id: Math.floor(Math.random() * 1000),
+      isMain: true,
+      productoId: producto.id,
+      url: newProducto.tmpURL || "",
+    };
+
+    setProductos((prev) => [{ ...producto }, ...prev]);
   };
 
   const deleteProducto = (id: number) => {

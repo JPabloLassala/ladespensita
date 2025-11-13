@@ -31,7 +31,15 @@ export function ProductosPage() {
 
   useEffect(() => {
     if (!data.length) return;
-    if (!isLoading && !error) {
+    if (error) {
+      notifications.show({
+        message: error,
+        position: "top-right",
+        title: "Error",
+        color: "red",
+      });
+    }
+    if (!isLoading) {
       setProductos(data);
     }
 
@@ -69,22 +77,9 @@ export function ProductosPage() {
 
   const handleCreate = async (producto: ProductoEntityCreate) => {
     const formData = getUpdateProductoFormData(producto);
-    const ok = await sendCreate(formData);
-    if (ok) {
-      notifications.show({
-        message: "Producto creado con éxito",
-        position: "top-right",
-        color: "green",
-      });
-      return;
-    }
+    sendCreate(formData);
 
-    notifications.show({
-      message: "No se pudo crear el producto",
-      position: "top-right",
-      title: "Error",
-      color: "red",
-    });
+    createProducto(producto);
   };
 
   const handleEditProducto = (producto: ProductoEntity) => {
@@ -135,18 +130,6 @@ export function ProductosPage() {
       <Notifications />
       <FilterProducts />
       <ProductosListContainer>
-        <Button
-          onClick={() => {
-            notifications.show({
-              message: "asdasd",
-              position: "top-right",
-              title: "asdasd",
-              color: "red",
-            });
-          }}
-        >
-          asdasd
-        </Button>
         <CreateNewProducto onCreate={handleCreate} />
         {filteredProductos.map((p) => (
           <ProductoCard

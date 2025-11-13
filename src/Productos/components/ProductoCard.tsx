@@ -25,7 +25,7 @@ export function ProductoCard({
   };
 
   return (
-    <Card shadow="sm" padding="md" radius="md" withBorder maw={230}>
+    <Card shadow="sm" padding="md" radius="md" withBorder w={230}>
       <Card.Section>
         <Image
           onClick={() => onEdit(producto)}

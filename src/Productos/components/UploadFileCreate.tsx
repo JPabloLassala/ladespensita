@@ -1,8 +1,8 @@
 import { faUpload, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Group, Image, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Button, Image, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import classes from "../Css/Dropzone.module.css";
+import type { ReactNode } from "react";
 
 export const UploadFileCreate = ({
   file,
@@ -11,6 +11,7 @@ export const UploadFileCreate = ({
   onResetFile,
   dirty,
   setDirty,
+  error,
 }: {
   file: File | undefined;
   onSetFile: (file: FileWithPath | undefined) => void;
@@ -18,6 +19,7 @@ export const UploadFileCreate = ({
   onResetFile?: () => void;
   dirty: boolean;
   setDirty: (dirty: boolean) => void;
+  error?: ReactNode;
 }) => {
   const theme = useMantineTheme();
   const fallback = (
@@ -67,7 +69,7 @@ export const UploadFileCreate = ({
           accept={IMAGE_MIME_TYPE}
           h="15rem"
           maxFiles={1}
-          className={classes.root}
+          style={{ borderStyle: "dashed", borderColor: error ? "red" : undefined }}
         >
           <Dropzone.Accept>
             <FontAwesomeIcon icon={faUpload} size="2x" />
@@ -77,6 +79,11 @@ export const UploadFileCreate = ({
           </Dropzone.Reject>
           <Dropzone.Idle>{preview()}</Dropzone.Idle>
         </Dropzone>
+        {error && (
+          <Text size="xs" c="red" ta="left">
+            {error}
+          </Text>
+        )}
         <Button disabled={!file} onClick={handleClearFile}>
           Borrar imagen
         </Button>

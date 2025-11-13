@@ -16,14 +16,38 @@ export const CreateProductoModal = ({
   onCreate: (data: ProductoEntityCreate) => void;
 }) => {
   const [uploadDirty, setUploadDirty] = useState(false);
-  const [file, setFile] = useState<FileWithPath | undefined>(undefined);
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
-  const form = useForm<ProductoEntityCreate>({ mode: "uncontrolled" });
+  const form = useForm<ProductoEntityCreate>({
+    mode: "uncontrolled",
+    validate: {
+      nombre: (value) => (!value?.trim() ? "El nombre es obligatorio" : null),
+      totales: (value) => (!value || value < 1 ? "El Stock inicial debe ser mayor a 0" : null),
+      unidadesMetroLineal: (value) =>
+        !value || value < 1 ? "Las unidades por metro lineal deben ser mayor a 0" : null,
+      valorUnitarioGarantia: (value) =>
+        !value || value < 0 ? "El valor unitario de garantía debe ser mayor o igual a 0" : null,
+      valorUnitarioAlquiler: (value) =>
+        !value || value < 0 ? "El valor unitario de alquiler debe ser mayor o igual a 0" : null,
+      costoDiseno: (value) =>
+        value === undefined || value < 0 ? "El costo de diseño debe ser mayor o igual a 0" : null,
+      costoGrafica: (value) =>
+        value === undefined || value < 0 ? "El costo de gráfica debe ser mayor o igual a 0" : null,
+      costoProducto: (value) =>
+        value === undefined || value < 0 ? "El costo de producto debe ser mayor o igual a 0" : null,
+      valorX1: (value) =>
+        value === undefined || value < 0 ? "El valor por 1 debe ser mayor o igual a 0" : null,
+      valorX3: (value) =>
+        value === undefined || value < 0 ? "El valor por 3 debe ser mayor o igual a 0" : null,
+      valorX6: (value) =>
+        value === undefined || value < 0 ? "El valor por 6 debe ser mayor o igual a 0" : null,
+      valorX12: (value) =>
+        value === undefined || value < 0 ? "El valor por 12 debe ser mayor o igual a 0" : null,
+      file: (value) => (!value ? "La imagen es obligatoria" : null),
+    },
+  });
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
-
-    setFile(newFile);
   };
 
   const handleSubmitForm = (values: ProductoEntityCreate) => {
@@ -33,7 +57,6 @@ export const CreateProductoModal = ({
     };
     onCreate({ ...valuesWithTotal, tmpURL: tmpURL });
     form.reset();
-    setFile(undefined);
     setUploadDirty(false);
     onClose();
   };
@@ -50,17 +73,21 @@ export const CreateProductoModal = ({
         <Stack justify="center">
           <Group justify="center">
             <UploadFileCreate
-              file={file}
+              file={form.getValues().file}
               onSetFile={handleSetFile}
               onSetTmpURL={setTmpURL}
               dirty={uploadDirty}
               setDirty={setUploadDirty}
+              error={form.errors.file}
             />
             <CreateProductoForm form={form} />
           </Group>
           <Group w="100%" justify="center">
             <Button color="gray" onClick={onClose}>
               Cancelar
+            </Button>
+            <Button color="red" onClick={() => form.reset()}>
+              Reestablecer
             </Button>
             <Button type="submit" color="blue">
               Crear
