@@ -27,6 +27,7 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
           "Content-Type": "application/json",
         },
       });
+      setData((oldData) => oldData.filter((producto) => producto.id !== id));
       return true;
     } catch (error: AxiosError | unknown) {
       if (error instanceof AxiosError) {
@@ -53,21 +54,16 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
         },
       });
       const producto = await resData.data;
-      setData((oldData) => {
-        return [producto, ...oldData];
-      });
-      return true;
+      setData((oldData) => [producto, ...oldData]);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         setError(error.response?.data?.message || error.message || "Something went wrong");
       } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
       }
-
-      return false;
-    } finally {
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   }, []);
 
   const sendUpdate = useCallback(async function sendUpdate(

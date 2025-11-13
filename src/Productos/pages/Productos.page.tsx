@@ -60,21 +60,10 @@ export function ProductosPage() {
     sendUpdate(formData, id);
     updateProducto(producto.id, producto);
   };
-  const handleDelete = async (id: number) => {
-    const ok = await sendDelete(id);
-    if (ok) {
-      deleteProducto(id);
-      return;
-    }
-
-    notifications.show({
-      message: "No se pudo eliminar el producto",
-      position: "top-right",
-      title: "Error",
-      color: "red",
-    });
+  const handleDelete = (id: number) => {
+    sendDelete(id);
+    deleteProducto(id);
   };
-
   const handleCreate = async (producto: ProductoEntityCreate) => {
     const formData = getUpdateProductoFormData(producto);
     sendCreate(formData);
