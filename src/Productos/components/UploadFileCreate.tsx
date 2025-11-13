@@ -69,7 +69,11 @@ export const UploadFileCreate = ({
           accept={IMAGE_MIME_TYPE}
           h="15rem"
           maxFiles={1}
-          style={{ borderStyle: "dashed", borderColor: error ? "red" : undefined }}
+          multiple={false}
+          styles={{
+            root: { borderStyle: "dashed", borderColor: error ? theme.colors.red[6] : undefined },
+            inner: { height: "100%" },
+          }}
         >
           <Dropzone.Accept>
             <FontAwesomeIcon icon={faUpload} size="2x" />
