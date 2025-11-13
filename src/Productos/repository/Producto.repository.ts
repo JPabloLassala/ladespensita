@@ -2,7 +2,7 @@ import Cookies from "universal-cookie";
 import { ProductoEntity } from "../entities";
 import { useCallback } from "react";
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export function useProductoRepository(initialData: ProductoEntity[] = []) {
   const cookies = new Cookies();
@@ -17,7 +17,7 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
 
   const sendDelete = useCallback(async function sendDelete(id: number) {
     const apiHost = import.meta.env.VITE_API_HOST;
-
+    setError(undefined);
     setIsLoading(true);
 
     try {
@@ -27,19 +27,23 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
           "Content-Type": "application/json",
         },
       });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
+      return true;
+    } catch (error: AxiosError | unknown) {
+      if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
       }
+    } finally {
+      setIsLoading(false);
     }
 
-    setIsLoading(false);
+    return false;
   }, []);
 
-  const sendCreate = useCallback(async function sendCreate(
-    newProductoFormData: FormData,
-  ): Promise<void> {
+  const sendCreate = useCallback(async function sendCreate(newProductoFormData: FormData) {
     setIsLoading(true);
+    setError(undefined);
     try {
       const apiHost = import.meta.env.VITE_API_HOST;
       const resData = await axios.post<ProductoEntity>(`${apiHost}/producto`, newProductoFormData, {
@@ -48,19 +52,22 @@ export function useProductoRepository(initialData: ProductoEntity[] = []) {
           "Content-Type": "multipart/form-data",
         },
       });
-
       const producto = await resData.data;
-
       setData((oldData) => {
-        return [...oldData, producto];
+        return [producto, ...oldData];
       });
+      return true;
     } catch (error: unknown) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || error.message || "Something went wrong");
+      } else if (error instanceof Error) {
         setError(error.message || "Something went wrong");
       }
-    }
 
-    setIsLoading(false);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   const sendUpdate = useCallback(async function sendUpdate(

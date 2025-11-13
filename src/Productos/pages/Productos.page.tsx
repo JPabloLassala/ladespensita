@@ -9,6 +9,8 @@ import { EditProductoModal } from "../components/EditProductoModal";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 import { useAlquilerProductoRepository } from "@/Alquileres/repository";
 import { useDisclosure } from "@mantine/hooks";
+import { notifications, Notifications } from "@mantine/notifications";
+import { Button } from "@mantine/core";
 
 export function ProductosPage() {
   const [firstLoad, setFirstLoad] = useState(true);
@@ -24,16 +26,17 @@ export function ProductosPage() {
   } = useProductosContext();
   const { filter, setFilteredProductos, filteredProductos } = useFilterContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
-  const { data, sendList, sendCreate, sendUpdate, sendDelete } = useProductoRepository(productos);
+  const { data, sendList, sendCreate, sendUpdate, sendDelete, error, isLoading } =
+    useProductoRepository(productos);
 
   useEffect(() => {
     if (!data.length) return;
-    if (firstLoad) {
+    if (!isLoading && !error) {
       setProductos(data);
     }
 
     setFirstLoad(false);
-  }, [data, firstLoad]);
+  }, [data, firstLoad, isLoading, error]);
 
   useEffect(() => {
     sendList();
@@ -49,14 +52,39 @@ export function ProductosPage() {
     sendUpdate(formData, id);
     updateProducto(producto.id, producto);
   };
-  const handleDelete = (id: number) => {
-    sendDelete(id);
-    deleteProducto(id);
+  const handleDelete = async (id: number) => {
+    const ok = await sendDelete(id);
+    if (ok) {
+      deleteProducto(id);
+      return;
+    }
+
+    notifications.show({
+      message: "No se pudo eliminar el producto",
+      position: "top-right",
+      title: "Error",
+      color: "red",
+    });
   };
-  const handleCreate = (producto: ProductoEntityCreate) => {
+
+  const handleCreate = async (producto: ProductoEntityCreate) => {
     const formData = getUpdateProductoFormData(producto);
-    sendCreate(formData);
-    createProducto(producto);
+    const ok = await sendCreate(formData);
+    if (ok) {
+      notifications.show({
+        message: "Producto creado con éxito",
+        position: "top-right",
+        color: "green",
+      });
+      return;
+    }
+
+    notifications.show({
+      message: "No se pudo crear el producto",
+      position: "top-right",
+      title: "Error",
+      color: "red",
+    });
   };
 
   const handleEditProducto = (producto: ProductoEntity) => {
@@ -104,8 +132,21 @@ export function ProductosPage() {
 
   return (
     <ProductosPageContainer>
+      <Notifications />
       <FilterProducts />
       <ProductosListContainer>
+        <Button
+          onClick={() => {
+            notifications.show({
+              message: "asdasd",
+              position: "top-right",
+              title: "asdasd",
+              color: "red",
+            });
+          }}
+        >
+          asdasd
+        </Button>
         <CreateNewProducto onCreate={handleCreate} />
         {filteredProductos.map((p) => (
           <ProductoCard
