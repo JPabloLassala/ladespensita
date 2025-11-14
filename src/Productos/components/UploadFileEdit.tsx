@@ -4,6 +4,7 @@ import { Button, Image, Stack, Text, useMantineTheme } from "@mantine/core";
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import classes from "../Css/Dropzone.module.css";
 import { ProductoImage } from "../entities";
+import { ReactNode } from "react";
 
 export const UploadFileEdit = ({
   file,
@@ -13,6 +14,7 @@ export const UploadFileEdit = ({
   onClearFile,
   setDirty,
   image,
+  error,
 }: {
   file: File | undefined;
   dirty: boolean;
@@ -21,6 +23,7 @@ export const UploadFileEdit = ({
   onClearFile?: () => void;
   setDirty: (dirty: boolean) => void;
   image?: ProductoImage;
+  error?: ReactNode;
 }) => {
   const theme = useMantineTheme();
   const fallback = (
@@ -33,29 +36,20 @@ export const UploadFileEdit = ({
   );
 
   const preview = () => {
-    if (!file && !image) return fallback;
+    if (!file) return fallback;
     if (dirty) {
       if (!file) return fallback;
 
       return (
         <Image
           fit="contain"
-          h={200}
+          h="100%"
           src={URL.createObjectURL(file as File)}
           onLoad={() => URL.revokeObjectURL(file.name)}
         />
       );
     }
 
-    if (image)
-      return (
-        <Image
-          fit="contain"
-          h={200}
-          src={image?.url}
-          fallbackSrc="https://placehold.co/160x300?text=Sin%20Foto"
-        />
-      );
     return fallback;
   };
 
@@ -71,15 +65,23 @@ export const UploadFileEdit = ({
   };
 
   return (
-    <Stack justify="center" align="center">
-      <Stack justify="center">
+    <Stack component="div" justify="center" align="center">
+      <Stack component="div" justify="center" w="15rem">
         <Dropzone
           onDrop={handleDrop}
           radius="md"
           accept={IMAGE_MIME_TYPE}
           h="15rem"
           maxFiles={1}
-          className={classes.root}
+          multiple={false}
+          styles={{
+            root: {
+              borderStyle: "dashed",
+              borderColor: error ? theme.colors.red[6] : undefined,
+              padding: 0,
+            },
+            inner: { height: "100%" },
+          }}
         >
           <Dropzone.Accept>
             <FontAwesomeIcon icon={faUpload} size="2x" />

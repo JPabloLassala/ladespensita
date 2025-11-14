@@ -7,6 +7,7 @@ export function ProductosListContainer({ children }: { children: React.ReactNode
       cols={{ base: 1, sm: 2, lg: 5 }}
       spacing={{ base: 10, sm: "xl" }}
       verticalSpacing={{ base: "md", sm: "xl" }}
+      mb="lg"
     >
       {children}
     </SimpleGrid>

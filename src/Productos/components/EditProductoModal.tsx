@@ -18,7 +18,6 @@ export const EditProductoModal = ({
   onUpdate: (producto: ProductoEntityUpdate, id: number) => void;
 }) => {
   const [uploadDirty, setUploadDirty] = useState(false);
-  const [file, setFile] = useState<FileWithPath | undefined>(undefined);
   const [tmpURL, setTmpURL] = useState<string | undefined>(undefined);
   const form = useForm<ProductoEntityUpdate>({
     mode: "uncontrolled",
@@ -41,11 +40,35 @@ export const EditProductoModal = ({
       valorX6: producto.valorX6,
       valorX12: producto.valorX12,
     },
+    validate: {
+      nombre: (value) => (!value?.trim() ? "El nombre es obligatorio" : null),
+      totales: (value) => (!value || value < 1 ? "El Stock inicial debe ser mayor a 0" : null),
+      unidadesMetroLineal: (value) =>
+        !value || value < 1 ? "Las unidades por metro lineal deben ser mayor a 0" : null,
+      valorUnitarioGarantia: (value) =>
+        !value || value < 0 ? "El valor unitario de garantía debe ser mayor o igual a 0" : null,
+      valorUnitarioAlquiler: (value) =>
+        !value || value < 0 ? "El valor unitario de alquiler debe ser mayor o igual a 0" : null,
+      costoDiseno: (value) =>
+        value === undefined || value < 0 ? "El costo de diseño debe ser mayor o igual a 0" : null,
+      costoGrafica: (value) =>
+        value === undefined || value < 0 ? "El costo de gráfica debe ser mayor o igual a 0" : null,
+      costoProducto: (value) =>
+        value === undefined || value < 0 ? "El costo de producto debe ser mayor o igual a 0" : null,
+      valorX1: (value) =>
+        value === undefined || value < 0 ? "El valor por 1 debe ser mayor o igual a 0" : null,
+      valorX3: (value) =>
+        value === undefined || value < 0 ? "El valor por 3 debe ser mayor o igual a 0" : null,
+      valorX6: (value) =>
+        value === undefined || value < 0 ? "El valor por 6 debe ser mayor o igual a 0" : null,
+      valorX12: (value) =>
+        value === undefined || value < 0 ? "El valor por 12 debe ser mayor o igual a 0" : null,
+      file: (value) => (!value ? "La imagen es obligatoria" : null),
+    },
   });
 
   useEffect(() => {
     if (!opened) return;
-    console.log("asda");
     form.setValues({
       id: producto.id,
       nombre: producto.nombre,
@@ -69,15 +92,9 @@ export const EditProductoModal = ({
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
-
-    if (!newFile) {
-      setTmpURL(undefined);
-    }
-    setFile(newFile);
   };
 
   const handleClearFile = () => {
-    setFile(undefined);
     setTmpURL(undefined);
     form.setFieldValue("file", undefined);
     setUploadDirty(true);
@@ -86,15 +103,17 @@ export const EditProductoModal = ({
   const handleCancel = () => {
     form.reset();
     onClose();
-    setFile(undefined);
     setUploadDirty(false);
   };
 
   const handleSubmitForm = (values: ProductoEntityUpdate) => {
-    onUpdate({ ...values, tmpURL: tmpURL }, producto.id);
-
+    const valuesWithTotal: ProductoEntityUpdate = {
+      ...values,
+      costoTotal:
+        (values?.costoDiseno || 0) + (values.costoGrafica || 0) + (values.costoProducto || 0),
+    };
+    onUpdate({ ...valuesWithTotal, tmpURL: tmpURL }, producto.id);
     form.reset();
-    setFile(undefined);
     setUploadDirty(false);
     onClose();
   };
@@ -111,13 +130,14 @@ export const EditProductoModal = ({
         <Stack justify="center">
           <Group justify="center">
             <UploadFileEdit
-              file={file}
+              file={form.getValues().file}
               onSetFile={handleSetFile}
               image={producto.image}
               onClearFile={handleClearFile}
               onSetTmpURL={setTmpURL}
               dirty={uploadDirty}
               setDirty={setUploadDirty}
+              error={form.errors.file}
             />
             <EditProductoForm form={form} />
           </Group>
