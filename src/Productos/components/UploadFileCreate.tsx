@@ -14,16 +14,16 @@ export const UploadFileCreate = ({
   error,
 }: {
   file: File | undefined;
+  dirty: boolean;
   onSetFile: (file: FileWithPath | undefined) => void;
   onSetTmpURL: (url: string) => void;
   onResetFile?: () => void;
-  dirty: boolean;
   setDirty: (dirty: boolean) => void;
   error?: ReactNode;
 }) => {
   const theme = useMantineTheme();
   const fallback = (
-    <Stack justify="center" align="center" h="100%" miw="100%">
+    <Stack component="div" justify="center" align="center" h="100%" miw="100%">
       <FontAwesomeIcon icon={faUpload} size="2x" color={theme.colors.blue[4]} />
       <Text size="xl" inline>
         Subir Imagen
@@ -39,7 +39,7 @@ export const UploadFileCreate = ({
       return (
         <Image
           fit="contain"
-          h={200}
+          h="100%"
           src={URL.createObjectURL(file as File)}
           onLoad={() => URL.revokeObjectURL(file.name)}
         />
@@ -61,8 +61,8 @@ export const UploadFileCreate = ({
   };
 
   return (
-    <Stack justify="center" align="center">
-      <Stack justify="center" w="15rem">
+    <Stack component="div" justify="center" align="center">
+      <Stack component="div" justify="center" w="15rem">
         <Dropzone
           onDrop={handleDrop}
           radius="md"
@@ -71,7 +71,11 @@ export const UploadFileCreate = ({
           maxFiles={1}
           multiple={false}
           styles={{
-            root: { borderStyle: "dashed", borderColor: error ? theme.colors.red[6] : undefined },
+            root: {
+              borderStyle: "dashed",
+              borderColor: error ? theme.colors.red[6] : undefined,
+              padding: 0,
+            },
             inner: { height: "100%" },
           }}
         >
