@@ -6,7 +6,7 @@ export type ProductosContextType = {
   productos: ProductoEntity[];
   setProductos: React.Dispatch<React.SetStateAction<ProductoEntity[]>>;
   getUpdateProductoFormData: (producto: ProductoEntityUpdate | ProductoEntityCreate) => FormData;
-  updateProducto: (productoId: number, newProducto: ProductoEntityUpdate) => void;
+  updateProducto: (newProducto: ProductoEntityUpdate) => void;
   createProducto: (newProducto: ProductoEntityCreate) => void;
   deleteProducto: (id: number) => void;
 };
@@ -16,15 +16,28 @@ export const ProductosContext = createContext<ProductosContextType | null>(null)
 export function ProductosContextProvider({ children }: { children: React.ReactNode }) {
   const [productos, setProductos] = useState<ProductoEntity[]>([]);
 
-  const updateProducto = (productoId: number, productoNewData: ProductoEntityUpdate) => {
-    setProductos((oldProductos) => {
-      return oldProductos.map((producto) => {
-        if (producto.id === productoId) {
-          return { ...producto, ...productoNewData };
-        }
-        return producto;
-      });
-    });
+  const updateProducto = (productoNewData: ProductoEntityUpdate) => {
+    console.log("productonew", productoNewData);
+    const getNewProducto = () => {
+      const newProducto: ProductoEntity = { ...productoNewData } as ProductoEntity;
+      if (productoNewData.tmpURL) {
+        newProducto.image = {
+          createdAt: new Date(),
+          id: Math.floor(Math.random() * 10000),
+          isMain: true,
+          productoId: productoNewData.id!,
+          url: productoNewData.tmpURL,
+        };
+      }
+      return newProducto;
+    };
+    setProductos((oldProductos) =>
+      oldProductos.map((producto) => {
+        if (producto.id !== productoNewData.id) return producto;
+
+        return { ...producto, ...getNewProducto() };
+      }),
+    );
   };
 
   const getUpdateProductoFormData = (producto: ProductoEntityUpdate | ProductoEntityCreate) => {

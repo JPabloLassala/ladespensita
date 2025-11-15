@@ -10,7 +10,6 @@ import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../e
 import { useAlquilerProductoRepository } from "@/Alquileres/repository";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications, Notifications } from "@mantine/notifications";
-import { Button } from "@mantine/core";
 
 export function ProductosPage() {
   const [firstLoad, setFirstLoad] = useState(true);
@@ -58,7 +57,7 @@ export function ProductosPage() {
   const handleUpdate = (producto: ProductoEntityUpdate, id: number) => {
     const formData = getUpdateProductoFormData(producto);
     sendUpdate(formData, id);
-    updateProducto(producto.id, producto);
+    updateProducto(producto);
   };
   const handleDelete = (id: number) => {
     sendDelete(id);
