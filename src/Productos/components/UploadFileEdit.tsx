@@ -11,7 +11,6 @@ export const UploadFileEdit = ({
   dirty,
   onSetFile,
   onSetTmpURL,
-  onClearFile,
   setDirty,
   image,
   error,
@@ -20,7 +19,6 @@ export const UploadFileEdit = ({
   dirty: boolean;
   onSetFile: (file: FileWithPath | undefined) => void;
   onSetTmpURL: (url: string) => void;
-  onClearFile?: () => void;
   setDirty: (dirty: boolean) => void;
   image?: ProductoImage;
   error?: ReactNode;
@@ -36,7 +34,9 @@ export const UploadFileEdit = ({
   );
 
   const preview = () => {
-    if (!file) return fallback;
+    if (image && !dirty) {
+      return <Image fit="contain" h="100%" src={image.url} />;
+    }
     if (dirty) {
       if (!file) return fallback;
 
@@ -91,10 +91,10 @@ export const UploadFileEdit = ({
           </Dropzone.Reject>
           <Dropzone.Idle>{preview()}</Dropzone.Idle>
         </Dropzone>
-        {image && (
-          <Button onClick={onClearFile} color="red">
-            Borrar imagen
-          </Button>
+        {error && (
+          <Text size="xs" c="red" ta="left">
+            {error}
+          </Text>
         )}
         {dirty && <Button onClick={handleReset}>Volver a original</Button>}
       </Stack>

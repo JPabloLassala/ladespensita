@@ -41,7 +41,8 @@ export type ProductoEntityCreate = Omit<
   tmpURL?: string;
 };
 
-export type ProductoEntityUpdate = Partial<ProductoEntityCreate> & {
+export type ProductoEntityUpdate = Partial<Omit<ProductoEntity, "createdAt" | "updatedAt">> & {
   id: number;
   tmpURL?: string;
+  file?: FileWithPath;
 };

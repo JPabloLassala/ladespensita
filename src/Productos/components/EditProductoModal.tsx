@@ -32,6 +32,7 @@ export const EditProductoModal = ({
       costoDiseno: producto.costoDiseno,
       costoGrafica: producto.costoGrafica,
       costoProducto: producto.costoProducto,
+      costoTotal: producto.costoTotal,
       medidasProfundidad: producto.medidasProfundidad,
       valorUnitarioGarantia: producto.valorUnitarioGarantia,
       valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
@@ -39,6 +40,7 @@ export const EditProductoModal = ({
       valorX3: producto.valorX3,
       valorX6: producto.valorX6,
       valorX12: producto.valorX12,
+      image: producto.image,
     },
     validate: {
       nombre: (value) => (!value?.trim() ? "El nombre es obligatorio" : null),
@@ -63,7 +65,11 @@ export const EditProductoModal = ({
         value === undefined || value < 0 ? "El valor por 6 debe ser mayor o igual a 0" : null,
       valorX12: (value) =>
         value === undefined || value < 0 ? "El valor por 12 debe ser mayor o igual a 0" : null,
-      file: (value) => (!value ? "La imagen es obligatoria" : null),
+    },
+    onValuesChange: (values) => {
+      const costoTotal =
+        (values.costoDiseno || 0) + (values.costoGrafica || 0) + (values.costoProducto || 0);
+      form.setFieldValue("costoTotal", costoTotal);
     },
   });
 
@@ -80,6 +86,7 @@ export const EditProductoModal = ({
       costoDiseno: producto.costoDiseno,
       costoGrafica: producto.costoGrafica,
       costoProducto: producto.costoProducto,
+      costoTotal: producto.costoTotal,
       medidasProfundidad: producto.medidasProfundidad,
       valorUnitarioGarantia: producto.valorUnitarioGarantia,
       valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
@@ -87,17 +94,12 @@ export const EditProductoModal = ({
       valorX3: producto.valorX3,
       valorX6: producto.valorX6,
       valorX12: producto.valorX12,
+      image: producto.image,
     });
   }, [producto]);
 
   const handleSetFile = (newFile: FileWithPath | undefined): void => {
     form.setFieldValue("file", newFile);
-  };
-
-  const handleClearFile = () => {
-    setTmpURL(undefined);
-    form.setFieldValue("file", undefined);
-    setUploadDirty(true);
   };
 
   const handleCancel = () => {
@@ -133,7 +135,6 @@ export const EditProductoModal = ({
               file={form.getValues().file}
               onSetFile={handleSetFile}
               image={producto.image}
-              onClearFile={handleClearFile}
               onSetTmpURL={setTmpURL}
               dirty={uploadDirty}
               setDirty={setUploadDirty}
