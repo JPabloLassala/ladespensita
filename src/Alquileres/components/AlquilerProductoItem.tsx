@@ -51,9 +51,9 @@ export function AlquilerProductoItem({
       }}
     >
       <Group wrap="nowrap" justify="space-between" align="center">
-        <Group>
+        <Group wrap="nowrap">
           <Image
-            src="http://localhost:3000/images/21.jpg"
+            src={producto.image?.url}
             fallbackSrc={`https://placehold.co/75?text=Sin%20Foto`}
             w={75}
             alt={producto.nombre}
@@ -65,8 +65,13 @@ export function AlquilerProductoItem({
             </Text>
           </Stack>
         </Group>
-        <Group>
-          <Button size="compact-md" variant="outline" onClick={handleDecreaseQuantity} tabIndex={-1}>
+        <Group wrap="nowrap" align="center">
+          <Button
+            size="compact-md"
+            variant="outline"
+            onClick={handleDecreaseQuantity}
+            tabIndex={-1}
+          >
             -
           </Button>
           <NumberInput
@@ -77,7 +82,12 @@ export function AlquilerProductoItem({
             tabIndex={tabIndex}
             max={remaining !== "-" ? +remaining : undefined}
           />
-          <Button size="compact-md" variant="outline" onClick={handleIncreaseQuantity} tabIndex={-1}>
+          <Button
+            size="compact-md"
+            variant="outline"
+            onClick={handleIncreaseQuantity}
+            tabIndex={-1}
+          >
             +
           </Button>
         </Group>
