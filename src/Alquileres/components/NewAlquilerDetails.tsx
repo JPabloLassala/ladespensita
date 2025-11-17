@@ -6,7 +6,7 @@ import {
   AlquilerProductoUpdate,
 } from "@/Alquileres/entities";
 import { ProductoEntity, useProductosContext } from "@/Productos";
-import { Button, Group, Stack, Title } from "@mantine/core";
+import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -16,6 +16,8 @@ import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquilerProductoRepository } from "../repository";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export function NewAlquilerDetails({
   onCreateAlquiler,
@@ -28,6 +30,7 @@ export function NewAlquilerDetails({
   const { createEmptyAlquilerProducto, alquilerProductos, setAlquilerProductos } =
     useAlquilerProductoContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
+  const [nameFilter, setNameFilter] = useState("");
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity | undefined
   >(undefined);
@@ -93,6 +96,11 @@ export function NewAlquilerDetails({
     (p) => p.productoId === selectedProducto?.productoId,
   );
 
+  const filteredProductos = productos.filter((producto) => {
+    if (nameFilter === "") return true;
+    return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+  });
+
   return (
     <Stack component="div" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
@@ -104,8 +112,16 @@ export function NewAlquilerDetails({
         <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
           <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="md">
             <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
+            <TextInput
+              onChange={(event) => setNameFilter(event.currentTarget.value)}
+              value={nameFilter}
+              placeholder="Buscar producto..."
+              radius="md"
+              rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
+              leftSection={<FontAwesomeIcon icon={faSearch} />}
+            />
             <AlquilerProductosScrollContainer>
-              {productos.map((producto, index) => {
+              {filteredProductos.map((producto, index) => {
                 const apFormIdx = productosForm.values.productos.findIndex(
                   (p) => p.productoId === producto.id,
                 );

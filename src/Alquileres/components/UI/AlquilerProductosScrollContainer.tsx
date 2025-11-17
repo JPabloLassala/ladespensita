@@ -1,10 +1,9 @@
-import { Flex } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
 export function AlquilerProductosScrollContainer({ children }: { children: React.ReactNode }) {
   return (
-    <Flex
+    <Stack
       component="div"
-      direction="column"
       h="100%"
       gap="1rem"
       w="100%"
@@ -12,6 +11,6 @@ export function AlquilerProductosScrollContainer({ children }: { children: React
       style={{ overflowY: "auto" }}
     >
       {children}
-    </Flex>
+    </Stack>
   );
 }
