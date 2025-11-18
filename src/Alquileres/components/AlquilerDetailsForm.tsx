@@ -24,29 +24,29 @@ export function AlquilerDetailsForm({
   };
 
   return (
-    <Grid gutter="md">
-      <Grid.Col span="auto">
+    <Grid gutter="md" w="100%">
+      <Grid.Col span={6}>
         <TextInput
-          w="15rem"
+          w="100%"
           key={form.key("proyecto")}
           label="Proyecto"
           tabIndex={1}
           {...form.getInputProps("proyecto")}
         />
         <TextInput
-          w="15rem"
+          w="100%"
           key={form.key("productora")}
           label="Productora"
           tabIndex={2}
           {...form.getInputProps("productora")}
         />
       </Grid.Col>
-      <Grid.Col span="auto">
+      <Grid.Col span={6}>
         <DatePickerInput
           type="range"
           leftSection={<FontAwesomeIcon icon={faCalendar} />}
           leftSectionPointerEvents="none"
-          w="20rem"
+          w="100%"
           label="Fechas de inicio y fin"
           placeholder="Pick date"
           {...form.getInputProps("fechas")}

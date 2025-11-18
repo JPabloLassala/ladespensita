@@ -9,7 +9,7 @@ import {
   AlquilerUpdate,
 } from "@/Alquileres/entities";
 
-import { Button, Group, Stack, Title } from "@mantine/core";
+import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
@@ -20,6 +20,8 @@ import { useAlquilerProductoRepository } from "../repository";
 import { AlquilerStatus } from "./AlquilerStatus";
 import { APP_STATE, useAppStateContext } from "@/Common";
 import dayjs from "dayjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -36,6 +38,7 @@ export function AlquilerDetails({
   const { alquilerProductos, createEmptyAlquilerProducto, setAlquilerProductos } =
     useAlquilerProductoContext();
   const { sendGetStock, stockData, sendList, data } = useAlquilerProductoRepository();
+  const [nameFilter, setNameFilter] = useState("");
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
@@ -133,6 +136,11 @@ export function AlquilerDetails({
     (p) => p.productoId === selectedProducto?.productoId,
   );
 
+  const filteredProductos = productos.filter((producto) => {
+    if (nameFilter === "") return true;
+    return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+  });
+
   return (
     <Stack component="section" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
@@ -159,8 +167,17 @@ export function AlquilerDetails({
             gap="md"
           >
             <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
+            <TextInput
+              onChange={(event) => setNameFilter(event.currentTarget.value)}
+              value={nameFilter}
+              placeholder="Buscar producto..."
+              radius="md"
+              w="100%"
+              rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
+              leftSection={<FontAwesomeIcon icon={faSearch} />}
+            />
             <AlquilerProductosScrollContainer>
-              {productos.map((producto, index) => {
+              {filteredProductos.map((producto, index) => {
                 const apFormIdx = productosForm.values.productos.findIndex(
                   (p) => p.productoId === producto.id,
                 );
