@@ -77,12 +77,16 @@ export function AlquilerDetails({
     productos: Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>;
   }>({
     initialValues: {
-      productos: productos.map((p) => {
-        const existing = data.find((ap) => ap.productoId === p.id);
-        return existing || createEmptyAlquilerProducto(p);
-      }),
+      productos: data.reduce(
+        (acc, curr) => {
+          acc[curr.productoId] = curr;
+          return acc;
+        },
+        {} as Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>,
+      ),
     },
     onValuesChange: (values) => {
+      console.log("formValues", values);
       setAlquilerProductos((prev) => {
         return prev.map((ap) => {
           const updated = values.productos[ap.productoId];
@@ -94,6 +98,7 @@ export function AlquilerDetails({
 
   useEffect(() => {
     if (!datesTouched.inicio || !datesTouched.fin) return;
+    console.log("datestouched");
 
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -104,6 +109,7 @@ export function AlquilerDetails({
   }, [datesTouched]);
 
   useEffect(() => {
+    console.log("selectedalquiler");
     form.setValues({ ...selectedAlquiler });
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -115,6 +121,7 @@ export function AlquilerDetails({
   }, [selectedAlquiler.id]);
 
   useEffect(() => {
+    console.log("data");
     setAlquilerProductos(
       productos.map((p) => {
         const existing = data.find((ap) => ap.productoId === p.id);
@@ -122,10 +129,13 @@ export function AlquilerDetails({
       }),
     );
     productosForm.setValues({
-      productos: productos.map((p) => {
-        const existing = data.find((ap) => ap.productoId === p.id);
-        return existing || createEmptyAlquilerProducto(p);
-      }),
+      productos: data.reduce(
+        (acc, curr) => {
+          acc[curr.productoId] = curr;
+          return acc;
+        },
+        {} as Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>,
+      ),
     });
   }, [data]);
 
@@ -182,10 +192,14 @@ export function AlquilerDetails({
               {filteredProductos.map((producto, index) => {
                 const remaining =
                   stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+                const alquilerProducto = alquilerProductos.find(
+                  (ap) => ap.productoId === producto.id,
+                );
                 return (
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
+                    alquilerProducto={alquilerProducto}
                     isSelected={selectedProducto?.productoId === producto.id}
                     productosForm={productosForm}
                     onSelectProducto={() => handleSelectProducto(producto)}

@@ -3,6 +3,8 @@ import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/
 import { UseFormReturnType } from "node_modules/@mantine/form/lib/types";
 import { AlquilerProductoCreate } from "../entities";
 import { useForm } from "@mantine/form";
+import { useDebouncedValue } from "@mantine/hooks";
+import { useEffect, useState } from "react";
 
 type formType = UseFormReturnType<
   { productos: Record<number, AlquilerProductoCreate> },
@@ -13,6 +15,7 @@ type formType = UseFormReturnType<
 
 export function AlquilerProductoItem({
   producto,
+  alquilerProducto,
   onSelectProducto,
   isSelected,
   productosForm,
@@ -20,25 +23,35 @@ export function AlquilerProductoItem({
   tabIndex,
 }: {
   producto: ProductoEntity;
+  alquilerProducto: AlquilerProductoCreate | undefined;
   onSelectProducto: (productoId: number) => void;
   isSelected: boolean;
   productosForm: formType;
   remaining: number | string;
   tabIndex: number;
 }) {
-  const innerForm = useForm<{ precioFinal: number; cantidad: number; times: number }>({
-    initialValues: { precioFinal: 0, cantidad: 0, times: 1 },
+  const [precio, setPrecio] = useState(producto.valorX1);
+  const innerForm = useForm<{ precioFinal: number; cantidad: number }>({
+    initialValues: {
+      precioFinal: 0,
+      cantidad: 0,
+    },
     onValuesChange: (values) => {
       let precioFinal;
-      if (values.cantidad > 12) {
+      if (values.cantidad >= 12) {
         precioFinal = values.cantidad * producto.valorX12;
-      } else if (values.cantidad > 6) {
+        setPrecio(producto.valorX12);
+      } else if (values.cantidad >= 6) {
         precioFinal = values.cantidad * producto.valorX6;
-      } else if (values.cantidad > 3) {
+        setPrecio(producto.valorX6);
+      } else if (values.cantidad >= 3) {
         precioFinal = values.cantidad * producto.valorX3;
+        setPrecio(producto.valorX3);
       } else {
+        setPrecio(producto.valorX1);
         precioFinal = values.cantidad * producto.valorX1;
       }
+      // When cantidad is 0, changing quantity doesnt work. Once it's another value, it starts working
       productosForm.setFieldValue(`productos.${producto.id}`, {
         ...productosForm.values.productos[producto.id],
         productoId: producto.id,
@@ -67,6 +80,17 @@ export function AlquilerProductoItem({
     }
   }
 
+  useEffect(() => {
+    if (innerForm.isDirty()) return;
+    if (alquilerProducto?.cantidad === 0) return;
+    if (alquilerProducto) {
+      innerForm.setValues({
+        cantidad: alquilerProducto.cantidad,
+        precioFinal: alquilerProducto.precioFinal,
+      });
+    }
+  }, [alquilerProducto]);
+
   return (
     <Paper
       withBorder
@@ -91,12 +115,14 @@ export function AlquilerProductoItem({
           />
           <Stack>
             <Text fw={700}>{producto.nombre}</Text>
-            <Text size="sm" color="dimmed">
-              Disponible: {remaining}
-            </Text>
+            <Text size="sm">Disponible: {remaining}</Text>
           </Stack>
         </Group>
         <Group wrap="nowrap" align="center">
+          <Stack>
+            <Text size="sm">Precio final: {precio * innerForm.values.cantidad}</Text>
+            <Text size="sm">Precio unitario: ${precio}</Text>
+          </Stack>
           <Button
             size="compact-md"
             variant="outline"

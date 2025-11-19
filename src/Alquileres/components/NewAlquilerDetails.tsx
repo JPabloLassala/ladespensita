@@ -126,10 +126,14 @@ export function NewAlquilerDetails({
               {filteredProductos.map((producto, index) => {
                 const remaining =
                   stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+                const alquilerProducto = alquilerProductos.find(
+                  (ap) => ap.productoId === producto.id,
+                );
                 return (
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
+                    alquilerProducto={alquilerProducto}
                     isSelected={selectedProducto?.productoId === producto.id}
                     productosForm={productosForm}
                     onSelectProducto={() => handleSelectProducto(producto)}
