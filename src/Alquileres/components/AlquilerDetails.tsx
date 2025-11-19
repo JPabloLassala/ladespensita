@@ -73,19 +73,24 @@ export function AlquilerDetails({
       updateAlquiler(selectedAlquiler.id, values);
     },
   });
-  const productosForm = useForm<{ productos: (AlquilerProductoUpdate | AlquilerProductoCreate)[] }>(
-    {
-      initialValues: {
-        productos: productos.map((p) => {
-          const existing = data.find((ap) => ap.productoId === p.id);
-          return existing || createEmptyAlquilerProducto(p);
-        }),
-      },
-      onValuesChange: (values) => {
-        setAlquilerProductos(values.productos);
-      },
+  const productosForm = useForm<{
+    productos: Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>;
+  }>({
+    initialValues: {
+      productos: productos.map((p) => {
+        const existing = data.find((ap) => ap.productoId === p.id);
+        return existing || createEmptyAlquilerProducto(p);
+      }),
     },
-  );
+    onValuesChange: (values) => {
+      setAlquilerProductos((prev) => {
+        return prev.map((ap) => {
+          const updated = values.productos[ap.productoId];
+          return updated ? { ...ap, ...updated } : ap;
+        });
+      });
+    },
+  });
 
   useEffect(() => {
     if (!datesTouched.inicio || !datesTouched.fin) return;
@@ -132,10 +137,6 @@ export function AlquilerDetails({
     setSelectedProducto(alquilerProducto);
   }
 
-  const selectedProductoIdx = productosForm.values.productos.findIndex(
-    (p) => p.productoId === selectedProducto?.productoId,
-  );
-
   const filteredProductos = productos.filter((producto) => {
     if (nameFilter === "") return true;
     return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
@@ -144,7 +145,6 @@ export function AlquilerDetails({
   return (
     <Stack component="section" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
-      <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
       <form
         id="alquiler-details-form"
         style={{ height: "100%", overflowY: "auto" }}
@@ -166,6 +166,8 @@ export function AlquilerDetails({
             align="center"
             gap="md"
           >
+            <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
+
             <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
             <TextInput
               onChange={(event) => setNameFilter(event.currentTarget.value)}
@@ -178,9 +180,6 @@ export function AlquilerDetails({
             />
             <AlquilerProductosScrollContainer>
               {filteredProductos.map((producto, index) => {
-                const apFormIdx = productosForm.values.productos.findIndex(
-                  (p) => p.productoId === producto.id,
-                );
                 const remaining =
                   stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
                 return (
@@ -188,7 +187,7 @@ export function AlquilerDetails({
                     key={producto.id}
                     producto={producto}
                     isSelected={selectedProducto?.productoId === producto.id}
-                    inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
+                    productosForm={productosForm}
                     onSelectProducto={() => handleSelectProducto(producto)}
                     remaining={remaining}
                     tabIndex={index + 3}
@@ -211,7 +210,7 @@ export function AlquilerDetails({
             </Group>
           </Stack>
           {selectedProducto && (
-            <AlquilerProductoDetails productoIdx={selectedProductoIdx} form={productosForm} />
+            <AlquilerProductoDetails form={productosForm} selected={selectedProducto} />
           )}
         </Group>
       </form>

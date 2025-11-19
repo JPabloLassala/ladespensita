@@ -71,14 +71,18 @@ export function NewAlquilerDetails({
       setNewAlquiler(newAlquilerValues);
     },
   });
-  const productosForm = useForm<{ productos: (AlquilerProductoUpdate | AlquilerProductoCreate)[] }>(
-    {
-      initialValues: { productos: productos.map((p) => createEmptyAlquilerProducto(p)) },
-      onValuesChange: (values) => {
-        setAlquilerProductos(values.productos);
-      },
+  const productosForm = useForm<{ productos: Record<number, AlquilerProductoCreate> }>({
+    initialValues: { productos: {} },
+    onValuesChange: (values) => {
+      setAlquilerProductos((prev) => {
+        return prev.map((ap) => {
+          const updated = values.productos[ap.productoId];
+          return updated ? { ...ap, ...updated } : ap;
+        });
+      });
     },
-  );
+  });
+
   const handleCreateAlquiler = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAlquiler) return;
@@ -92,9 +96,7 @@ export function NewAlquilerDetails({
     setSelectedProducto(alquilerProducto);
   }
 
-  const selectedProductoIdx = productosForm.values.productos.findIndex(
-    (p) => p.productoId === selectedProducto?.productoId,
-  );
+  console.log("asdasd", alquilerProductos);
 
   const filteredProductos = productos.filter((producto) => {
     if (nameFilter === "") return true;
@@ -122,9 +124,6 @@ export function NewAlquilerDetails({
             />
             <AlquilerProductosScrollContainer>
               {filteredProductos.map((producto, index) => {
-                const apFormIdx = productosForm.values.productos.findIndex(
-                  (p) => p.productoId === producto.id,
-                );
                 const remaining =
                   stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
                 return (
@@ -132,7 +131,7 @@ export function NewAlquilerDetails({
                     key={producto.id}
                     producto={producto}
                     isSelected={selectedProducto?.productoId === producto.id}
-                    inputProps={productosForm.getInputProps(`productos.${apFormIdx}.cantidad`)}
+                    productosForm={productosForm}
                     onSelectProducto={() => handleSelectProducto(producto)}
                     remaining={remaining}
                     tabIndex={index + 3}
@@ -150,7 +149,7 @@ export function NewAlquilerDetails({
             </Group>
           </Stack>
           {selectedProducto && (
-            <AlquilerProductoDetails productoIdx={selectedProductoIdx} form={productosForm} />
+            <AlquilerProductoDetails selected={selectedProducto} form={productosForm} />
           )}
         </Group>
       </form>

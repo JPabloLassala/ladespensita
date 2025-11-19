@@ -1,38 +1,69 @@
 import { ProductoEntity } from "@/Productos";
 import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
-import { GetInputPropsReturnType } from "node_modules/@mantine/form/lib/types";
+import { UseFormReturnType } from "node_modules/@mantine/form/lib/types";
+import { AlquilerProductoCreate } from "../entities";
+import { useForm } from "@mantine/form";
+
+type formType = UseFormReturnType<
+  { productos: Record<number, AlquilerProductoCreate> },
+  (values: { productos: Record<number, AlquilerProductoCreate> }) => {
+    productos: Record<number, AlquilerProductoCreate>;
+  }
+>;
 
 export function AlquilerProductoItem({
   producto,
   onSelectProducto,
   isSelected,
-  inputProps,
+  productosForm,
   remaining,
   tabIndex,
 }: {
   producto: ProductoEntity;
   onSelectProducto: (productoId: number) => void;
   isSelected: boolean;
-  inputProps: GetInputPropsReturnType;
+  productosForm: formType;
   remaining: number | string;
   tabIndex: number;
 }) {
+  const innerForm = useForm<{ precioFinal: number; cantidad: number; times: number }>({
+    initialValues: { precioFinal: 0, cantidad: 0, times: 1 },
+    onValuesChange: (values) => {
+      let precioFinal;
+      if (values.cantidad > 12) {
+        precioFinal = values.cantidad * producto.valorX12;
+      } else if (values.cantidad > 6) {
+        precioFinal = values.cantidad * producto.valorX6;
+      } else if (values.cantidad > 3) {
+        precioFinal = values.cantidad * producto.valorX3;
+      } else {
+        precioFinal = values.cantidad * producto.valorX1;
+      }
+      productosForm.setFieldValue(`productos.${producto.id}`, {
+        ...productosForm.values.productos[producto.id],
+        productoId: producto.id,
+        cantidad: values.cantidad,
+        precioFinal,
+      });
+    },
+  });
+
   function handleIncreaseQuantity() {
-    const quantity = (inputProps.value as number) || 0;
+    const quantity = innerForm.values.cantidad;
 
     if (remaining !== "-" && quantity === +remaining) {
-      inputProps.onChange(remaining);
+      innerForm.setFieldValue("cantidad", quantity);
       return;
     }
 
-    inputProps.onChange(quantity + 1);
+    innerForm.setFieldValue("cantidad", quantity + 1);
   }
 
   function handleDecreaseQuantity() {
-    const newQuantity = (inputProps.value as number) || 0;
+    const quantity = innerForm.values.cantidad;
 
-    if (newQuantity >= 0) {
-      inputProps.onChange(newQuantity - 1 > 0 ? newQuantity - 1 : 0);
+    if (quantity > 0) {
+      innerForm.setFieldValue("cantidad", quantity - 1);
     }
   }
 
@@ -78,7 +109,7 @@ export function AlquilerProductoItem({
             hideControls
             w="4rem"
             fw={700}
-            {...inputProps}
+            {...innerForm.getInputProps("cantidad")}
             tabIndex={tabIndex}
             max={remaining !== "-" ? +remaining : undefined}
           />
