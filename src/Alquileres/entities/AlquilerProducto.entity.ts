@@ -10,6 +10,7 @@ export type AlquilerProductoEntity = {
   costoProducto: number;
   costoTotal: number;
   cantidad: number;
+  precioFinal: number;
   valorUnitarioGarantia: number;
   valorTotalGarantia: number;
   valorUnitarioAlquiler: number;

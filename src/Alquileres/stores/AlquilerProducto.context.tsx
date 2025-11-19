@@ -45,6 +45,7 @@ export function AlquilerProductoContextProvider({ children }: { children: ReactN
       costoGrafica: producto.costoGrafica,
       costoProducto: producto.costoProducto,
       costoTotal: producto.costoTotal,
+      precioFinal: 0,
       valorUnitarioGarantia: producto.valorUnitarioGarantia,
       valorUnitarioAlquiler: producto.valorUnitarioAlquiler,
       valorX1: producto.valorX1,
