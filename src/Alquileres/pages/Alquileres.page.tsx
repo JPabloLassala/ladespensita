@@ -41,9 +41,12 @@ export function AlquileresPage() {
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
   }
   function handleStartCreateNewAlquiler() {
+    if (appState === APP_STATE.creating) return;
+
     setAppState(APP_STATE.creating);
     setNewAlquiler(createEmptyAlquiler());
     setSelectedAlquiler(undefined);
+    setAlquilerProductos([]);
   }
   function handleCancelCreateNewAlquiler() {
     setAppState(APP_STATE.loaded);
