@@ -26,7 +26,7 @@ export const AlquilerStatus = ({
   };
 
   return (
-    <Stack>
+    <Stack w="100%">
       <Group component="div">
         <Text>Status</Text>
         <Badge

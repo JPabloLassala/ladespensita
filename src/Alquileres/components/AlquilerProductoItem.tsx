@@ -82,11 +82,10 @@ export function AlquilerProductoItem({
 
   useEffect(() => {
     if (innerForm.isDirty()) return;
-    if (alquilerProducto?.cantidad === 0) return;
-    if (alquilerProducto) {
+    if (alquilerProducto?.cantidad || 0 > 0) {
       innerForm.setValues({
-        cantidad: alquilerProducto.cantidad,
-        precioFinal: alquilerProducto.precioFinal,
+        cantidad: alquilerProducto?.cantidad,
+        precioFinal: alquilerProducto?.precioFinal,
       });
     }
   }, [alquilerProducto]);
@@ -101,7 +100,7 @@ export function AlquilerProductoItem({
       onClick={() => onSelectProducto(producto.id)}
       style={{
         cursor: "pointer",
-        backgroundColor: isSelected ? "#e0f7fa" : "white",
+        backgroundColor: isSelected ? "var(--mantine-primary-color-light)" : "var(--mantine-white)",
         transition: "background-color 0.3s",
       }}
     >
