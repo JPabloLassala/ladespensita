@@ -1,4 +1,4 @@
-export * from "./AlquilerListEntry";
+export * from "./AlquilerItem";
 export * from "./AlquilerNoneSelected";
 export * from "./AlquilerProductosScrollContainer";
-export * from "./NewAlquilerListEntry";
+export * from "./NewAlquilerItem";
