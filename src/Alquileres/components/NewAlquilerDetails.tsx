@@ -96,15 +96,13 @@ export function NewAlquilerDetails({
     setSelectedProducto(alquilerProducto);
   }
 
-  console.log("asdasd", alquilerProductos);
-
   const filteredProductos = productos.filter((producto) => {
     if (nameFilter === "") return true;
     return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
   });
 
   return (
-    <Stack component="div" h="100%" mih="100%" id="alquiler-details-outer-flex">
+    <Stack component="div" h="100%" mih="100%" w="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         id="alquiler-details-form"

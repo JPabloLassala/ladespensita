@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { AlquilerSummaryItem, AlquilerSummaryItemCreate } from "../entities";
 import { useAlquilerContext } from "../stores";
 import { Button, Group, Stack } from "@mantine/core";
-import { AlquilerListEntry, NewAlquilerListEntry } from "./UI";
+import { AlquilerItem, NewAlquilerItem } from "./UI";
 
 export function AlquilerList({
   onSelectAlquiler,
@@ -26,7 +26,7 @@ export function AlquilerList({
   const summary = useMemo(
     () =>
       getSummary().map((alquiler) => (
-        <AlquilerListEntry
+        <AlquilerItem
           key={alquiler.id}
           alquiler={alquiler}
           isSelected={selectedAlquiler?.id === alquiler.id}
@@ -69,7 +69,7 @@ export function AlquilerList({
       <div style={{ height: "100%", overflowY: "auto" }}>
         <Stack gap="0.25rem">
           {newAlquilersummary && newAlquiler && (
-            <NewAlquilerListEntry onDeleteAlquiler={onCancelCreateNewAlquiler} />
+            <NewAlquilerItem onDeleteAlquiler={onCancelCreateNewAlquiler} />
           )}
           {summary}
         </Stack>

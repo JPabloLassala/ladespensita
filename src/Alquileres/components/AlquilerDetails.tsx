@@ -86,7 +86,6 @@ export function AlquilerDetails({
       ),
     },
     onValuesChange: (values) => {
-      console.log("formValues", values);
       setAlquilerProductos((prev) => {
         return prev.map((ap) => {
           const updated = values.productos[ap.productoId];
@@ -98,7 +97,6 @@ export function AlquilerDetails({
 
   useEffect(() => {
     if (!datesTouched.inicio || !datesTouched.fin) return;
-    console.log("datestouched");
 
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -109,7 +107,6 @@ export function AlquilerDetails({
   }, [datesTouched]);
 
   useEffect(() => {
-    console.log("selectedalquiler");
     form.setValues({ ...selectedAlquiler });
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -121,7 +118,6 @@ export function AlquilerDetails({
   }, [selectedAlquiler.id]);
 
   useEffect(() => {
-    console.log("data");
     setAlquilerProductos(
       productos.map((p) => {
         const existing = data.find((ap) => ap.productoId === p.id);
@@ -153,7 +149,7 @@ export function AlquilerDetails({
   });
 
   return (
-    <Stack component="section" h="100%" mih="100%" id="alquiler-details-outer-flex">
+    <Stack component="section" w="100%" h="100%" mih="100%" id="alquiler-details-outer-flex">
       <Title order={2}>Detalle</Title>
       <form
         id="alquiler-details-form"
@@ -177,7 +173,6 @@ export function AlquilerDetails({
             gap="md"
           >
             <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
-
             <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
             <TextInput
               onChange={(event) => setNameFilter(event.currentTarget.value)}
