@@ -5,12 +5,20 @@ import {
   AlquilerSummaryItem,
   AlquilerSummaryItemCreate,
 } from "@/Alquileres/entities";
-import { Badge, Card, Group, Stack, Text } from "@mantine/core";
+import {
+  Badge,
+  Card,
+  Group,
+  Stack,
+  Text,
+  useComputedColorScheme,
+  useMantineTheme,
+} from "@mantine/core";
 import { DeleteAlquilerModal } from "@/Alquileres/pages";
 import { useState } from "react";
 import dayjs from "dayjs";
 
-export function AlquilerListEntry({
+export function AlquilerItem({
   alquiler,
   isSelected,
   onSelectAlquiler,
@@ -21,6 +29,8 @@ export function AlquilerListEntry({
   onSelectAlquiler: () => void;
   onDeleteAlquiler: (a: AlquilerSummaryItem) => void;
 }) {
+  const computedColorScheme = useComputedColorScheme();
+  const theme = useMantineTheme();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dateRange = `${dayjs(alquiler.fechaInicio).format("DD/MM/YYYY")} - ${dayjs(alquiler.fechaFin).format("DD/MM/YYYY")}`;
   const getBadgeColor = () => {
@@ -49,7 +59,7 @@ export function AlquilerListEntry({
       onClick={onSelectAlquiler}
       style={{
         cursor: "pointer",
-        backgroundColor: isSelected ? "#e0f7fa" : "white",
+        backgroundColor: isSelected ? "var(--mantine-primary-color-light)" : undefined,
         transition: "background-color 0.3s",
       }}
     >

@@ -6,7 +6,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { useAlquilerContext } from "@/Alquileres/stores";
 
-export function NewAlquilerListEntry({ onDeleteAlquiler }: { onDeleteAlquiler: () => void }) {
+export function NewAlquilerItem({ onDeleteAlquiler }: { onDeleteAlquiler: () => void }) {
   const { newAlquiler } = useAlquilerContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dateInicio = newAlquiler?.fechaInicio
@@ -16,13 +16,17 @@ export function NewAlquilerListEntry({ onDeleteAlquiler }: { onDeleteAlquiler: (
   const dateRange = `${dateInicio} - ${dateFin}`;
 
   return (
-    <Card shadow="xs" padding="lg" radius="md" mx="0.5rem" withBorder>
+    <Card
+      shadow="xs"
+      padding="lg"
+      radius="md"
+      mx="0.5rem"
+      withBorder
+      style={{ backgroundColor: "var(--mantine-primary-color-light)" }}
+    >
       <Card.Section withBorder py="1rem">
         <Group justify="space-between" px="1rem" wrap="nowrap">
-          <Group wrap="nowrap">
-            <FontAwesomeIcon icon={faChevronRight} />
-            <Text fw={700}>{newAlquiler!.proyecto}</Text>
-          </Group>
+          <Text fw={700}>{newAlquiler!.proyecto}</Text>
           <DeleteAlquilerModal
             onAccept={onDeleteAlquiler}
             isModalOpen={isModalOpen}
