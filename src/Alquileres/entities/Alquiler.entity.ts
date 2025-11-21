@@ -29,7 +29,9 @@ export type AlquilerCreate = Omit<
   fechaFin: Date | null;
 };
 
-export type AlquilerUpdate = Omit<Partial<AlquilerEntity>, "updatedAt" | "productos">;
+export type AlquilerUpdate = Omit<Partial<AlquilerEntity>, "updatedAt" | "productos"> & {
+  id: number;
+};
 
 export type AlquilerSummaryItem = {
   id: number;

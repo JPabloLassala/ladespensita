@@ -8,9 +8,8 @@ import {
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
+import { useAlquilerContext } from "../stores";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
@@ -26,8 +25,6 @@ export function NewAlquilerDetails({
 }) {
   const { productos } = useProductosContext();
   const { setNewAlquiler } = useAlquilerContext();
-  const { createEmptyAlquilerProducto, alquilerProductos, setAlquilerProductos } =
-    useAlquilerProductoContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
   const [nameFilter, setNameFilter] = useState("");
   const [selectedProducto, setSelectedProducto] = useState<
@@ -37,12 +34,6 @@ export function NewAlquilerDetails({
     inicio: false,
     fin: false,
   });
-
-  useEffect(() => {
-    if (productos.length > 0) {
-      setAlquilerProductos(productos.map((producto) => createEmptyAlquilerProducto(producto)));
-    }
-  }, [productos]);
 
   const form = useForm<AlquilerCreate & { fechas: (Date | null)[] }>({
     initialValues: {
@@ -55,7 +46,6 @@ export function NewAlquilerDetails({
       fechaPresupuesto: new Date(),
     },
     onValuesChange: (values) => {
-      console.log("values", values);
       setDatesTouched({
         inicio: values.fechas[0] !== null,
         fin: values.fechas[1] !== null,
@@ -87,7 +77,7 @@ export function NewAlquilerDetails({
 
   function handleSelectProducto(producto: ProductoEntity) {
     if (selectedProducto?.productoId === producto.id) return;
-    const alquilerProducto = alquilerProductos?.find((p) => p.productoId === producto.id);
+    const alquilerProducto = productosForm.values.productos[producto.id];
     setSelectedProducto(alquilerProducto);
   }
 
@@ -98,7 +88,6 @@ export function NewAlquilerDetails({
     })
     .map((producto, index) => {
       const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
-      createEmptyAlquilerProducto(producto);
       return (
         <AlquilerProductoItem
           key={producto.id}

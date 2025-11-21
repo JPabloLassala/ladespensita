@@ -16,13 +16,14 @@ import {
   AlquilerCreate,
   AlquilerEntity,
   AlquilerProductoCreate,
+  AlquilerProductoUpdate,
   AlquilerSummaryItem,
+  AlquilerUpdate,
 } from "../entities";
 
 export function AlquileresPage() {
   const {
     getSummary,
-    newAlquiler,
     alquileres,
     setAlquileres,
     selectedAlquiler,
@@ -69,13 +70,16 @@ export function AlquileresPage() {
     setSelectedAlquiler(alquilerWithId);
     setNewAlquiler(undefined);
   }
-  async function handleUpdateAlquiler() {
+  async function handleUpdateAlquiler(
+    a: AlquilerUpdate,
+    ap: (AlquilerProductoCreate | AlquilerProductoUpdate)[],
+  ) {
     if (!selectedAlquiler) return;
     setAppState(APP_STATE.loading);
-    await sendUpdate(selectedAlquiler);
-    await sendUpdateAlquilerProducto(alquilerProductos, selectedAlquiler.id);
+    await sendUpdate(a);
+    await sendUpdateAlquilerProducto(ap, a.id!);
     setAppState(APP_STATE.loaded);
-    updateAlquiler(selectedAlquiler.id, selectedAlquiler);
+    updateAlquiler(a.id!, a);
   }
   async function handleDeleteAlquiler(alquiler: AlquilerSummaryItem) {
     setAppState(APP_STATE.loading);

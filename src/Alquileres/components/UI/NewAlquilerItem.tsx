@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Card, Group, Stack, Text } from "@mantine/core";
 import { DeleteAlquilerModal } from "@/Alquileres/pages";
 import { useState } from "react";
