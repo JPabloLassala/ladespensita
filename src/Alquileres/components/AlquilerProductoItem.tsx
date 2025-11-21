@@ -2,9 +2,8 @@ import { ProductoEntity } from "@/Productos";
 import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
 import { UseFormReturnType } from "node_modules/@mantine/form/lib/types";
 import { AlquilerProductoCreate } from "../entities";
-import { useForm } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
 import { useEffect, useState } from "react";
+import { useAlquilerProductoContext } from "../stores";
 
 type formType = UseFormReturnType<
   { productos: Record<number, AlquilerProductoCreate> },
@@ -15,80 +14,78 @@ type formType = UseFormReturnType<
 
 export function AlquilerProductoItem({
   producto,
-  alquilerProducto,
   onSelectProducto,
   isSelected,
-  productosForm,
+  form,
   remaining,
   tabIndex,
 }: {
   producto: ProductoEntity;
-  alquilerProducto: AlquilerProductoCreate | undefined;
   onSelectProducto: (productoId: number) => void;
   isSelected: boolean;
-  productosForm: formType;
+  form: formType;
   remaining: number | string;
   tabIndex: number;
 }) {
   const [precio, setPrecio] = useState(producto.valorX1);
-  const innerForm = useForm<{ precioFinal: number; cantidad: number }>({
-    initialValues: {
-      precioFinal: 0,
-      cantidad: 0,
-    },
-    onValuesChange: (values) => {
-      let precioFinal;
-      if (values.cantidad >= 12) {
-        precioFinal = values.cantidad * producto.valorX12;
-        setPrecio(producto.valorX12);
-      } else if (values.cantidad >= 6) {
-        precioFinal = values.cantidad * producto.valorX6;
-        setPrecio(producto.valorX6);
-      } else if (values.cantidad >= 3) {
-        precioFinal = values.cantidad * producto.valorX3;
-        setPrecio(producto.valorX3);
-      } else {
-        setPrecio(producto.valorX1);
-        precioFinal = values.cantidad * producto.valorX1;
-      }
-      // When cantidad is 0, changing quantity doesnt work. Once it's another value, it starts working
-      productosForm.setFieldValue(`productos.${producto.id}`, {
-        ...productosForm.values.productos[producto.id],
-        productoId: producto.id,
-        cantidad: values.cantidad,
-        precioFinal,
-      });
-    },
-  });
+  const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
+  const alquilerProducto =
+    form.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
+
+  const getUnitPrice = (quantity: number) => {
+    if (quantity >= 12) return producto.valorX12;
+    if (quantity >= 6) return producto.valorX6;
+    if (quantity >= 3) return producto.valorX3;
+    return producto.valorX1;
+  };
+
+  const updateAlquilerProducto = (partialValues: Partial<AlquilerProductoCreate>) => {
+    const current = form.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
+    form.setFieldValue(
+      `productos.${producto.id}`,
+      { ...current, ...partialValues },
+      { forceUpdate: true },
+    );
+  };
 
   function handleIncreaseQuantity() {
-    const quantity = innerForm.values.cantidad;
+    const cantidad = alquilerProducto.cantidad;
+    if (remaining !== "-" && cantidad === +remaining) return;
 
-    if (remaining !== "-" && quantity === +remaining) {
-      innerForm.setFieldValue("cantidad", quantity);
-      return;
-    }
+    const newQuantity = cantidad + 1;
+    const unitPrice = getUnitPrice(newQuantity);
+    setPrecio(unitPrice);
 
-    innerForm.setFieldValue("cantidad", quantity + 1);
+    updateAlquilerProducto({
+      cantidad: newQuantity,
+      precioFinal: newQuantity * unitPrice,
+    });
   }
 
   function handleDecreaseQuantity() {
-    const quantity = innerForm.values.cantidad;
+    const quantity = alquilerProducto.cantidad;
 
     if (quantity > 0) {
-      innerForm.setFieldValue("cantidad", quantity - 1);
+      const newQuantity = quantity - 1;
+      const unitPrice = getUnitPrice(newQuantity);
+      setPrecio(unitPrice);
+
+      updateAlquilerProducto({
+        cantidad: newQuantity,
+        precioFinal: newQuantity * unitPrice,
+      });
     }
   }
 
   useEffect(() => {
-    if (innerForm.isDirty()) return;
-    if (alquilerProducto?.cantidad || 0 > 0) {
-      innerForm.setValues({
-        cantidad: alquilerProducto?.cantidad,
-        precioFinal: alquilerProducto?.precioFinal,
-      });
+    if (!form.values.productos[producto.id]) {
+      updateAlquilerProducto(alquilerProducto);
     }
-  }, [alquilerProducto]);
+  }, [producto.id]);
+
+  useEffect(() => {
+    setPrecio(getUnitPrice(alquilerProducto.cantidad));
+  }, [alquilerProducto.cantidad]);
 
   return (
     <Paper
@@ -119,7 +116,7 @@ export function AlquilerProductoItem({
         </Group>
         <Group wrap="nowrap" align="center">
           <Stack>
-            <Text size="sm">Precio final: {precio * innerForm.values.cantidad}</Text>
+            <Text size="sm">Precio final: {precio * alquilerProducto.cantidad}</Text>
             <Text size="sm">Precio unitario: ${precio}</Text>
           </Stack>
           <Button
@@ -134,7 +131,7 @@ export function AlquilerProductoItem({
             hideControls
             w="4rem"
             fw={700}
-            {...innerForm.getInputProps("cantidad")}
+            {...form.getInputProps(`productos.${producto.id}.cantidad`)}
             tabIndex={tabIndex}
             max={remaining !== "-" ? +remaining : undefined}
           />

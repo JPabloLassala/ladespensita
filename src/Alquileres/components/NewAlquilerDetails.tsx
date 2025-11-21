@@ -22,11 +22,10 @@ import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 export function NewAlquilerDetails({
   onCreateAlquiler,
 }: {
-  onCreateAlquiler: (a: AlquilerCreate) => void;
+  onCreateAlquiler: (a: AlquilerCreate, p: AlquilerProductoCreate[]) => void;
 }) {
   const { productos } = useProductosContext();
-  const { newAlquiler, setNewAlquiler } = useAlquilerContext();
-  const { selectedAlquiler } = useAlquilerContext();
+  const { setNewAlquiler } = useAlquilerContext();
   const { createEmptyAlquilerProducto, alquilerProductos, setAlquilerProductos } =
     useAlquilerProductoContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
@@ -40,54 +39,50 @@ export function NewAlquilerDetails({
   });
 
   useEffect(() => {
-    setAlquilerProductos(productos.map((producto) => createEmptyAlquilerProducto(producto)));
+    if (productos.length > 0) {
+      setAlquilerProductos(productos.map((producto) => createEmptyAlquilerProducto(producto)));
+    }
   }, [productos]);
+
+  const form = useForm<AlquilerCreate & { fechas: (Date | null)[] }>({
+    initialValues: {
+      productora: "Nueva productora",
+      proyecto: "Nuevo proyecto",
+      status: ALQUILER_STATUS.PENDING,
+      fechaInicio: null,
+      fechaFin: null,
+      fechas: [null, null],
+      fechaPresupuesto: new Date(),
+    },
+    onValuesChange: (values) => {
+      console.log("values", values);
+      setDatesTouched({
+        inicio: values.fechas[0] !== null,
+        fin: values.fechas[1] !== null,
+      });
+
+      setNewAlquiler(values);
+    },
+  });
 
   useEffect(() => {
     if (!datesTouched.inicio || !datesTouched.fin) return;
 
-    sendGetStock(newAlquiler?.fechaInicio!, newAlquiler?.fechaFin!);
+    sendGetStock(form.values.fechaInicio!, form.values.fechaFin!);
     setDatesTouched({ inicio: false, fin: false });
   }, [datesTouched]);
 
-  const form = useForm<
-    Omit<AlquilerCreate, "fechaInicio" | "fechaFin"> & { fechas: (Date | null)[] }
-  >({
-    initialValues: {
-      productora: newAlquiler?.productora!,
-      proyecto: newAlquiler?.proyecto!,
-      status: ALQUILER_STATUS.PENDING,
-      fechas: [null, null],
-      fechaPresupuesto: newAlquiler?.fechaPresupuesto || new Date(),
-    },
-    onValuesChange: (values) => {
-      const newAlquilerValues = {
-        ...selectedAlquiler,
-        ...values,
-        fechaInicio: values.fechas[0] ? dayjs(values.fechas[0]).startOf("day").toDate() : null,
-        fechaFin: values.fechas[1] ? dayjs(values.fechas[1]).startOf("day").toDate() : null,
-      };
-
-      setNewAlquiler(newAlquilerValues);
-    },
-  });
   const productosForm = useForm<{ productos: Record<number, AlquilerProductoCreate> }>({
     initialValues: { productos: {} },
-    onValuesChange: (values) => {
-      setAlquilerProductos((prev) => {
-        return prev.map((ap) => {
-          const updated = values.productos[ap.productoId];
-          return updated ? { ...ap, ...updated } : ap;
-        });
-      });
-    },
   });
 
   const handleCreateAlquiler = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAlquiler) return;
+    const alquilerProductos = Object.values(productosForm.values.productos).filter(
+      (ap) => ap.cantidad! > 0,
+    );
 
-    onCreateAlquiler(newAlquiler);
+    onCreateAlquiler(form.values, alquilerProductos);
   };
 
   function handleSelectProducto(producto: ProductoEntity) {
@@ -96,10 +91,26 @@ export function NewAlquilerDetails({
     setSelectedProducto(alquilerProducto);
   }
 
-  const filteredProductos = productos.filter((producto) => {
-    if (nameFilter === "") return true;
-    return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
-  });
+  const filteredProductos = productos
+    .filter((producto) => {
+      if (nameFilter === "") return true;
+      return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+    })
+    .map((producto, index) => {
+      const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+      createEmptyAlquilerProducto(producto);
+      return (
+        <AlquilerProductoItem
+          key={producto.id}
+          producto={producto}
+          form={productosForm}
+          isSelected={selectedProducto?.productoId === producto.id}
+          onSelectProducto={() => handleSelectProducto(producto)}
+          remaining={remaining}
+          tabIndex={index + 3}
+        />
+      );
+    });
 
   return (
     <Stack component="div" h="100%" mih="100%" w="100%" id="alquiler-details-outer-flex">
@@ -111,7 +122,7 @@ export function NewAlquilerDetails({
       >
         <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
           <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="md">
-            <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
+            <AlquilerDetailsForm form={form} />
             <TextInput
               onChange={(event) => setNameFilter(event.currentTarget.value)}
               value={nameFilter}
@@ -120,27 +131,7 @@ export function NewAlquilerDetails({
               rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
               leftSection={<FontAwesomeIcon icon={faSearch} />}
             />
-            <AlquilerProductosScrollContainer>
-              {filteredProductos.map((producto, index) => {
-                const remaining =
-                  stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
-                const alquilerProducto = alquilerProductos.find(
-                  (ap) => ap.productoId === producto.id,
-                );
-                return (
-                  <AlquilerProductoItem
-                    key={producto.id}
-                    producto={producto}
-                    alquilerProducto={alquilerProducto}
-                    isSelected={selectedProducto?.productoId === producto.id}
-                    productosForm={productosForm}
-                    onSelectProducto={() => handleSelectProducto(producto)}
-                    remaining={remaining}
-                    tabIndex={index + 3}
-                  />
-                );
-              })}
-            </AlquilerProductosScrollContainer>
+            <AlquilerProductosScrollContainer>{filteredProductos}</AlquilerProductosScrollContainer>
             <Group mb="1rem">
               <Button type="submit" color="blue" size="lg">
                 Guardar

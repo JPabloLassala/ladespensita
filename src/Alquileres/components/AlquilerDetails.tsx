@@ -47,13 +47,14 @@ export function AlquilerDetails({
     fin: false,
   });
 
-  const form = useForm<
-    Omit<AlquilerUpdate, "fechaFin" | "fechaInicio"> & { fechas: (Date | null)[] }
-  >({
+  const form = useForm<AlquilerUpdate & { fechas: (Date | null)[] }>({
     initialValues: {
       id: selectedAlquiler?.id || 0,
+      status: selectedAlquiler!.status || ALQUILER_STATUS.PENDING,
       productora: selectedAlquiler!.productora || "",
       proyecto: selectedAlquiler!.proyecto || "",
+      fechaInicio: selectedAlquiler!.fechaInicio || undefined,
+      fechaFin: selectedAlquiler!.fechaFin || undefined,
       fechas: [
         selectedAlquiler!.fechaInicio || new Date(),
         selectedAlquiler!.fechaFin || new Date(),
@@ -62,15 +63,19 @@ export function AlquilerDetails({
       createdAt: selectedAlquiler!.createdAt || new Date(),
     },
     onValuesChange: (values) => {
-      const newValues = {
-        ...selectedAlquiler,
-        ...values,
-        fechaInicio: values.fechas[0] || undefined,
-        fechaFin: values.fechas[1] || undefined,
-      };
+      // const newValues = {
+      //   ...selectedAlquiler,
+      //   ...values,
+      //   fechaInicio: values.fechas[0] || undefined,
+      //   fechaFin: values.fechas[1] || undefined,
+      // };
 
-      setSelectedAlquiler(newValues as AlquilerEntity);
-      updateAlquiler(selectedAlquiler.id, values);
+      // setSelectedAlquiler(newValues as AlquilerEntity);
+      updateAlquiler(selectedAlquiler.id, {
+        ...values,
+        fechaInicio: values.fechas[0] ? dayjs(values.fechas[0]).startOf("day").toDate() : undefined,
+        fechaFin: values.fechas[1] ? dayjs(values.fechas[1]).startOf("day").toDate() : undefined,
+      });
     },
   });
   const productosForm = useForm<{
@@ -107,6 +112,7 @@ export function AlquilerDetails({
   }, [datesTouched]);
 
   useEffect(() => {
+    console.log("selected");
     form.setValues({ ...selectedAlquiler });
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -173,7 +179,7 @@ export function AlquilerDetails({
             gap="md"
           >
             <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
-            <AlquilerDetailsForm form={form} setDatesTouched={setDatesTouched} />
+            <AlquilerDetailsForm form={form} />
             <TextInput
               onChange={(event) => setNameFilter(event.currentTarget.value)}
               value={nameFilter}
@@ -194,9 +200,8 @@ export function AlquilerDetails({
                   <AlquilerProductoItem
                     key={producto.id}
                     producto={producto}
-                    alquilerProducto={alquilerProducto}
+                    form={productosForm}
                     isSelected={selectedProducto?.productoId === producto.id}
-                    productosForm={productosForm}
                     onSelectProducto={() => handleSelectProducto(producto)}
                     remaining={remaining}
                     tabIndex={index + 3}

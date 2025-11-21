@@ -11,7 +11,13 @@ import {
 } from "../components";
 import { useAlquilerProductoRepository, useAlquilerRepository } from "../repository";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
-import { ALQUILER_STATUS, AlquilerEntity, AlquilerSummaryItem } from "../entities";
+import {
+  ALQUILER_STATUS,
+  AlquilerCreate,
+  AlquilerEntity,
+  AlquilerProductoCreate,
+  AlquilerSummaryItem,
+} from "../entities";
 
 export function AlquileresPage() {
   const {
@@ -31,7 +37,7 @@ export function AlquileresPage() {
   const { sendCreate: sendCreateAlquilerProducto, sendUpdate: sendUpdateAlquilerProducto } =
     useAlquilerProductoRepository();
   const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
-  const { setProductos } = useProductosContext();
+  const { productos, setProductos } = useProductosContext();
   const { appState, setAppState } = useAppStateContext();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
 
@@ -53,12 +59,12 @@ export function AlquileresPage() {
     setNewAlquiler(undefined);
     setSelectedAlquiler(undefined);
   }
-  async function handleCreateAlquiler() {
-    if (!newAlquiler) return;
+  async function handleCreateAlquiler(a: AlquilerCreate, ap: AlquilerProductoCreate[]) {
+    if (!a) return;
     setAppState(APP_STATE.loading);
 
-    const alquilerWithId = (await sendCreate(newAlquiler)) as AlquilerEntity;
-    await sendCreateAlquilerProducto(alquilerProductos, alquilerWithId.id);
+    const alquilerWithId = (await sendCreate(a)) as AlquilerEntity;
+    await sendCreateAlquilerProducto(ap, alquilerWithId.id);
     createAlquiler(alquilerWithId);
     setSelectedAlquiler(alquilerWithId);
     setNewAlquiler(undefined);
@@ -92,9 +98,17 @@ export function AlquileresPage() {
 
   useEffect(() => {
     setProductos(productosData);
+  }, [productosData]);
+
+  useEffect(() => {
     setAlquileres(data);
-    setAppState(APP_STATE.loaded);
-  }, [data, productosData]);
+  }, [data]);
+
+  useEffect(() => {
+    if (productos.length > 0 && alquileres.length > 0) {
+      setAppState(APP_STATE.loaded);
+    }
+  }, [alquileres, productos]);
 
   useEffect(() => {
     setAppState(APP_STATE.loading);

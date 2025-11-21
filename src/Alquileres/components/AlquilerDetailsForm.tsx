@@ -1,26 +1,17 @@
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, TextInput } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePickerInput, DatesRangeValue } from "@mantine/dates";
+import { UseFormReturnType } from "@mantine/form";
+import dayjs from "dayjs";
 
-export function AlquilerDetailsForm({
-  form,
-  setDatesTouched,
-}: {
-  form: any;
-  setDatesTouched: React.Dispatch<
-    React.SetStateAction<{
-      inicio: boolean;
-      fin: boolean;
-    }>
-  >;
-}) {
-  const handleDatesChange = (dates: (Date | null)[]) => {
-    form.setFieldValue("fechas", dates);
-    setDatesTouched({
-      inicio: dates[0] !== null,
-      fin: dates[1] !== null,
-    });
+export function AlquilerDetailsForm({ form }: { form: UseFormReturnType<any> }) {
+  const handleChange = (value: DatesRangeValue<string>) => {
+    const fechaInicio = value[0] ? dayjs(value[0]).startOf("day").toDate() : null;
+    const fechaFin = value[1] ? dayjs(value[1]).startOf("day").toDate() : null;
+    form.setFieldValue("fechaInicio", fechaInicio);
+    form.setFieldValue("fechaFin", fechaFin);
+    form.setFieldValue("fechas", value);
   };
 
   return (
@@ -50,7 +41,7 @@ export function AlquilerDetailsForm({
           label="Fechas de inicio y fin"
           placeholder="Pick date"
           {...form.getInputProps("fechas")}
-          onChange={handleDatesChange}
+          onChange={handleChange}
         />
       </Grid.Col>
     </Grid>
