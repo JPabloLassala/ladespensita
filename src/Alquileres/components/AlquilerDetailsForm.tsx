@@ -17,20 +17,8 @@ export function AlquilerDetailsForm({ form }: { form: UseFormReturnType<any> }) 
   return (
     <Grid gutter="md" w="100%">
       <Grid.Col span={6}>
-        <TextInput
-          w="100%"
-          key={form.key("proyecto")}
-          label="Proyecto"
-          tabIndex={1}
-          {...form.getInputProps("proyecto")}
-        />
-        <TextInput
-          w="100%"
-          key={form.key("productora")}
-          label="Productora"
-          tabIndex={2}
-          {...form.getInputProps("productora")}
-        />
+        <TextInput w="100%" label="Proyecto" tabIndex={1} {...form.getInputProps("proyecto")} />
+        <TextInput w="100%" label="Productora" tabIndex={2} {...form.getInputProps("productora")} />
       </Grid.Col>
       <Grid.Col span={6}>
         <DatePickerInput

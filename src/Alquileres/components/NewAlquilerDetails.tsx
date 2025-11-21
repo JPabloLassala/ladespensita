@@ -9,7 +9,7 @@ import { ProductoEntity, useProductosContext } from "@/Productos";
 import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
-import { useAlquilerContext } from "../stores";
+import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerProductoItem } from "./AlquilerProductoItem";
@@ -17,6 +17,7 @@ import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquilerProductoRepository } from "../repository";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
+import dayjs from "dayjs";
 
 export function NewAlquilerDetails({
   onCreateAlquiler,
@@ -25,6 +26,7 @@ export function NewAlquilerDetails({
 }) {
   const { productos } = useProductosContext();
   const { setNewAlquiler } = useAlquilerContext();
+  const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
   const [nameFilter, setNameFilter] = useState("");
   const [selectedProducto, setSelectedProducto] = useState<
@@ -53,6 +55,25 @@ export function NewAlquilerDetails({
 
       setNewAlquiler(values);
     },
+    validate: {
+      fechas: (value) => {
+        console.log("value", value);
+        if (!value[0] || !value[1]) return "Debe seleccionar una fecha de inicio y fin";
+        if (dayjs(value[0]).isAfter(dayjs(value[1])))
+          return "La fecha de inicio debe ser anterior a la de fin";
+        return null;
+      },
+      productora: (value) => {
+        if (value.trim().length === 0) return "La productora es requerida";
+        if (value.trim() === "Nueva productora") return "Debe ingresar una productora válida";
+        return null;
+      },
+      proyecto: (value) => {
+        if (value.trim().length === 0) return "El proyecto es requerido";
+        if (value.trim() === "Nuevo proyecto") return "Debe ingresar un proyecto válido";
+        return null;
+      },
+    },
   });
 
   useEffect(() => {
@@ -63,16 +84,54 @@ export function NewAlquilerDetails({
   }, [datesTouched]);
 
   const productosForm = useForm<{ productos: Record<number, AlquilerProductoCreate> }>({
-    initialValues: { productos: {} },
+    initialValues: {
+      productos: productos.reduce(
+        (acc, producto) => {
+          acc[producto.id] = {
+            ...createEmptyAlquilerProducto(producto),
+            productoId: producto.id,
+            cantidad: 0,
+            precioFinal: 0,
+          };
+          return acc;
+        },
+        {} as Record<number, AlquilerProductoCreate>,
+      ),
+    },
+    onValuesChange: (values) => {
+      console.log("productos form values", values);
+    },
+    validate: (values) => {
+      const productosValues = Object.values(values.productos);
+      const hasQuantity = productosValues.some((producto) => (producto.cantidad ?? 0) > 0);
+
+      if (hasQuantity) return {};
+
+      const errors: Record<string, string> = {};
+      productos.forEach((producto) => {
+        errors[`productos.${producto.id}.cantidad`] = "No hay productos";
+      });
+
+      return errors;
+    },
   });
 
   const handleCreateAlquiler = (e: React.FormEvent) => {
     e.preventDefault();
+    const { hasErrors: formHasErrors } = form.validate();
+    const { hasErrors: productosFormHasErrors } = productosForm.validate();
+    console.log("error", formHasErrors, productosFormHasErrors);
+    if (formHasErrors || productosFormHasErrors) return;
     const alquilerProductos = Object.values(productosForm.values.productos).filter(
       (ap) => ap.cantidad! > 0,
     );
 
     onCreateAlquiler(form.values, alquilerProductos);
+  };
+
+  const handleReset = () => {
+    form.reset();
+    productosForm.reset();
   };
 
   function handleSelectProducto(producto: ProductoEntity) {
@@ -125,8 +184,8 @@ export function NewAlquilerDetails({
               <Button type="submit" color="blue" size="lg">
                 Guardar
               </Button>
-              <Button type="button" color="red" size="lg">
-                Cancelar
+              <Button type="button" color="gray" size="lg" onClick={handleReset}>
+                Resetear
               </Button>
             </Group>
           </Stack>

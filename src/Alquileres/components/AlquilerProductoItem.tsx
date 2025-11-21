@@ -31,7 +31,6 @@ export function AlquilerProductoItem({
   const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
   const alquilerProducto =
     form.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
-  if (producto.id === 550) console.log("alquiler item", alquilerProducto);
 
   const getUnitPrice = (quantity: number) => {
     if (quantity >= 12) return producto.valorX12;

@@ -39,7 +39,7 @@ export function AlquilerDetails({
   const { appState } = useAppStateContext();
   const { productos } = useProductosContext();
   const { updateAlquiler } = useAlquilerContext();
-  const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
+  const { createEmptyAlquilerProducto, alquilerProductos } = useAlquilerProductoContext();
   const { sendGetStock, stockData, sendList, data } = useAlquilerProductoRepository();
   const [nameFilter, setNameFilter] = useState("");
   const [selectedProducto, setSelectedProducto] = useState<
@@ -66,18 +66,48 @@ export function AlquilerDetails({
       createdAt: selectedAlquiler!.createdAt || new Date(),
     },
     onValuesChange: (values) => {
+      console.log("form values", values);
       setDatesTouched({
         inicio: values.fechas[0] !== null,
         fin: values.fechas[1] !== null,
       });
       updateAlquiler(selectedAlquiler.id, values);
     },
+    validate: {
+      fechas: (value) => {
+        console.log("value", value);
+        console.log("!value[0] || !value[1]", !value[0] || !value[1]);
+        if (!value[0] || !value[1]) return "Debe seleccionar una fecha de inicio y fin";
+        if (dayjs(value[0]).isAfter(dayjs(value[1])))
+          return "La fecha de inicio debe ser anterior a la de fin";
+        return null;
+      },
+    },
   });
 
   const productosForm = useForm<{
     productos: Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>;
   }>({
-    initialValues: { productos: {} },
+    initialValues: {
+      productos: alquilerProductos.reduce(
+        (acc, producto) => {
+          acc[producto.productoId] = producto;
+          return acc;
+        },
+        {} as Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>,
+      ),
+    },
+    validate: (values) => {
+      if (Object.keys(values.productos).length > 0) return {};
+
+      return productos.reduce(
+        (errors, producto) => {
+          errors[`productos.${producto.id}.cantidad`] = "Debe seleccionar al menos un producto";
+          return errors;
+        },
+        {} as Record<string, string>,
+      );
+    },
   });
 
   useEffect(() => {
@@ -92,7 +122,6 @@ export function AlquilerDetails({
   }, [datesTouched]);
 
   useEffect(() => {
-    console.log("selected");
     form.setValues({ ...selectedAlquiler });
     const since = dayjs(selectedAlquiler.fechaInicio).toDate();
     const until = dayjs(selectedAlquiler.fechaFin).toDate();
@@ -118,10 +147,16 @@ export function AlquilerDetails({
 
   const handleUpdateAlquiler = (e: React.FormEvent) => {
     e.preventDefault();
+    const { hasErrors: formHasErrors } = form.validate();
+    const { hasErrors: productosFormHasErrors } = productosForm.validate();
+    console.log("error", formHasErrors, productosFormHasErrors);
+    if (formHasErrors || productosFormHasErrors) return;
+
     const alquilerProductos = Object.values(productosForm.values.productos).filter(
       (ap) => ap.cantidad! > 0,
     );
 
+    console.log("form.values", form.values);
     onUpdateAlquiler(form.values, alquilerProductos);
   };
 
