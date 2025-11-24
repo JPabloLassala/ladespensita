@@ -1,10 +1,13 @@
 import { FileWithPath } from "@mantine/dropzone";
 import { ImageEntity } from "./Image.entity";
+import { IMAGE_FORMAT, IMAGE_TYPE } from "@/Common";
 
 export class ProductoImage {
   id: number;
   url: string;
   productoId: number;
+  type: IMAGE_TYPE;
+  format: IMAGE_FORMAT;
   isMain: boolean;
   createdAt: Date;
 }
@@ -28,7 +31,7 @@ export class ProductoEntity {
   valorX3: number;
   valorX6: number;
   valorX12: number;
-  image: ImageEntity;
+  images: ImageEntity[];
   createdAt: Date;
   updatedAt?: Date;
 }

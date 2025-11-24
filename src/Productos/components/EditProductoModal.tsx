@@ -40,7 +40,7 @@ export const EditProductoModal = ({
       valorX3: producto.valorX3,
       valorX6: producto.valorX6,
       valorX12: producto.valorX12,
-      image: producto.image,
+      images: producto.images,
     },
     validate: {
       nombre: (value) => (!value?.trim() ? "El nombre es obligatorio" : null),
@@ -94,7 +94,7 @@ export const EditProductoModal = ({
       valorX3: producto.valorX3,
       valorX6: producto.valorX6,
       valorX12: producto.valorX12,
-      image: producto.image,
+      images: producto.images,
     });
   }, [producto]);
 
@@ -125,7 +125,7 @@ export const EditProductoModal = ({
       opened={opened}
       onClose={onClose}
       centered
-      size="60%"
+      size="80%"
       removeScrollProps={{ enabled: false }}
     >
       <form onSubmit={form.onSubmit(handleSubmitForm)}>
@@ -134,7 +134,7 @@ export const EditProductoModal = ({
             <UploadFileEdit
               file={form.getValues().file}
               onSetFile={handleSetFile}
-              image={producto.image}
+              images={producto.images}
               onSetTmpURL={setTmpURL}
               dirty={uploadDirty}
               setDirty={setUploadDirty}

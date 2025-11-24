@@ -5,6 +5,7 @@ import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import classes from "../Css/Dropzone.module.css";
 import { ProductoImage } from "../entities";
 import { ReactNode } from "react";
+import { IMAGE_TYPE } from "@/Common";
 
 export const UploadFileEdit = ({
   file,
@@ -12,7 +13,7 @@ export const UploadFileEdit = ({
   onSetFile,
   onSetTmpURL,
   setDirty,
-  image,
+  images,
   error,
 }: {
   file: File | undefined;
@@ -20,7 +21,7 @@ export const UploadFileEdit = ({
   onSetFile: (file: FileWithPath | undefined) => void;
   onSetTmpURL: (url: string) => void;
   setDirty: (dirty: boolean) => void;
-  image?: ProductoImage;
+  images?: ProductoImage[];
   error?: ReactNode;
 }) => {
   const theme = useMantineTheme();
@@ -34,6 +35,8 @@ export const UploadFileEdit = ({
   );
 
   const preview = () => {
+    const image =
+      images && images.length > 0 ? images.find((i) => i.type === IMAGE_TYPE.FULL) : undefined;
     if (image && !dirty) {
       return <Image fit="contain" h="100%" src={image.url} />;
     }
@@ -66,13 +69,14 @@ export const UploadFileEdit = ({
 
   return (
     <Stack component="div" justify="center" align="center">
-      <Stack component="div" justify="center" w="15rem">
+      <Stack component="div" justify="center">
         <Dropzone
           onDrop={handleDrop}
           radius="md"
           accept={IMAGE_MIME_TYPE}
-          h="15rem"
+          h="30rem"
           maxFiles={1}
+          w="30rem"
           multiple={false}
           styles={{
             root: {

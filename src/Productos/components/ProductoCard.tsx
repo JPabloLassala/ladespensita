@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import "../Css/hover-trash.css";
+import { IMAGE_TYPE } from "@/Common";
 
 export function ProductoCard({
   producto,
@@ -24,12 +25,14 @@ export function ProductoCard({
     onDelete(producto.id);
   };
 
+  const thumbnailUrl = producto.images.find((i) => i.type === IMAGE_TYPE.GALLERY)?.url || "";
+
   return (
     <Card shadow="sm" padding="md" radius="md" withBorder w={230}>
       <Card.Section>
         <Image
           onClick={() => onEdit(producto)}
-          src={producto.image?.url}
+          src={thumbnailUrl}
           fallbackSrc="https://placehold.co/160x300?text=Sin%20Foto"
           height={160}
         />
