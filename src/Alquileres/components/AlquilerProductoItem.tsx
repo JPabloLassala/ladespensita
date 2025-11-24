@@ -4,6 +4,7 @@ import { UseFormReturnType } from "node_modules/@mantine/form/lib/types";
 import { AlquilerProductoCreate } from "../entities";
 import { useEffect, useState } from "react";
 import { useAlquilerProductoContext } from "../stores";
+import { IMAGE_TYPE } from "@/Common";
 
 type formType = UseFormReturnType<
   { productos: Record<number, AlquilerProductoCreate> },
@@ -87,6 +88,8 @@ export function AlquilerProductoItem({
     setPrecio(getUnitPrice(alquilerProducto.cantidad));
   }, [alquilerProducto.cantidad]);
 
+  const thumbnailUrl = producto.images.find((i) => i.type === IMAGE_TYPE.THUMBNAIL)?.url;
+
   return (
     <Paper
       withBorder
@@ -104,7 +107,7 @@ export function AlquilerProductoItem({
       <Group wrap="nowrap" justify="space-between" align="center">
         <Group wrap="nowrap">
           <Image
-            src={producto.image?.url}
+            src={thumbnailUrl}
             fallbackSrc={`https://placehold.co/75?text=Sin%20Foto`}
             w={75}
             alt={producto.nombre}
