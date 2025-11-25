@@ -1,37 +1,44 @@
 import { ProductoEntity } from "@/Productos";
 import { Button, Group, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
 import { UseFormReturnType } from "node_modules/@mantine/form/lib/types";
-import { AlquilerProductoCreate } from "../entities";
-import { useEffect, useState } from "react";
-import { useAlquilerProductoContext } from "../stores";
+import {
+  AlquilerProductoCreate,
+  AlquilerProductoEntity,
+  AlquilerProductoUpdate,
+} from "../entities";
+import { memo, useEffect, useState } from "react";
 import { IMAGE_TYPE } from "@/Common";
 
+type AlquilerProductoFormValue =
+  | AlquilerProductoCreate
+  | AlquilerProductoUpdate
+  | AlquilerProductoEntity;
+
 type formType = UseFormReturnType<
-  { productos: Record<number, AlquilerProductoCreate> },
-  (values: { productos: Record<number, AlquilerProductoCreate> }) => {
-    productos: Record<number, AlquilerProductoCreate>;
+  { productos: Record<number, AlquilerProductoFormValue> },
+  (values: { productos: Record<number, AlquilerProductoFormValue> }) => {
+    productos: Record<number, AlquilerProductoFormValue>;
   }
 >;
 
-export function AlquilerProductoItem({
+export function _AlquilerProductoItem({
   producto,
   onSelectProducto,
   isSelected,
   form,
+  alquilerProducto,
   remaining,
   tabIndex,
 }: {
   producto: ProductoEntity;
-  onSelectProducto: (productoId: number) => void;
+  onSelectProducto: (producto: AlquilerProductoFormValue) => void;
   isSelected: boolean;
   form: formType;
+  alquilerProducto: AlquilerProductoFormValue;
   remaining: number | string;
   tabIndex: number;
 }) {
   const [precio, setPrecio] = useState(producto.valorX1);
-  const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
-  const alquilerProducto =
-    form.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
 
   const getUnitPrice = (quantity: number) => {
     if (quantity >= 12) return producto.valorX12;
@@ -41,10 +48,9 @@ export function AlquilerProductoItem({
   };
 
   const updateAlquilerProducto = (partialValues: Partial<AlquilerProductoCreate>) => {
-    const current = form.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
     form.setFieldValue(
       `productos.${producto.id}`,
-      { ...current, ...partialValues },
+      { ...alquilerProducto, ...partialValues },
       { forceUpdate: true },
     );
   };
@@ -79,12 +85,6 @@ export function AlquilerProductoItem({
   }
 
   useEffect(() => {
-    if (!form.values.productos[producto.id]) {
-      updateAlquilerProducto(alquilerProducto);
-    }
-  }, [producto.id]);
-
-  useEffect(() => {
     setPrecio(getUnitPrice(alquilerProducto.cantidad));
   }, [alquilerProducto.cantidad]);
 
@@ -97,7 +97,7 @@ export function AlquilerProductoItem({
       radius="md"
       p="xs"
       key={producto.id}
-      onClick={() => onSelectProducto(producto.id)}
+      onClick={() => onSelectProducto(alquilerProducto)}
       style={{
         cursor: "pointer",
         backgroundColor: isSelected ? "var(--mantine-primary-color-light)" : "var(--mantine-white)",
@@ -151,3 +151,5 @@ export function AlquilerProductoItem({
     </Paper>
   );
 }
+
+export const AlquilerProductoItem = memo(_AlquilerProductoItem);

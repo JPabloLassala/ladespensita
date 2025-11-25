@@ -66,7 +66,6 @@ export function AlquilerDetails({
       createdAt: selectedAlquiler!.createdAt || new Date(),
     },
     onValuesChange: (values) => {
-      console.log("form values", values);
       setDatesTouched({
         inicio: values.fechas[0] !== null,
         fin: values.fechas[1] !== null,
@@ -160,10 +159,11 @@ export function AlquilerDetails({
     onUpdateAlquiler(form.values, alquilerProductos);
   };
 
-  function handleSelectProducto(producto: ProductoEntity) {
-    if (selectedProducto?.productoId === producto.id) return;
-    const alquilerProducto = productosForm.values.productos[producto.id];
-    setSelectedProducto(alquilerProducto);
+  function handleSelectProducto(
+    producto: AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity,
+  ) {
+    if (selectedProducto?.productoId === producto.productoId) return;
+    setSelectedProducto(producto);
   }
 
   const filteredProductos = productos
@@ -173,13 +173,15 @@ export function AlquilerDetails({
     })
     .map((producto, index) => {
       const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+      const alquilerProducto = productosForm.values.productos[producto.id];
       return (
         <AlquilerProductoItem
           key={producto.id}
           producto={producto}
+          alquilerProducto={alquilerProducto}
           form={productosForm}
           isSelected={selectedProducto?.productoId === producto.id}
-          onSelectProducto={() => handleSelectProducto(producto)}
+          onSelectProducto={handleSelectProducto}
           remaining={remaining}
           tabIndex={index + 3}
         />

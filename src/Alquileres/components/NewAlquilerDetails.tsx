@@ -8,7 +8,7 @@ import {
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
@@ -134,31 +134,53 @@ export function NewAlquilerDetails({
     productosForm.reset();
   };
 
-  function handleSelectProducto(producto: ProductoEntity) {
-    if (selectedProducto?.productoId === producto.id) return;
-    const alquilerProducto = productosForm.values.productos[producto.id];
-    setSelectedProducto(alquilerProducto);
-  }
+  const handleSelectProducto = useCallback(
+    (
+      producto:
+        | AlquilerProductoCreate
+        | AlquilerProductoUpdate
+        | AlquilerProductoEntity
+        | undefined,
+    ) => {
+      if (!producto) return;
+      if (selectedProducto?.productoId === producto.productoId) return;
+      setSelectedProducto(producto);
+    },
+    [selectedProducto?.productoId],
+  );
 
-  const filteredProductos = productos
-    .filter((producto) => {
-      if (nameFilter === "") return true;
-      return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
-    })
-    .map((producto, index) => {
-      const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
-      return (
-        <AlquilerProductoItem
-          key={producto.id}
-          producto={producto}
-          form={productosForm}
-          isSelected={selectedProducto?.productoId === producto.id}
-          onSelectProducto={() => handleSelectProducto(producto)}
-          remaining={remaining}
-          tabIndex={index + 3}
-        />
-      );
-    });
+  const filteredProductos = useMemo(() => {
+    return productos
+      .filter((producto) => {
+        if (nameFilter === "") return true;
+        return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+      })
+      .map((producto, index) => {
+        const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+        const alquilerProducto =
+          productosForm.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
+        return (
+          <AlquilerProductoItem
+            key={producto.id}
+            producto={producto}
+            form={productosForm}
+            alquilerProducto={alquilerProducto}
+            isSelected={selectedProducto?.productoId === producto.id}
+            onSelectProducto={handleSelectProducto}
+            remaining={remaining}
+            tabIndex={index + 3}
+          />
+        );
+      });
+  }, [
+    productos,
+    nameFilter,
+    stockData,
+    productosForm.values.productos,
+    createEmptyAlquilerProducto,
+    selectedProducto?.productoId,
+    handleSelectProducto,
+  ]);
 
   return (
     <Stack component="div" h="100%" mih="100%" w="100%" id="alquiler-details-outer-flex">
