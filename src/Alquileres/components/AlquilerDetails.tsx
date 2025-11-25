@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   ALQUILER_STATUS,
@@ -166,27 +166,38 @@ export function AlquilerDetails({
     setSelectedProducto(producto);
   }
 
-  const filteredProductos = productos
-    .filter((producto) => {
-      if (nameFilter === "") return true;
-      return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
-    })
-    .map((producto, index) => {
-      const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
-      const alquilerProducto = productosForm.values.productos[producto.id];
-      return (
-        <AlquilerProductoItem
-          key={producto.id}
-          producto={producto}
-          alquilerProducto={alquilerProducto}
-          form={productosForm}
-          isSelected={selectedProducto?.productoId === producto.id}
-          onSelectProducto={handleSelectProducto}
-          remaining={remaining}
-          tabIndex={index + 3}
-        />
-      );
-    });
+  const filteredProductos = useMemo(
+    () =>
+      productos
+        .filter((producto) => {
+          if (nameFilter === "") return true;
+          return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+        })
+        .map((producto, index) => {
+          const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
+          const alquilerProducto =
+            productosForm.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
+          return (
+            <AlquilerProductoItem
+              key={producto.id}
+              producto={producto}
+              alquilerProducto={alquilerProducto}
+              form={productosForm}
+              isSelected={selectedProducto?.productoId === producto.id}
+              onSelectProducto={handleSelectProducto}
+              remaining={remaining}
+              tabIndex={index + 3}
+            />
+          );
+        }),
+    [
+      productos,
+      nameFilter,
+      stockData,
+      productosForm.values.productos,
+      selectedProducto?.productoId,
+    ],
+  );
 
   return (
     <Stack component="section" w="100%" h="100%" mih="100%" id="alquiler-details-outer-flex">

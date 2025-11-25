@@ -177,9 +177,7 @@ export function NewAlquilerDetails({
     nameFilter,
     stockData,
     productosForm.values.productos,
-    createEmptyAlquilerProducto,
     selectedProducto?.productoId,
-    handleSelectProducto,
   ]);
 
   return (
