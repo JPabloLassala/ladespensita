@@ -10,7 +10,7 @@ import {
   AlquilerUpdate,
 } from "@/Alquileres/entities";
 
-import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
 import { ProductoEntity, useProductosContext } from "@/Productos";
 import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
 import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
@@ -42,6 +42,7 @@ export function AlquilerDetails({
   const { createEmptyAlquilerProducto, alquilerProductos } = useAlquilerProductoContext();
   const { sendGetStock, stockData, sendList, data } = useAlquilerProductoRepository();
   const [nameFilter, setNameFilter] = useState("");
+  const [hideZero, setHideZero] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoEntity | AlquilerProductoCreate | undefined
   >(undefined);
@@ -170,8 +171,13 @@ export function AlquilerDetails({
     () =>
       productos
         .filter((producto) => {
-          if (nameFilter === "") return true;
-          return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+          const filterQuantity = (productosForm.values.productos[producto.id]?.cantidad || 0) > 0;
+          const filterName =
+            nameFilter === "" || producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+
+          if (hideZero && !filterQuantity) return false;
+          if (!filterName) return false;
+          return true;
         })
         .map((producto, index) => {
           const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
@@ -194,6 +200,7 @@ export function AlquilerDetails({
       productos,
       nameFilter,
       stockData,
+      hideZero,
       productosForm.values.productos,
       selectedProducto?.productoId,
     ],
@@ -207,33 +214,35 @@ export function AlquilerDetails({
         style={{ height: "100%", overflowY: "auto" }}
         onSubmit={handleUpdateAlquiler}
       >
-        <Group
-          component="div"
-          h="100%"
-          style={{ overflowY: "auto" }}
-          align="flex-start"
-          gap="md"
-          wrap="nowrap"
-        >
+        <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
           <Stack
             component="div"
             mih="100%"
             h="100%"
             id="alquiler-details-inner-flex"
-            align="center"
             gap="md"
+            flex={1}
+            maw="60%"
           >
             <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
             <AlquilerDetailsForm form={form} />
-            <TextInput
-              onChange={(event) => setNameFilter(event.currentTarget.value)}
-              value={nameFilter}
-              placeholder="Buscar producto..."
-              radius="md"
-              w="100%"
-              rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
-              leftSection={<FontAwesomeIcon icon={faSearch} />}
-            />
+            <Group component="div">
+              <TextInput
+                onChange={(event) => setNameFilter(event.currentTarget.value)}
+                value={nameFilter}
+                placeholder="Buscar producto..."
+                radius="md"
+                w="100%"
+                flex={1}
+                rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
+                leftSection={<FontAwesomeIcon icon={faSearch} />}
+              />
+              <Checkbox
+                label="No mostrar 0"
+                checked={hideZero}
+                onChange={(event) => setHideZero(event.currentTarget.checked)}
+              />
+            </Group>
             <AlquilerProductosScrollContainer>{filteredProductos}</AlquilerProductosScrollContainer>
             <Group mb="1rem">
               <Button
@@ -252,6 +261,7 @@ export function AlquilerDetails({
           {selectedProducto && (
             <AlquilerProductoDetails form={productosForm} selected={selectedProducto} />
           )}
+          {!selectedProducto && <Stack component="div" gap="0.5rem" w="20%"></Stack>}
         </Group>
       </form>
     </Stack>

@@ -6,7 +6,7 @@ import {
   AlquilerProductoUpdate,
 } from "@/Alquileres/entities";
 import { ProductoEntity, useProductosContext } from "@/Productos";
-import { Button, Group, Stack, TextInput, Title } from "@mantine/core";
+import { Button, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
@@ -29,6 +29,7 @@ export function NewAlquilerDetails({
   const { createEmptyAlquilerProducto } = useAlquilerProductoContext();
   const { sendGetStock, stockData } = useAlquilerProductoRepository();
   const [nameFilter, setNameFilter] = useState("");
+  const [hideZero, setHideZero] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState<
     AlquilerProductoCreate | AlquilerProductoUpdate | AlquilerProductoEntity | undefined
   >(undefined);
@@ -152,8 +153,13 @@ export function NewAlquilerDetails({
   const filteredProductos = useMemo(() => {
     return productos
       .filter((producto) => {
-        if (nameFilter === "") return true;
-        return producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+        const filterQuantity = (productosForm.values.productos[producto.id]?.cantidad || 0) > 0;
+        const filterName =
+          nameFilter === "" || producto.nombre.toLowerCase().includes(nameFilter.toLowerCase());
+
+        if (hideZero && !filterQuantity) return false;
+        if (!filterName) return false;
+        return true;
       })
       .map((producto, index) => {
         const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
@@ -176,6 +182,7 @@ export function NewAlquilerDetails({
     productos,
     nameFilter,
     stockData,
+    hideZero,
     productosForm.values.productos,
     selectedProducto?.productoId,
   ]);
@@ -189,16 +196,32 @@ export function NewAlquilerDetails({
         onSubmit={handleCreateAlquiler}
       >
         <Group component="div" h="100%" style={{ overflowY: "auto" }} align="flex-start" gap="md">
-          <Stack component="div" mih="100%" h="100%" id="alquiler-details-inner-flex" gap="md">
+          <Stack
+            component="div"
+            mih="100%"
+            h="100%"
+            id="alquiler-details-inner-flex"
+            gap="md"
+            flex={1}
+            maw="60%"
+          >
             <AlquilerDetailsForm form={form} />
-            <TextInput
-              onChange={(event) => setNameFilter(event.currentTarget.value)}
-              value={nameFilter}
-              placeholder="Buscar producto..."
-              radius="md"
-              rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
-              leftSection={<FontAwesomeIcon icon={faSearch} />}
-            />
+            <Group>
+              <TextInput
+                onChange={(event) => setNameFilter(event.currentTarget.value)}
+                value={nameFilter}
+                placeholder="Buscar producto..."
+                radius="md"
+                flex={1}
+                rightSection={<FontAwesomeIcon icon={faClose} onClick={() => setNameFilter("")} />}
+                leftSection={<FontAwesomeIcon icon={faSearch} />}
+              />
+              <Checkbox
+                label="No mostrar 0"
+                checked={hideZero}
+                onChange={(event) => setHideZero(event.currentTarget.checked)}
+              />
+            </Group>
             <AlquilerProductosScrollContainer>{filteredProductos}</AlquilerProductosScrollContainer>
             <Group mb="1rem">
               <Button type="submit" color="blue" size="lg">

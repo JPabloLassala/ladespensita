@@ -8,7 +8,7 @@ export function AlquilerProductosScrollContainer({ children }: { children: React
       gap="1rem"
       w="100%"
       id="alquiler-productos-scroll-container"
-      style={{ overflowY: "auto" }}
+      style={{ overflowY: "scroll" }}
     >
       {children}
     </Stack>
