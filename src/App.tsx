@@ -42,6 +42,22 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/alquileres/new",
+        element: (
+          <PrivateRoute>
+            <AlquileresPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/alquileres/:id",
+        element: (
+          <PrivateRoute>
+            <AlquileresPage />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);

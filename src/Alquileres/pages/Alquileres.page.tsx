@@ -3,6 +3,7 @@ import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
 import { Group } from "@mantine/core";
 import { useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   AlquilerDetails,
   AlquilerList,
@@ -14,7 +15,6 @@ import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import {
   ALQUILER_STATUS,
   AlquilerCreate,
-  AlquilerEntity,
   AlquilerProductoCreate,
   AlquilerProductoUpdate,
   AlquilerSummaryItem,
@@ -37,38 +37,56 @@ export function AlquileresPage() {
   const { data, sendList, sendCreate, sendUpdate, sendDelete } = useAlquilerRepository([]);
   const { sendCreate: sendCreateAlquilerProducto, sendUpdate: sendUpdateAlquilerProducto } =
     useAlquilerProductoRepository();
-  const { alquilerProductos, setAlquilerProductos } = useAlquilerProductoContext();
+  const { setAlquilerProductos } = useAlquilerProductoContext();
   const { productos, setProductos } = useProductosContext();
   const { appState, setAppState } = useAppStateContext();
   const { data: productosData, sendList: sendListProductos } = useProductoRepository([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id: alquilerIdParam } = useParams();
+  const alquilerIdFromRoute =
+    alquilerIdParam && !Number.isNaN(Number(alquilerIdParam)) ? Number(alquilerIdParam) : undefined;
+  const isNewRoute = /^\/alquileres\/new\/?$/.test(location.pathname);
 
   function handleSelectAlquiler(id: number) {
     setAppState(APP_STATE.loaded);
-    handleCancelCreateNewAlquiler();
+    handleCancelCreateNewAlquiler(false);
     setSelectedAlquiler(alquileres.find((alquiler) => alquiler.id === id));
+    navigate(`/alquileres/${id}`);
   }
   function handleStartCreateNewAlquiler() {
     if (appState === APP_STATE.creating) return;
 
     setAppState(APP_STATE.creating);
-    setNewAlquiler(createEmptyAlquiler());
+    createEmptyAlquiler();
     setSelectedAlquiler(undefined);
     setAlquilerProductos([]);
+    navigate("/alquileres/new");
   }
-  function handleCancelCreateNewAlquiler() {
+  function handleCancelCreateNewAlquiler(shouldNavigate = true) {
     setAppState(APP_STATE.loaded);
     setNewAlquiler(undefined);
     setSelectedAlquiler(undefined);
+    if (shouldNavigate) {
+      navigate("/alquileres");
+    }
   }
   async function handleCreateAlquiler(a: AlquilerCreate, ap: AlquilerProductoCreate[]) {
     if (!a) return;
     setAppState(APP_STATE.loading);
 
-    const alquilerWithId = (await sendCreate(a)) as AlquilerEntity;
+    const alquilerWithId = await sendCreate(a);
+    if (!alquilerWithId) {
+      setAppState(APP_STATE.loaded);
+      return;
+    }
+
     await sendCreateAlquilerProducto(ap, alquilerWithId.id);
     createAlquiler(alquilerWithId);
     setSelectedAlquiler(alquilerWithId);
     setNewAlquiler(undefined);
+    setAppState(APP_STATE.loaded);
+    navigate(`/alquileres/${alquilerWithId.id}`);
   }
   async function handleUpdateAlquiler(
     a: AlquilerUpdate,
@@ -89,6 +107,7 @@ export function AlquileresPage() {
     deleteAlquiler(alquiler.id);
     setSelectedAlquiler(undefined);
     setAppState(APP_STATE.loaded);
+    navigate("/alquileres");
   }
   async function handleChangeStatus(id: number, status: ALQUILER_STATUS) {
     if (!selectedAlquiler) return;
@@ -109,16 +128,66 @@ export function AlquileresPage() {
   }, [data]);
 
   useEffect(() => {
-    if (productos.length > 0 && alquileres.length > 0) {
-      setAppState(APP_STATE.loaded);
+    if (isNewRoute) {
+      if (appState !== APP_STATE.creating) {
+        setAppState(APP_STATE.creating);
+        createEmptyAlquiler();
+        setSelectedAlquiler(undefined);
+        setAlquilerProductos([]);
+      }
+      return;
     }
-  }, [alquileres, productos]);
+
+    if (alquilerIdFromRoute) {
+      if (selectedAlquiler?.id === alquilerIdFromRoute) return;
+
+      const alquiler = alquileres.find((a) => a.id === alquilerIdFromRoute);
+      if (alquiler) {
+        setAppState(APP_STATE.loaded);
+        setNewAlquiler(undefined);
+        setSelectedAlquiler(alquiler);
+      } else {
+        setSelectedAlquiler(undefined);
+      }
+      return;
+    }
+
+    if (location.pathname.startsWith("/alquileres")) {
+      if (selectedAlquiler || appState === APP_STATE.creating) {
+        setAppState(APP_STATE.loaded);
+        setNewAlquiler(undefined);
+        setSelectedAlquiler(undefined);
+        setAlquilerProductos([]);
+      }
+    }
+  }, [
+    alquilerIdFromRoute,
+    alquileres,
+    appState,
+    createEmptyAlquiler,
+    isNewRoute,
+    location.pathname,
+    setAppState,
+    setAlquilerProductos,
+    setNewAlquiler,
+    setSelectedAlquiler,
+    selectedAlquiler?.id,
+  ]);
 
   useEffect(() => {
-    setAppState(APP_STATE.loading);
+    if (appState === APP_STATE.creating) return;
+    if (productos.length > 0 && (alquileres.length > 0 || !alquilerIdFromRoute)) {
+      setAppState(APP_STATE.loaded);
+    }
+  }, [alquilerIdFromRoute, alquileres.length, appState, productos.length]);
+
+  useEffect(() => {
+    if (!isNewRoute) {
+      setAppState(APP_STATE.loading);
+    }
     sendListProductos();
     sendList();
-  }, []);
+  }, [isNewRoute, sendList, sendListProductos]);
 
   return (
     <Group
