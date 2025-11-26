@@ -23,6 +23,8 @@ import { APP_STATE, useAppStateContext } from "@/Common";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
+import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -225,7 +227,13 @@ export function AlquilerDetails({
             maw="60%"
           >
             <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
-            <AlquilerDetailsForm form={form} />
+            <Stack>
+              <AlquilerDetailsForm form={form} />
+              <Group>
+                <AlquilerDetailsDates form={form} />
+                <AlquilerSummaryPrice form={productosForm} />
+              </Group>
+            </Stack>
             <Group component="div">
               <TextInput
                 onChange={(event) => setNameFilter(event.currentTarget.value)}

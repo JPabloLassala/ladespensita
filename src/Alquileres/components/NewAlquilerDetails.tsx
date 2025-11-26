@@ -18,6 +18,8 @@ import { useAlquilerProductoRepository } from "../repository";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
+import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
+import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
 
 export function NewAlquilerDetails({
   onCreateAlquiler,
@@ -98,9 +100,6 @@ export function NewAlquilerDetails({
         },
         {} as Record<number, AlquilerProductoCreate>,
       ),
-    },
-    onValuesChange: (values) => {
-      console.log("productos form values", values);
     },
     validate: (values) => {
       const productosValues = Object.values(values.productos);
@@ -205,7 +204,13 @@ export function NewAlquilerDetails({
             flex={1}
             maw="60%"
           >
-            <AlquilerDetailsForm form={form} />
+            <Stack>
+              <AlquilerDetailsForm form={form} />
+              <Group>
+                <AlquilerDetailsDates form={form} />
+                <AlquilerSummaryPrice form={productosForm} />
+              </Group>
+            </Stack>
             <Group>
               <TextInput
                 onChange={(event) => setNameFilter(event.currentTarget.value)}
