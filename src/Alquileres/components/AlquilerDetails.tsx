@@ -145,7 +145,7 @@ export function AlquilerDetails({
         {} as Record<number, AlquilerProductoUpdate | AlquilerProductoCreate>,
       ),
     });
-  }, [data]);
+  }, [data, productos]);
 
   const handleUpdateAlquiler = (e: React.FormEvent) => {
     e.preventDefault();
