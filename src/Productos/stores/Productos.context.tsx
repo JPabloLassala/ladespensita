@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { ProductoEntity, ProductoEntityCreate, ProductoEntityUpdate } from "../entities";
 import { FileWithPath } from "@mantine/dropzone";
+import { IMAGE_FORMAT, IMAGE_TYPE } from "@/Common";
 
 export type ProductosContextType = {
   productos: ProductoEntity[];
@@ -21,13 +22,17 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     const getNewProducto = () => {
       const newProducto: ProductoEntity = { ...productoNewData } as ProductoEntity;
       if (productoNewData.tmpURL) {
-        newProducto.image = {
-          createdAt: new Date(),
-          id: Math.floor(Math.random() * 10000),
-          isMain: true,
-          productoId: productoNewData.id!,
-          url: productoNewData.tmpURL,
-        };
+        newProducto.images = [
+          {
+            createdAt: new Date(),
+            id: Math.floor(Math.random() * 10000),
+            type: IMAGE_TYPE.GALLERY,
+            format: IMAGE_FORMAT.WEBP,
+            isMain: true,
+            productoId: productoNewData.id!,
+            url: productoNewData.tmpURL,
+          },
+        ];
       }
       return newProducto;
     };
@@ -68,13 +73,17 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
     producto.valorX6 = newProducto.valorX6;
     producto.valorX12 = newProducto.valorX12;
 
-    producto.image = {
-      createdAt: new Date(),
-      id: Math.floor(Math.random() * 1000),
-      isMain: true,
-      productoId: producto.id,
-      url: newProducto.tmpURL || "",
-    };
+    producto.images = [
+      {
+        createdAt: new Date(),
+        id: Math.floor(Math.random() * 1000),
+        type: IMAGE_TYPE.GALLERY,
+        format: IMAGE_FORMAT.WEBP,
+        isMain: true,
+        productoId: producto.id,
+        url: newProducto.tmpURL || "",
+      },
+    ];
 
     setProductos((prev) => [{ ...producto }, ...prev]);
   };

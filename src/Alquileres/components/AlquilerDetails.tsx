@@ -185,6 +185,7 @@ export function AlquilerDetails({
           const remaining = stockData?.find((s) => s.productoId === producto.id)?.remaining || "-";
           const alquilerProducto =
             productosForm.values.productos[producto.id] || createEmptyAlquilerProducto(producto);
+
           return (
             <AlquilerProductoItem
               key={producto.id}

@@ -21,7 +21,7 @@ type formType = UseFormReturnType<
   }
 >;
 
-export function _AlquilerProductoItem({
+export const AlquilerProductoItem = memo(function _AlquilerProductoItem({
   producto,
   onSelectProducto,
   isSelected,
@@ -150,6 +150,4 @@ export function _AlquilerProductoItem({
       </Group>
     </Paper>
   );
-}
-
-export const AlquilerProductoItem = memo(_AlquilerProductoItem);
+});
