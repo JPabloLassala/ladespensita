@@ -23,8 +23,9 @@ import { APP_STATE, useAppStateContext } from "@/Common";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
+import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
 import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
+import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -227,12 +228,19 @@ export function AlquilerDetails({
             flex={1}
             maw="60%"
           >
-            <AlquilerStatus alquiler={selectedAlquiler} onChangeStatus={onChangeStatus} />
+            <Group>
+              <AlquilerStatus
+                alquiler={selectedAlquiler}
+                onChangeStatus={onChangeStatus}
+                flex={1}
+              />
+              <AlquilerSummaryPrice productos={productos} form={productosForm} />
+            </Group>
             <Stack>
               <AlquilerDetailsForm form={form} />
               <Group>
                 <AlquilerDetailsDates form={form} />
-                <AlquilerSummaryPrice form={productosForm} />
+                <AlquilerTotalPrice form={productosForm} />
               </Group>
             </Stack>
             <Group component="div">

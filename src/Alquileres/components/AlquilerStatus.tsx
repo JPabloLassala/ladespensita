@@ -1,14 +1,15 @@
-import { Badge, Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Badge, Button, Group, Stack, StackProps, Text, Title } from "@mantine/core";
 import { ALQUILER_STATUS, AlquilerEntity } from "../entities";
 import { APP_STATE, useAppStateContext } from "@/Common";
 
 export const AlquilerStatus = ({
   alquiler,
   onChangeStatus,
+  ...props
 }: {
   alquiler: AlquilerEntity;
   onChangeStatus: (id: number, status: ALQUILER_STATUS) => void;
-}) => {
+} & StackProps) => {
   const { appState } = useAppStateContext();
   const getBadgeColor = (status: ALQUILER_STATUS) => {
     switch (status) {
@@ -26,7 +27,7 @@ export const AlquilerStatus = ({
   };
 
   return (
-    <Stack w="100%">
+    <Stack {...props}>
       <Group component="div">
         <Text>Status</Text>
         <Badge

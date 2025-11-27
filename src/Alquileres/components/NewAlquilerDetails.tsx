@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
-import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
+import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
 
 export function NewAlquilerDetails({
   onCreateAlquiler,
@@ -208,7 +208,7 @@ export function NewAlquilerDetails({
               <AlquilerDetailsForm form={form} />
               <Group>
                 <AlquilerDetailsDates form={form} />
-                <AlquilerSummaryPrice form={productosForm} />
+                <AlquilerTotalPrice form={productosForm} />
               </Group>
             </Stack>
             <Group>
