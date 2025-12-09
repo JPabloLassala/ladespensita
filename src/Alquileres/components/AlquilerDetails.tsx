@@ -234,7 +234,7 @@ export function AlquilerDetails({
                 onChangeStatus={onChangeStatus}
                 flex={1}
               />
-              <AlquilerSummaryPrice productos={productos} form={productosForm} />
+              <AlquilerSummaryPrice productos={productos} form={productosForm} alquiler={form} />
             </Group>
             <Stack>
               <AlquilerDetailsForm form={form} />
