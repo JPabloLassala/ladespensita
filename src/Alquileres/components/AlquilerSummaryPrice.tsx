@@ -1,7 +1,7 @@
 import { Button, Center, CopyButton, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ProductoEntity } from "@/Productos";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { AlquilerSummaryPDF } from "./AlquilerSummaryPDF";
 import { AlquilerFormType, AlquilerProductosFormType } from "../types";
 
@@ -25,35 +25,13 @@ export const AlquilerSummaryPrice = ({
     .join("\n");
 
   return (
-    <>
-      <Button onClick={open}>Mostrar resumen</Button>
-      <Modal size="auto" opened={isModalOpen} onClose={close}>
-        {alquilerProductos.map((ap) => {
-          const producto = productos.find((p) => p.id === ap.productoId);
-          if (!producto) return null;
-          return (
-            <Text key={ap.productoId}>
-              {producto.nombre} x{ap.cantidad}: ${ap.precioFinal}
-            </Text>
-          );
-        })}
-        <Center w="100%" mt="lg">
-          {/* <Button onClick={handlePdf}>Descargar PDF</Button> */}
-          <PDFDownloadLink
-            document={<AlquilerSummaryPDF alquiler={alquiler} productos={productos} />}
-            fileName="greeting.pdf"
-          >
-            <Button>Descargar PDF</Button>
-          </PDFDownloadLink>
-          <CopyButton value={text} timeout={1000}>
-            {({ copied, copy }) => (
-              <Button onClick={copy} color={copied ? "teal" : "blue"}>
-                {copied ? "Copiado" : "Copiar al portapapeles"}
-              </Button>
-            )}
-          </CopyButton>
-        </Center>
-      </Modal>
-    </>
+    <PDFDownloadLink
+      document={
+        <AlquilerSummaryPDF alquiler={alquiler} productos={productos} alquilerProductos={form} />
+      }
+      fileName="greeting.pdf"
+    >
+      <Button>Descargar PDF</Button>
+    </PDFDownloadLink>
   );
 };
