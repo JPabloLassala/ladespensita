@@ -97,16 +97,16 @@ export const AlquilerSummaryPDF = ({
   const styles = StyleSheet.create({
     table: {
       width: "100%",
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderColor: "black",
       backgroundColor: "#eee", // light gray
       display: "flex",
       flexDirection: "column",
       borderStyle: "solid",
-      borderTopWidth: 1,
-      borderLeftWidth: 1,
-      borderRightWidth: 1,
-      borderBottomWidth: 1,
+      borderTopWidth: 0.5,
+      borderLeftWidth: 0.5,
+      borderRightWidth: 0.5,
+      borderBottomWidth: 0.5,
     },
     row: {
       display: "flex",
@@ -117,7 +117,7 @@ export const AlquilerSummaryPDF = ({
       borderTopWidth: 0,
       borderLeftWidth: 0,
       borderRightWidth: 0,
-      borderBottomWidth: 1,
+      borderBottomWidth: 0.5,
     },
     rowLast: {
       borderBottomWidth: 0,
@@ -131,38 +131,59 @@ export const AlquilerSummaryPDF = ({
       borderTopWidth: 0,
       borderLeftWidth: 0,
       borderRightWidth: 0,
-      borderBottomWidth: 1,
+      borderBottomWidth: 0.5,
     },
     cell: {
-      flexGrow: 1,
+      flex: 1,
+      minWidth: 0,
       paddingTop: 6,
       paddingBottom: 6,
       paddingLeft: 4,
       paddingRight: 4,
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderStyle: "solid",
       borderColor: "black",
-      borderRightWidth: 1,
+      borderRightWidth: 0.5,
       borderBottomWidth: 0,
       borderLeftWidth: 0,
       borderTopWidth: 0,
-      textAlign: "center",
+      alignItems: "center",
+      justifyContent: "center",
       fontSize: 13,
-      fontWeight: 700,
     },
     cellLast: { borderRightWidth: 0, borderBottomWidth: 0, borderTopWidth: 0 },
+    colImage: { flex: 1.2 },
+    colProducto: { flex: 2.5 },
+    colNarrow: { flex: 0.9 },
     page: { padding: 40, display: "flex", flexDirection: "column", gap: 20 },
     pageHeader: { display: "flex", flexDirection: "row", gap: 20 },
     imageSection: { flexGrow: 0 },
     image: { width: 50, aspectRatio: "1 / 1" },
     alquilerSection: { flexGrow: 1 },
     alquilerInnerSection: { display: "flex", flexDirection: "column", gap: 10 },
-    impact: { fontSize: 16, fontFamily: "Impact", fontWeight: "bold" },
-    productImage: { width: 60, height: 40, objectFit: "cover", display: "flex" },
+    impact: { fontFamily: "Impact", fontWeight: "bold" },
+    productImage: { width: 40, height: 40, objectFit: "cover", display: "flex" },
+    textHeader: { fontSize: 6, textAlign: "center" },
+    textCell: { textAlign: "center", fontSize: 8 },
+    textTitle: { fontSize: 8 },
   });
 
+  const formatValue = (value?: string | number | null) => {
+    if (value === null || value === undefined || value === "") return "-";
+    return String(value);
+  };
+
+  const formatCurrency = (value?: number) => {
+    if (value === null || value === undefined) return "-";
+    return `$${value}`;
+  };
+
   const headerCells = [
-    "IMAGEN PRODUCTO METRO LINEAL ALTURA UNIDADES",
+    "IMAGEN",
+    "PRODUCTO",
+    "METRO LINEAL",
+    "ALTURA",
+    "UNIDADES",
     "DISPONIBLES",
     "UNIDADES",
     "COTIZADAS",
@@ -172,6 +193,11 @@ export const AlquilerSummaryPDF = ({
     "GARANTÍA",
     "VALOR UNITARIO",
     "ALQUILER SUBTOTAL ALQUILER",
+  ];
+  const columnStyles = [
+    styles.colImage,
+    styles.colProducto,
+    ...Array.from({ length: headerCells.length - 2 }, () => styles.colNarrow),
   ];
 
   return (
@@ -183,15 +209,23 @@ export const AlquilerSummaryPDF = ({
           </View>
           <View style={styles.alquilerSection}>
             <View style={styles.alquilerInnerSection}>
-              <Text style={styles.impact}>Presupuesto "La Despensita"</Text>
-              <Text style={styles.impact}>Fecha {dayjs().format("DD/MM/YYYY")}</Text>
+              <Text style={{ ...styles.impact, ...styles.textTitle }}>
+                Presupuesto "La Despensita"
+              </Text>
+              <Text style={{ ...styles.impact, ...styles.textTitle }}>
+                Fecha {dayjs().format("DD/MM/YYYY")}
+              </Text>
             </View>
           </View>
           <View style={styles.alquilerSection}>
             <View style={styles.alquilerInnerSection}>
-              <Text style={styles.impact}>Productora {alquiler.values.productora}</Text>
-              <Text style={styles.impact}>Proyecto {alquiler.values.proyecto}</Text>
-              <Text style={styles.impact}>
+              <Text style={{ ...styles.impact, ...styles.textTitle }}>
+                Productora {alquiler.values.productora}
+              </Text>
+              <Text style={{ ...styles.impact, ...styles.textTitle }}>
+                Proyecto {alquiler.values.proyecto}
+              </Text>
+              <Text style={{ ...styles.impact, ...styles.textTitle }}>
                 Alquiler {dayjs(alquiler.values.fechaInicio).format("DD/MM/YYYY")}
                 {" - "}
                 {dayjs(alquiler.values.fechaFin).format("DD/MM/YYYY")}
@@ -202,15 +236,13 @@ export const AlquilerSummaryPDF = ({
         <View style={styles.table}>
           <View style={styles.headerRow}>
             {headerCells.map((c, i, h) => {
-              if (i + 1 === h.length)
-                return (
-                  <View key={`${c}-${i}`} style={{ ...styles.cell, ...styles.cellLast }}>
-                    <Text>{c}</Text>
-                  </View>
-                );
+              const isLast = i + 1 === h.length;
               return (
-                <View key={`${c}-${i}`} style={styles.cell}>
-                  <Text>{c}</Text>
+                <View
+                  key={`${c}-${i}`}
+                  style={[styles.cell, columnStyles[i], isLast ? styles.cellLast : {}]}
+                >
+                  <Text style={styles.textHeader}>{c}</Text>
                 </View>
               );
             })}
@@ -221,33 +253,68 @@ export const AlquilerSummaryPDF = ({
               const rowKey = `${ap.productoId}-${i}`;
               const product = productos.find((p) => p.id === ap.productoId);
               const productImageUrl = product?.images?.[0]?.url;
-              console.log(
-                "image URL:",
-                productImageUrl,
-              );
-              if (i + 1 === arr.length) {
-                return (
-                  <View key={rowKey} style={{ ...styles.row, ...styles.rowLast }}>
-                    <View style={styles.cell}>
-                      <Text>last {ap.cantidad}</Text>
-                    </View>
-                    <View style={{ ...styles.cell, ...styles.cellLast }}>
-                      <Text>last {ap.cantidad}</Text>
-                    </View>
-                  </View>
-                );
-              }
+              const isLast = i + 1 === arr.length;
+              const availableUnits =
+                typeof product?.totales === "number" ? product.totales - ap.cantidad : undefined;
+              const garantiaTotal =
+                ap.valorTotalGarantia > 0
+                  ? ap.valorTotalGarantia
+                  : ap.valorUnitarioGarantia * ap.cantidad;
+              const alquilerUnitario =
+                ap.cantidad > 0 && ap.precioFinal
+                  ? ap.precioFinal / ap.cantidad
+                  : ap.valorUnitarioAlquiler;
 
               return (
-                <View key={rowKey} style={styles.row} id="AAAAA">
-                  <View style={styles.cell}>
-                    <Image
-                      style={styles.productImage}
-                      src={getJpegImageSource(productImageUrl)}
-                    />
+                <View key={rowKey} style={[styles.row, isLast && styles.rowLast]}>
+                  <View style={[styles.cell, columnStyles[0]]}>
+                    {productImageUrl ? (
+                      <Image
+                        style={styles.productImage}
+                        src={getJpegImageSource(productImageUrl)}
+                      />
+                    ) : (
+                      <Text style={styles.textCell}>-</Text>
+                    )}
                   </View>
-                  <View style={{ ...styles.cell, ...styles.cellLast }}>
-                    <Text>last {ap.cantidad}</Text>
+                  <View style={[styles.cell, columnStyles[1]]}>
+                    <Text style={styles.textCell}>{formatValue(product?.nombre)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[2]]}>
+                    <Text style={styles.textCell}>{formatValue(product?.unidadesMetroLineal)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[3]]}>
+                    <Text style={styles.textCell}>{formatValue(product?.medidasAltura)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[4]]}>
+                    <Text style={styles.textCell}>{formatValue(product?.totales)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[5]]}>
+                    <Text style={styles.textCell}>{formatValue(availableUnits)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[6]]}>
+                    <Text style={styles.textCell}>{formatValue(ap.cantidad)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[7]]}>
+                    <Text style={styles.textCell}>{formatValue(ap.cantidad)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[8]]}>
+                    <Text style={styles.textCell}>{formatCurrency(ap.valorUnitarioGarantia)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[9]]}>
+                    <Text style={styles.textCell}>{formatCurrency(ap.valorUnitarioGarantia)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[10]]}>
+                    <Text style={styles.textCell}>{formatCurrency(garantiaTotal)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[11]]}>
+                    <Text style={styles.textCell}>{formatCurrency(garantiaTotal)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[12]]}>
+                    <Text style={styles.textCell}>{formatCurrency(alquilerUnitario)}</Text>
+                  </View>
+                  <View style={[styles.cell, columnStyles[13], styles.cellLast]}>
+                    <Text style={styles.textCell}>{formatCurrency(ap.precioFinal)}</Text>
                   </View>
                 </View>
               );
