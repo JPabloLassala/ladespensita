@@ -18,7 +18,6 @@ export function ProductosContextProvider({ children }: { children: React.ReactNo
   const [productos, setProductos] = useState<ProductoEntity[]>([]);
 
   const updateProducto = (productoNewData: ProductoEntityUpdate) => {
-    console.log("productonew", productoNewData);
     const getNewProducto = () => {
       const newProducto: ProductoEntity = { ...productoNewData } as ProductoEntity;
       if (productoNewData.tmpURL) {

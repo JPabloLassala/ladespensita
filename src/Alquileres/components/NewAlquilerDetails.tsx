@@ -60,7 +60,6 @@ export function NewAlquilerDetails({
     },
     validate: {
       fechas: (value) => {
-        console.log("value", value);
         if (!value[0] || !value[1]) return "Debe seleccionar una fecha de inicio y fin";
         if (dayjs(value[0]).isAfter(dayjs(value[1])))
           return "La fecha de inicio debe ser anterior a la de fin";
@@ -120,7 +119,6 @@ export function NewAlquilerDetails({
     e.preventDefault();
     const { hasErrors: formHasErrors } = form.validate();
     const { hasErrors: productosFormHasErrors } = productosForm.validate();
-    console.log("error", formHasErrors, productosFormHasErrors);
     if (formHasErrors || productosFormHasErrors) return;
     const alquilerProductos = Object.values(productosForm.values.productos).filter(
       (ap) => ap.cantidad! > 0,
