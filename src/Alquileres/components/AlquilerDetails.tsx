@@ -25,7 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
 import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
-import { AlquilerSummaryPrice } from "./AlquilerSummaryPrice";
+import { AlquilerSummaryExport } from "./AlquilerSummaryExport";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -230,7 +230,6 @@ export function AlquilerDetails({
                 onChangeStatus={onChangeStatus}
                 flex={1}
               />
-              <AlquilerSummaryPrice productos={productos} form={productosForm} alquiler={form} />
             </Group>
             <Stack>
               <AlquilerDetailsForm form={form} />
@@ -269,6 +268,11 @@ export function AlquilerDetails({
               <Button disabled={appState === APP_STATE.loading} type="button" color="red" size="lg">
                 Cancelar
               </Button>
+              <AlquilerSummaryExport
+                productos={productos}
+                form={productosForm}
+                alquilerForm={form}
+              />
             </Group>
           </Stack>
           {selectedProducto && (

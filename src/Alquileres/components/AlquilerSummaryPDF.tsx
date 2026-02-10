@@ -78,11 +78,11 @@ const getJpegImageSource = (url?: string) => {
 };
 
 export const AlquilerSummaryPDF = ({
-  alquiler,
+  alquilerForm,
   productos,
   alquilerProductos,
 }: {
-  alquiler: AlquilerFormType;
+  alquilerForm: AlquilerFormType;
   productos: ProductoEntity[];
   alquilerProductos: AlquilerProductosFormType;
 }) => {
@@ -250,15 +250,15 @@ export const AlquilerSummaryPDF = ({
           <View style={styles.alquilerSection}>
             <View style={styles.alquilerInnerSection}>
               <Text style={{ ...styles.impact, ...styles.textTitle }}>
-                Productora {alquiler.values.productora}
+                Productora {alquilerForm.values.productora}
               </Text>
               <Text style={{ ...styles.impact, ...styles.textTitle }}>
-                Proyecto {alquiler.values.proyecto}
+                Proyecto {alquilerForm.values.proyecto}
               </Text>
               <Text style={{ ...styles.impact, ...styles.textTitle }}>
-                Alquiler {dayjs(alquiler.values.fechaInicio).format("DD/MM/YYYY")}
+                Alquiler {dayjs(alquilerForm.values.fechaInicio).format("DD/MM/YYYY")}
                 {" - "}
-                {dayjs(alquiler.values.fechaFin).format("DD/MM/YYYY")}
+                {dayjs(alquilerForm.values.fechaFin).format("DD/MM/YYYY")}
               </Text>
             </View>
           </View>
