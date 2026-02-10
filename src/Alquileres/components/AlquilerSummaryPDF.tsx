@@ -99,7 +99,7 @@ export const AlquilerSummaryPDF = ({
   const headerGap = 12;
   const tableHeaderHeight = 28;
   const tableHeaderTop = pagePadding + headerHeight + headerGap;
-  const contentTopPadding = tableHeaderTop + tableHeaderHeight;
+  const contentTopPadding = tableHeaderTop + tableHeaderHeight + 5;
   const footerHeight = 110;
 
   const styles = StyleSheet.create({
@@ -116,17 +116,16 @@ export const AlquilerSummaryPDF = ({
       borderColor: "black",
       borderLeftWidth: 0.5,
       borderRightWidth: 0.5,
-      borderBottomWidth: 0,
+      borderBottomWidth: 0.5,
     },
     headerRow: {
       width: "100%",
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#aad0d6ff",
-      borderColor: "blue",
+      borderColor: "black",
       borderStyle: "solid",
       borderWidth: 0.5,
-      borderBottomWidth: 0.5,
     },
     cell: {
       flex: 1,
