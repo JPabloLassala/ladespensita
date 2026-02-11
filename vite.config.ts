@@ -10,4 +10,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src/"),
     },
   },
+  build: {
+    minify: "esbuild",
+    cssMinify: true,
+    sourcemap: false,
+    target: "es2019",
+  },
 });
