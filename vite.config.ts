@@ -16,7 +16,7 @@ export default defineConfig({
     },
   },
   build: {
-    minify: "esbuild",
+    minify: "terser",
     cssMinify: true,
     sourcemap: false,
     target: "es2019",
