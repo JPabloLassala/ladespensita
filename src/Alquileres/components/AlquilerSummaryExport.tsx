@@ -1,9 +1,14 @@
+import { lazy, Suspense } from "react";
 import { Button, Modal, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ProductoEntity } from "@/Productos";
-import { PDFViewer } from "@react-pdf/renderer";
-import { AlquilerSummaryPDF } from "./AlquilerSummaryPDF";
 import { AlquilerFormType, AlquilerProductosFormType } from "../types";
+
+const AlquilerSummaryPdfViewer = lazy(() =>
+  import("./AlquilerSummaryPdfViewer").then((module) => ({
+    default: module.AlquilerSummaryPdfViewer,
+  })),
+);
 
 export const AlquilerSummaryExport = ({
   form,
@@ -39,13 +44,11 @@ export const AlquilerSummaryExport = ({
         size="90%"
         title={<Text fw={600}>Presupuesto</Text>}
       >
-        <PDFViewer style={{ width: "100%", height: "80vh" }}>
-          <AlquilerSummaryPDF
-            alquilerForm={alquilerForm}
-            productos={productos}
-            alquilerProductos={form}
-          />
-        </PDFViewer>
+        {isModalOpen && (
+          <Suspense fallback={<Text>Cargando visor PDF...</Text>}>
+            <AlquilerSummaryPdfViewer form={form} alquilerForm={alquilerForm} productos={productos} />
+          </Suspense>
+        )}
       </Modal>
     </>
   );
