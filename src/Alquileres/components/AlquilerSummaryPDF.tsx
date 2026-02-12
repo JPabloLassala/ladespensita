@@ -235,7 +235,7 @@ export const AlquilerSummaryPDF = ({
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.pageHeader} fixed>
           <View style={styles.imageSection}>
-            <Image style={styles.image} src={"/public/ladespenlogo.png"} />
+            <Image style={styles.image} src={"/ladespenlogo.png"} />
           </View>
           <View style={styles.alquilerSection}>
             <View style={styles.alquilerInnerSection}>
