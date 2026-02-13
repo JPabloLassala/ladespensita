@@ -242,7 +242,17 @@ export function NewAlquilerDetails({
                 onChange={(event) => setHideZero(event.currentTarget.checked)}
               />
             </Group>
-            <AlquilerProductosScrollContainer>{filteredProductos}</AlquilerProductosScrollContainer>
+            <AlquilerProductosScrollContainer>
+              {filteredProductos.length ? filteredProductos : null}
+              {filteredProductos.length === 0 && (
+                <Center h="100%">
+                  <Title order={1} fw={800} style={{ color: "lightgray" }}>
+                    <FontAwesomeIcon icon={faStoreSlash} style={{ marginRight: 10 }} />
+                    No se encontraron productos
+                  </Title>
+                </Center>
+              )}
+            </AlquilerProductosScrollContainer>
             <Group mb="1rem">
               <Button type="submit" color="blue" size="lg">
                 Guardar
