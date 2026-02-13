@@ -5,8 +5,8 @@ import {
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
 } from "@/Alquileres/entities";
-import { ProductoEntity, useProductosContext } from "@/Productos";
-import { Button, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
+import { useProductosContext } from "@/Productos";
+import { Button, Center, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
@@ -16,7 +16,7 @@ import { AlquilerProductoItem } from "./AlquilerProductoItem";
 import { AlquilerProductosScrollContainer } from "./UI";
 import { useAlquilerProductoRepository } from "../repository";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faSearch, faStoreSlash } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
 import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
@@ -84,6 +84,23 @@ export function NewAlquilerDetails({
     sendGetStock(form.values.fechaInicio!, form.values.fechaFin!);
     setDatesTouched({ inicio: false, fin: false });
   }, [datesTouched]);
+
+  useEffect(() => {
+    productosForm.setValues({
+      productos: productos.reduce(
+        (acc, producto) => {
+          acc[producto.id] = {
+            ...createEmptyAlquilerProducto(producto),
+            productoId: producto.id,
+            cantidad: 0,
+            precioFinal: 0,
+          };
+          return acc;
+        },
+        {} as Record<number, AlquilerProductoCreate>,
+      ),
+    });
+  }, [productos, createEmptyAlquilerProducto]);
 
   const productosForm = useForm<{ productos: Record<number, AlquilerProductoCreate> }>({
     initialValues: {
