@@ -1,31 +1,35 @@
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "@mantine/form";
 import {
   ALQUILER_STATUS,
-  AlquilerCreate,
   AlquilerEntity,
   AlquilerProductoCreate,
   AlquilerProductoEntity,
   AlquilerProductoUpdate,
   AlquilerUpdate,
 } from "@/Alquileres/entities";
+import { useForm } from "@mantine/form";
+import { useEffect, useMemo, useState } from "react";
 
-import { Button, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
-import { ProductoEntity, useProductosContext } from "@/Productos";
-import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
-import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
-import { AlquilerProductoItem } from "./AlquilerProductoItem";
-import { AlquilerProductosScrollContainer } from "./UI";
-import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
-import { useAlquilerProductoRepository } from "../repository";
-import { AlquilerStatus } from "./AlquilerStatus";
 import { APP_STATE, useAppStateContext } from "@/Common";
-import dayjs from "dayjs";
+import { useProductosContext } from "@/Productos";
+import {
+  faClose,
+  faMagnifyingGlassMinus,
+  faSearch,
+  faStoreSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
+import { Button, Center, Checkbox, Group, Stack, TextInput, Title } from "@mantine/core";
+import dayjs from "dayjs";
+import { useAlquilerProductoRepository } from "../repository";
+import { useAlquilerContext, useAlquilerProductoContext } from "../stores";
 import { AlquilerDetailsDates } from "./AlquilerDetailsDates";
+import { AlquilerDetailsForm } from "./AlquilerDetailsForm";
+import { AlquilerProductoDetails } from "./AlquilerProductoDetails";
+import { AlquilerProductoItem } from "./AlquilerProductoItem";
+import { AlquilerStatus } from "./AlquilerStatus";
 import { AlquilerSummaryExport } from "./AlquilerSummaryExport";
+import { AlquilerTotalPrice } from "./AlquilerTotalPrice";
+import { AlquilerProductosScrollContainer } from "./UI";
 
 export function AlquilerDetails({
   onUpdateAlquiler,
@@ -255,7 +259,17 @@ export function AlquilerDetails({
                 onChange={(event) => setHideZero(event.currentTarget.checked)}
               />
             </Group>
-            <AlquilerProductosScrollContainer>{filteredProductos}</AlquilerProductosScrollContainer>
+            <AlquilerProductosScrollContainer>
+              {filteredProductos.length ? filteredProductos : null}
+              {filteredProductos.length === 0 && (
+                <Center h="100%">
+                  <Title order={1} fw={800} style={{ color: "lightgray" }}>
+                    <FontAwesomeIcon icon={faStoreSlash} style={{ marginRight: 10 }} />
+                    No se encontraron productos
+                  </Title>
+                </Center>
+              )}
+            </AlquilerProductosScrollContainer>
             <Group mb="1rem">
               <Button
                 disabled={appState === APP_STATE.loading}
