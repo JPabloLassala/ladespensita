@@ -2,7 +2,7 @@ import { APP_STATE, useAppStateContext } from "@/Common";
 import { useProductosContext } from "@/Productos";
 import { useProductoRepository } from "@/Productos/repository";
 import { Group } from "@mantine/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   AlquilerDetails,
@@ -22,6 +22,7 @@ import {
 } from "../entities";
 
 export function AlquileresPage() {
+  const [firstLoad, setFirstLoad] = useState(true);
   const {
     getSummary,
     alquileres,
@@ -34,7 +35,8 @@ export function AlquileresPage() {
     updateAlquiler,
     deleteAlquiler,
   } = useAlquilerContext();
-  const { data, sendList, sendCreate, sendUpdate, sendDelete } = useAlquilerRepository([]);
+  const { data, sendList, sendCreate, sendUpdate, sendDelete, isLoading } =
+    useAlquilerRepository(alquileres);
   const { sendCreate: sendCreateAlquilerProducto, sendUpdate: sendUpdateAlquilerProducto } =
     useAlquilerProductoRepository();
   const { setAlquilerProductos } = useAlquilerProductoContext();
@@ -124,8 +126,12 @@ export function AlquileresPage() {
   }, [productosData]);
 
   useEffect(() => {
-    setAlquileres(data);
-  }, [data]);
+    if (!data.length) return;
+    if (!isLoading) {
+      setAlquileres(data);
+    }
+    setFirstLoad(false);
+  }, [data, firstLoad, isLoading, setAlquileres]);
 
   useEffect(() => {
     if (isNewRoute) {
